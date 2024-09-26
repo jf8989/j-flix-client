@@ -1,29 +1,34 @@
+// src/components/main-view/main-view.jsx
 import React, { useState } from 'react';
-import { BookCard } from '../book-card/book-card';
+import { MovieCard } from '../movie-card/movie-card';
+import { MovieView } from '../movie-view/movie-view';
 
-export const MainView = () => {
-  const [books, setBooks] = useState([
-    { id: 1, title: 'Book Title 1' },
-    { id: 2, title: 'Book Title 2' }
+const MainView = () => {
+  const [movies] = useState([
+    { id: 1, title: 'Inception', description: 'A mind-bending thriller', director: 'Christopher Nolan', genre: 'Sci-Fi' },
+    { id: 2, title: 'The Matrix', description: 'A dystopian future', director: 'Wachowski Sisters', genre: 'Sci-Fi' },
+    { id: 3, title: 'Interstellar', description: 'A journey through space', director: 'Christopher Nolan', genre: 'Sci-Fi' }
   ]);
-  const [selectedBook, setSelectedBook] = useState(null);
 
-  const handleBookClick = (book) => {
-    setSelectedBook(book);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
   };
 
   return (
     <div>
-      {selectedBook ? (
-        <div>
-          <h1>{selectedBook.title}</h1>
-          <button onClick={() => setSelectedBook(null)}>Back</button>
-        </div>
+      {selectedMovie ? (
+        <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
       ) : (
-        books.map((book) => (
-          <BookCard key={book.id} book={book} onClick={() => handleBookClick(book)} />
-        ))
+        <div>
+          {movies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} onMovieClick={() => handleMovieClick(movie)} />
+          ))}
+        </div>
       )}
     </div>
-  );  
+  );
 };
+
+export default MainView;

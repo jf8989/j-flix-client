@@ -1,9 +1,8 @@
+// src/index.jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
+import './index.scss'; // Assuming you have some global styles
+import MainView from './components/main-view/main-view'; // Import MainView
 
-const MyFlixApp = () => {
-  return <h1>Welcome to myFlix!</h1>;
-};
-
-ReactDOM.render(<MyFlixApp />, document.getElementById('app'));
+// Render the MainView component
+ReactDOM.render(<MainView />, document.getElementById('app'));
