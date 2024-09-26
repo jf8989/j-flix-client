@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Parcel cache
+.parcel-cache/
+
+# Dist folder (build output)
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+jspm_packages/
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Sass cache
+.sass-cache/
+
+# MacOS
+.DS_Store
