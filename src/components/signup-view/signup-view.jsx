@@ -1,12 +1,23 @@
 // src/components/signup-view/signup-view.jsx
-export const SignupView = () => {
+import React, { useState } from "react";
+
+export const SignupView = ({ onSignupSuccess, onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State to manage error messages
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Validate that both passwords match
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match!");
+      return;
+    }
+
     const data = {
       Username: username,
       Password: password,
@@ -23,6 +34,7 @@ export const SignupView = () => {
       .then((data) => {
         if (data) {
           alert("Signup successful");
+          onSignupSuccess();
         } else {
           alert("Signup failed");
         }
@@ -51,6 +63,15 @@ export const SignupView = () => {
         />
       </label>
       <label>
+        Confirm Password:
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+      </label>
+      <label>
         Email:
         <input
           type="email"
@@ -67,7 +88,16 @@ export const SignupView = () => {
           onChange={(e) => setBirthday(e.target.value)}
         />
       </label>
-      <button type="submit">Signup</button>
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+      <button type="submit">Sign Up</button>
+
+      {/* Button to switch to Login */}
+      <p>
+        Already have an account?{" "}
+        <button type="button" onClick={onLogin}>
+          Log In Here
+        </button>
+      </p>
     </form>
   );
 };

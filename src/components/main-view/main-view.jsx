@@ -6,16 +6,15 @@ import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 
 const MainView = () => {
-  const [movies, setMovies] = useState([]); // Movies state
-  const [selectedMovie, setSelectedMovie] = useState(null); // Selected movie state
+  const [movies, setMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [user, setUser] = useState(
     localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
       : null
-  ); // User state from localStorage
-  const [showSignup, setShowSignup] = useState(false); // Toggle between login and signup
+  );
+  const [showSignup, setShowSignup] = useState(false); // Manage login/signup toggle
 
-  // Fetch movies only when user is authenticated
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -38,10 +37,12 @@ const MainView = () => {
     setUser(null); // Reset user state and log out
   };
 
-  // If no user is logged in, show the login or signup form
   if (!user) {
     return showSignup ? (
-      <SignupView onSignup={() => setShowSignup(false)} />
+      <SignupView
+        onSignupSuccess={() => setShowSignup(false)}
+        onLogin={() => setShowSignup(false)}
+      />
     ) : (
       <LoginView
         onLoggedIn={(user) => setUser(user)}
@@ -63,7 +64,7 @@ const MainView = () => {
       ) : (
         <div>
           {movies.length === 0 ? (
-            <p>Loading movies...</p> // Display a loading message until movies are fetched
+            <p>Loading movies...</p>
           ) : (
             movies.map((movie) => (
               <MovieCard

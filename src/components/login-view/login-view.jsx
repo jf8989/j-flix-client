@@ -1,13 +1,12 @@
 // src/components/login-view/login-view.jsx
 import React, { useState } from "react";
 
-export const LoginView = ({ onLoggedIn }) => {
+export const LoginView = ({ onLoggedIn, onSignup }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const data = {
       Username: username,
       Password: password,
@@ -52,6 +51,14 @@ export const LoginView = ({ onLoggedIn }) => {
         />
       </label>
       <button type="submit">Login</button>
+
+      {/* Button to switch to Signup */}
+      <p>
+        Don’t have an account?{" "}
+        <button type="button" onClick={onSignup}>
+          Sign Up Here
+        </button>
+      </p>
     </form>
   );
 };
