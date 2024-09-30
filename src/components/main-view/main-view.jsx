@@ -19,8 +19,17 @@ const MainView = () => {
     setSelectedMovie(movie);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null); // reset user state
+  };
+
   return (
     <div>
+      <div>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
       {selectedMovie ? (
         <MovieView
           movie={selectedMovie}
