@@ -19,24 +19,29 @@ export const SignupView = ({ onSignupSuccess, onLogin }) => {
     }
 
     const data = {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birthday: birthday,
+      username: username, // Changed from 'Username' to 'username'
+      password: password, // Changed from 'Password' to 'password'
+      email: email, // Changed from 'Email' to 'email'
+      birthday: birthday, // Changed from 'Birthday' to 'birthday'
     };
 
-    fetch("https://your-api-url.com/users", {
+    fetch("https://j-flix-omega.vercel.app/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        // Add this to check the response status
+        console.log("Response status:", response.status);
+        return response.json();
+      })
       .then((data) => {
-        if (data) {
+        console.log("Signup response data:", data); // Add this for debugging
+        if (data && data.user) {
           alert("Signup successful");
           onSignupSuccess();
         } else {
-          alert("Signup failed");
+          alert("Signup failed: " + (data.message || "Unknown error"));
         }
       })
       .catch((e) => alert("Error: " + e));

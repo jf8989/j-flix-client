@@ -7,18 +7,36 @@ export const LoginView = ({ onLoggedIn, onSignup }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const data = {
-      Username: username,
-      Password: password,
+      username: username.toLowerCase(), // Convert to lowercase here
+      password: password,
     };
 
-    fetch("https://your-api-url.com/login", {
+    // Add this console log
+    console.log("Sending login data:", data);
+
+    fetch("https://j-flix-omega.vercel.app/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "http://localhost:1234",
+      },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        // Add this console log
+        console.log("Response status:", response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
+        // Add this console log
+        console.log("Login response data:", data);
+
         if (data.token) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
@@ -27,7 +45,10 @@ export const LoginView = ({ onLoggedIn, onSignup }) => {
           alert("Login failed");
         }
       })
-      .catch((e) => alert("Error: " + e));
+      .catch((e) => {
+        console.error("Login error:", e);
+        alert("Error: " + e.message);
+      });
   };
 
   return (
