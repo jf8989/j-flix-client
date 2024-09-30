@@ -1,16 +1,19 @@
 // src/components/main-view/main-view.jsx
-import React, { useState } from 'react';
-import { MovieCard } from '../movie-card/movie-card';
-import { MovieView } from '../movie-view/movie-view';
+import React, { useState, useEffect } from "react";
+import { MovieCard } from "../movie-card/movie-card";
+import { MovieView } from "../movie-view/movie-view";
 
 const MainView = () => {
-  const [movies] = useState([
-    { id: 1, title: 'Inception', description: 'A mind-bending thriller', director: 'Christopher Nolan', genre: 'Sci-Fi' },
-    { id: 2, title: 'The Matrix', description: 'A dystopian future', director: 'Wachowski Sisters', genre: 'Sci-Fi' },
-    { id: 3, title: 'Interstellar', description: 'A journey through space', director: 'Christopher Nolan', genre: 'Sci-Fi' }
-  ]);
-
+  const [movies, setMovies] = useState([]); // Initial state with an empty array
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  // Fetch movie data when the component mounts
+  useEffect(() => {
+    fetch("https://j-flix-omega.vercel.app/movies") // Replace with your actual API URL
+      .then((response) => response.json())
+      .then((data) => setMovies(data))
+      .catch((error) => console.error("Error fetching movies:", error));
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -19,12 +22,23 @@ const MainView = () => {
   return (
     <div>
       {selectedMovie ? (
-        <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
+        <MovieView
+          movie={selectedMovie}
+          onBackClick={() => setSelectedMovie(null)}
+        />
       ) : (
         <div>
-          {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} onMovieClick={() => handleMovieClick(movie)} />
-          ))}
+          {movies.length === 0 ? (
+            <p>Loading movies...</p> // Display a loading message until movies are fetched
+          ) : (
+            movies.map((movie) => (
+              <MovieCard
+                key={movie._id}
+                movie={movie}
+                onMovieClick={() => handleMovieClick(movie)}
+              />
+            ))
+          )}
         </div>
       )}
     </div>
