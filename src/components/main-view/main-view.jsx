@@ -1,5 +1,6 @@
 // src/components/main-view/main-view.jsx
 import React, { useState, useEffect } from "react";
+import { Row, Col, Button, Card } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -13,7 +14,7 @@ const MainView = () => {
       ? JSON.parse(localStorage.getItem("user"))
       : null
   );
-  const [showSignup, setShowSignup] = useState(false); // Manage login/signup toggle
+  const [showSignup, setShowSignup] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,49 +35,77 @@ const MainView = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUser(null); // Reset user state and log out
+    setUser(null);
   };
 
   if (!user) {
-    return showSignup ? (
-      <SignupView
-        onSignupSuccess={() => setShowSignup(false)}
-        onLogin={() => setShowSignup(false)}
-      />
-    ) : (
-      <LoginView
-        onLoggedIn={(user) => setUser(user)}
-        onSignup={() => setShowSignup(true)}
-      />
+    return (
+      <Row className="justify-content-md-center">
+        <Col md={6}>
+          <Card>
+            <Card.Body>
+              {showSignup ? (
+                <SignupView
+                  onSignupSuccess={() => setShowSignup(false)}
+                  onLogin={() => setShowSignup(false)}
+                />
+              ) : (
+                <LoginView
+                  onLoggedIn={(user) => setUser(user)}
+                  onSignup={() => setShowSignup(true)}
+                />
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     );
   }
 
   return (
-    <div>
-      <div>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
+    <>
+      <Row className="mb-4">
+        <Col>
+          <Button variant="primary" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Col>
+      </Row>
       {selectedMovie ? (
-        <MovieView
-          movie={selectedMovie}
-          onBackClick={() => setSelectedMovie(null)}
-        />
+        <Row>
+          <Col>
+            <MovieView
+              movie={selectedMovie}
+              onBackClick={() => setSelectedMovie(null)}
+            />
+          </Col>
+        </Row>
       ) : (
-        <div>
+        <Row>
           {movies.length === 0 ? (
-            <p>Loading movies...</p>
+            <Col>
+              <p>Loading movies...</p>
+            </Col>
           ) : (
             movies.map((movie) => (
-              <MovieCard
+              <Col
                 key={movie._id}
-                movie={movie}
-                onMovieClick={() => handleMovieClick(movie)}
-              />
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                className="mb-4"
+              >
+                <MovieCard
+                  movie={movie}
+                  onMovieClick={() => handleMovieClick(movie)}
+                />
+              </Col>
             ))
           )}
-        </div>
+        </Row>
       )}
-    </div>
+    </>
   );
 };
 

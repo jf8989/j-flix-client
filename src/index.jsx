@@ -1,8 +1,14 @@
 // src/index.jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.scss'; // Assuming you have some global styles
-import MainView from './components/main-view/main-view'; // Import MainView
+import React from "react";
+import ReactDOM from "react-dom";
+import { Container } from "react-bootstrap";
+import MainView from "./components/main-view/main-view";
+import "./index.scss";
 
-// Render the MainView component
-ReactDOM.render(<MainView />, document.getElementById('app'));
+// Wrap the MainView component with a Bootstrap Container
+ReactDOM.render(
+  <Container>
+    <MainView />
+  </Container>,
+  document.getElementById("app")
+);
