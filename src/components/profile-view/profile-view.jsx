@@ -27,34 +27,46 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      username: username,
-      password: password,
-      email: email,
-      birthday: birthday,
-    };
+    // Prepare the object with only modified fields
+    const updatedFields = {};
+    if (username !== user.Username) updatedFields.username = username;
+    if (password) updatedFields.password = password; // If the password is not empty, update it
+    if (email !== user.Email) updatedFields.email = email;
+    if (birthday !== formatDate(user.Birthday))
+      updatedFields.birthday = birthday;
+
+    if (Object.keys(updatedFields).length === 0) {
+      alert("No fields have been updated.");
+      return;
+    }
+
+    console.log("Updating user with data: ", updatedFields);
 
     fetch(`https://j-flix-omega.vercel.app/users/${user.Username}`, {
       method: "PUT",
-      body: JSON.stringify(data),
+      body: JSON.stringify(updatedFields), // Send only the modified fields
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     })
       .then((response) => {
-        if (response.ok) {
-          alert("Update successful");
-          return response.json();
-        } else {
-          alert("Update failed");
+        if (!response.ok) {
+          throw new Error("Failed to update user");
         }
+        return response.json();
       })
       .then((data) => {
         if (data) {
-          localStorage.setItem("user", JSON.stringify(data));
-          setUser(data);
+          console.log("Update successful: ", data);
+          localStorage.setItem("user", JSON.stringify(data)); // Update localStorage with the new user data
+          setUser(data); // Update the user state
+          alert("Update successful");
         }
+      })
+      .catch((error) => {
+        console.error("Error during update:", error);
+        alert("Update failed");
       });
   };
 
@@ -65,15 +77,25 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-    }).then((response) => {
-      if (response.ok) {
-        setUser(null);
-        localStorage.clear();
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then((err) => {
+            throw new Error(err.message || "Failed to deregister");
+          });
+        }
+      })
+      .then(() => {
+        setUser(null); // Clear user data
+        localStorage.clear(); // Clear localStorage
         alert("User deregistered successfully");
-      } else {
-        alert("Failed to deregister");
-      }
-    });
+      })
+      .catch((error) => {
+        console.error("Error during deregistration:", error);
+        alert(error.message || "Failed to deregister");
+      });
   };
 
   const handleToggleFavorite = (movieId) => {
@@ -81,27 +103,49 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
     const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
     const method = isFavorite ? "DELETE" : "POST";
 
+    console.log(`Sending ${method} request to: ${url}`);
+
     fetch(url, {
       method: method,
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-    }).then((response) => {
-      if (response.ok) {
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Throw error if response is not OK
+          throw new Error(
+            `Failed to ${isFavorite ? "remove" : "add"} favorite movie`
+          );
+        }
+        return response.json();
+      })
+      .then((updatedUser) => {
+        // Update favorite movies on success
         const updatedFavorites = isFavorite
           ? favoriteMovies.filter((id) => id !== movieId)
           : [...favoriteMovies, movieId];
+
         setFavoriteMovies(updatedFavorites);
         setUser({ ...user, FavoriteMovies: updatedFavorites });
+
+        // Persist the updated user in localStorage
         localStorage.setItem(
           "user",
           JSON.stringify({ ...user, FavoriteMovies: updatedFavorites })
         );
-      } else {
-        alert("Failed to update favorites");
-      }
-    });
+
+        alert(
+          `Successfully ${isFavorite ? "removed from" : "added to"} favorites!`
+        );
+      })
+      .catch((error) => {
+        console.error(error); // Log the error for debugging
+        alert(
+          `Error: Could not ${isFavorite ? "remove from" : "add to"} favorites`
+        );
+      });
   };
 
   return (
