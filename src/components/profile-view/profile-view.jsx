@@ -1,7 +1,13 @@
 // src/components/profile-view/profile-view.jsx
 import React, { useState, useEffect } from "react";
-import { Button, Card, Form } from "react-bootstrap";
+import { Button, Card, Form, Row, Col } from "react-bootstrap"; // Import Row and Col
 import { MovieCard } from "../movie-card/movie-card";
+
+// Function to format the date to yyyy-MM-dd for input type="date"
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toISOString().split("T")[0]; // Get the date part only
+};
 
 export const ProfileView = ({ user, token, setUser, movies }) => {
   const [username, setUsername] = useState("");
@@ -10,11 +16,12 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   const [birthday, setBirthday] = useState("");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
 
+  // Populate user data and favorite movies
   useEffect(() => {
-    setUsername(user.username);
-    setEmail(user.email);
-    setBirthday(user.birthday);
-    setFavoriteMovies(user.favoriteMovies || []); // Provide default empty array
+    setUsername(user.Username); // Adjust to user.Username
+    setEmail(user.Email);
+    setBirthday(formatDate(user.Birthday)); // Format birthday to yyyy-MM-dd
+    setFavoriteMovies(user.FavoriteMovies || []); // Ensure it's an array
   }, [user]);
 
   const handleSubmit = (event) => {
@@ -27,7 +34,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
       birthday: birthday,
     };
 
-    fetch(`https://j-flix-omega.vercel.app/users/${user.username}`, {
+    fetch(`https://j-flix-omega.vercel.app/users/${user.Username}`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
@@ -52,7 +59,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   };
 
   const handleDeregister = () => {
-    fetch(`https://j-flix-omega.vercel.app/users/${user.username}`, {
+    fetch(`https://j-flix-omega.vercel.app/users/${user.Username}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -71,7 +78,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
 
   const handleToggleFavorite = (movieId) => {
     const isFavorite = favoriteMovies.includes(movieId);
-    const url = `https://j-flix-omega.vercel.app/users/${user.username}/movies/${movieId}`;
+    const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
     const method = isFavorite ? "DELETE" : "POST";
 
     fetch(url, {
@@ -86,10 +93,10 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
           ? favoriteMovies.filter((id) => id !== movieId)
           : [...favoriteMovies, movieId];
         setFavoriteMovies(updatedFavorites);
-        setUser({ ...user, favoriteMovies: updatedFavorites });
+        setUser({ ...user, FavoriteMovies: updatedFavorites });
         localStorage.setItem(
           "user",
-          JSON.stringify({ ...user, favoriteMovies: updatedFavorites })
+          JSON.stringify({ ...user, FavoriteMovies: updatedFavorites })
         );
       } else {
         alert("Failed to update favorites");
@@ -110,6 +117,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
               onChange={(e) => setUsername(e.target.value)}
               required
               minLength="3"
+              readOnly
             />
           </Form.Group>
           <Form.Group controlId="formPassword">
@@ -145,17 +153,25 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
         <Button variant="danger" onClick={handleDeregister}>
           Deregister
         </Button>
+
         <h2>Favorite Movies</h2>
-        {movies
-          .filter((m) => favoriteMovies && favoriteMovies.includes(m._id))
-          .map((movie) => (
-            <MovieCard
-              key={movie._id}
-              movie={movie}
-              onToggleFavorite={handleToggleFavorite}
-              isFavorite={true}
-            />
-          ))}
+        {movies.length > 0 && favoriteMovies.length > 0 ? (
+          <Row>
+            {movies
+              .filter((movie) => favoriteMovies.includes(movie._id))
+              .map((movie) => (
+                <Col className="mb-4" key={movie._id} md={3}>
+                  <MovieCard
+                    movie={movie}
+                    onToggleFavorite={handleToggleFavorite}
+                    isFavorite={true}
+                  />
+                </Col>
+              ))}
+          </Row>
+        ) : (
+          <p>No favorite movies selected.</p>
+        )}
       </Card.Body>
     </Card>
   );
