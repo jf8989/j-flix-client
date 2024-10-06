@@ -36,10 +36,11 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
         </Card.Text>
         <Button
           onClick={() => onToggleFavorite(movie._id)}
-          variant={isFavorite(movie._id) ? "danger" : "primary"}
+          variant={isFavorite(movie._id) ? "danger" : "primary"} // Dynamically changing the button style
         >
-          {isFavorite(movie._id) ? "Remove from Favorites" : "Add to Favorites"}
+          {isFavorite(movie._id) ? "Remove from Favorites" : "Add to Favorites"}{" "}
         </Button>
+
         <Link to="/">
           <Button variant="secondary">Back</Button>
         </Link>

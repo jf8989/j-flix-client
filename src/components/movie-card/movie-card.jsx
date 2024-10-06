@@ -15,8 +15,8 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
           <Button variant="link">Open</Button>
         </Link>
         <Button
-          variant={isFavorite ? "danger" : "primary"}
-          onClick={() => onToggleFavorite(movie._id)}
+          variant={isFavorite ? "danger" : "primary"} // Change color based on favorite status
+          onClick={() => onToggleFavorite(movie._id)} // Toggle favorite status
         >
           {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
         </Button>
@@ -33,5 +33,5 @@ MovieCard.propTypes = {
     description: PropTypes.string.isRequired,
   }).isRequired,
   onToggleFavorite: PropTypes.func.isRequired,
-  isFavorite: PropTypes.bool.isRequired,
+  isFavorite: PropTypes.bool.isRequired, // This should always be a boolean
 };

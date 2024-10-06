@@ -29,7 +29,11 @@ const MainView = () => {
 
   const [user, setUser] = useState(
     parsedUser
-      ? { ...parsedUser, favoriteMovies: parsedUser.favoriteMovies || [] }
+      ? {
+          ...parsedUser,
+          favoriteMovies:
+            parsedUser.favoriteMovies || parsedUser.FavoriteMovies || [],
+        }
       : null
   );
   const [token, setToken] = useState(storedToken ? storedToken : null);
@@ -72,8 +76,7 @@ const MainView = () => {
       return;
     }
 
-    const isFavorite =
-      user.favoriteMovies && user.favoriteMovies.includes(movieId);
+    const isFavorite = user.favoriteMovies.includes(movieId);
     const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
     const method = isFavorite ? "DELETE" : "POST";
 
@@ -85,15 +88,30 @@ const MainView = () => {
       },
     })
       .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
+        if (!response.ok) {
           throw new Error("Failed to update favorites");
         }
+        return response.json();
       })
       .then((updatedUser) => {
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser({
+          ...user,
+          favoriteMovies:
+            updatedUser.favoriteMovies || updatedUser.FavoriteMovies,
+        });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...updatedUser,
+            favoriteMovies:
+              updatedUser.favoriteMovies || updatedUser.FavoriteMovies,
+          })
+        );
+        alert(
+          isFavorite
+            ? "Movie removed from favorites!"
+            : "Movie added to favorites!"
+        );
       })
       .catch((error) => {
         console.error("Error updating favorites:", error);
@@ -178,15 +196,15 @@ const MainView = () => {
                       movies={movies}
                       onToggleFavorite={onToggleFavorite}
                       isFavorite={(movieId) =>
-                        user.favoriteMovies &&
-                        user.favoriteMovies.includes(movieId)
-                      }
+                        user?.FavoriteMovies?.includes(movieId) || false
+                      } // Ensuring boolean
                     />
                   </Col>
                 )}
               </>
             }
           />
+
           <Route
             path="/"
             element={
@@ -209,9 +227,8 @@ const MainView = () => {
                             movie={movie}
                             onToggleFavorite={onToggleFavorite}
                             isFavorite={
-                              user.favoriteMovies &&
-                              user.favoriteMovies.includes(movie._id)
-                            }
+                              user?.FavoriteMovies?.includes(movie._id) || false
+                            } // Ensuring boolean
                           />
                         </Col>
                       ))}
