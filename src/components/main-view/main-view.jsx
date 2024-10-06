@@ -15,12 +15,21 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 
 const MainView = () => {
-  const storedUser = JSON.parse(localStorage.getItem("user"));
+  let storedUser = localStorage.getItem("user");
+  let parsedUser = null;
+
+  try {
+    parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error("Error parsing user from localStorage:", error);
+    parsedUser = null;
+  }
+
   const storedToken = localStorage.getItem("token");
 
   const [user, setUser] = useState(
-    storedUser
-      ? { ...storedUser, favoriteMovies: storedUser.favoriteMovies || [] }
+    parsedUser
+      ? { ...parsedUser, favoriteMovies: parsedUser.favoriteMovies || [] }
       : null
   );
   const [token, setToken] = useState(storedToken ? storedToken : null);
@@ -112,12 +121,21 @@ const MainView = () => {
                   <Navigate to="/" />
                 ) : (
                   <Col md={5}>
-                    <SignupView />
+                    <SignupView
+                      onSignupSuccess={() => {
+                        alert("Signup successful!");
+                        window.location.href = "/login"; // Redirect after successful signup
+                      }}
+                      onLogin={() => {
+                        window.location.href = "/login"; // Redirect to login page
+                      }}
+                    />
                   </Col>
                 )}
               </>
             }
           />
+
           <Route
             path="/login"
             element={
