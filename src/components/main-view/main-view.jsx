@@ -122,12 +122,17 @@ const MainView = () => {
                 ) : (
                   <Col md={5}>
                     <SignupView
-                      onSignupSuccess={() => {
-                        alert("Signup successful!");
-                        window.location.href = "/login"; // Redirect after successful signup
-                      }}
-                      onLogin={() => {
-                        window.location.href = "/login"; // Redirect to login page
+                      onSignupSuccess={(user, token) => {
+                        // Set the user and token in the state and localStorage
+                        const userWithFavorites = {
+                          ...user,
+                          favoriteMovies: user.favoriteMovies || [],
+                        };
+                        setUser(userWithFavorites);
+                        setToken(token);
+
+                        // Redirect to home after successful signup and login
+                        window.location.href = "/";
                       }}
                     />
                   </Col>

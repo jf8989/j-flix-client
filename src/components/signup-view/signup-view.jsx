@@ -1,7 +1,7 @@
 // src/components/signup-view/signup-view.jsx
 import React, { useState } from "react";
 
-export const SignupView = ({ onSignupSuccess, onLogin }) => {
+export const SignupView = ({ onSignupSuccess }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
@@ -19,10 +19,10 @@ export const SignupView = ({ onSignupSuccess, onLogin }) => {
     }
 
     const data = {
-      username: username, // Changed from 'Username' to 'username'
-      password: password, // Changed from 'Password' to 'password'
-      email: email, // Changed from 'Email' to 'email'
-      birthday: birthday, // Changed from 'Birthday' to 'birthday'
+      username: username,
+      password: password,
+      email: email,
+      birthday: birthday,
     };
 
     fetch("https://j-flix-omega.vercel.app/users", {
@@ -31,20 +31,50 @@ export const SignupView = ({ onSignupSuccess, onLogin }) => {
       body: JSON.stringify(data),
     })
       .then((response) => {
-        // Add this to check the response status
-        console.log("Response status:", response.status);
-        return response.json();
+        return response.json(); // Parse the response
       })
       .then((data) => {
-        console.log("Signup response data:", data); // Add this for debugging
+        console.log("Signup response data:", data);
         if (data && data.user) {
-          alert("Signup successful");
-          onSignupSuccess();
+          // User registered successfully, now try to log the user in automatically
+          autoLogin(username, password); // Attempt login after signup
         } else {
           alert("Signup failed: " + (data.message || "Unknown error"));
         }
       })
-      .catch((e) => alert("Error: " + e));
+      .catch((e) => {
+        alert("Error: " + e);
+      });
+  };
+
+  const autoLogin = (username, password) => {
+    // Attempt to log the user in automatically after signup
+    fetch("https://j-flix-omega.vercel.app/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Login failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data && data.token) {
+          // Store the user and token in localStorage
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", data.token);
+
+          // Call the onSignupSuccess to update the app state and redirect
+          onSignupSuccess(data.user, data.token);
+        } else {
+          throw new Error("Login failed");
+        }
+      })
+      .catch((e) => {
+        alert("Login failed: " + e.message);
+      });
   };
 
   return (
@@ -99,7 +129,7 @@ export const SignupView = ({ onSignupSuccess, onLogin }) => {
       {/* Button to switch to Login */}
       <p>
         Already have an account?{" "}
-        <button type="button" onClick={onLogin}>
+        <button type="button" onClick={() => (window.location.href = "/login")}>
           Log In Here
         </button>
       </p>
