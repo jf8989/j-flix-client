@@ -1,7 +1,7 @@
 // src/components/login-view/login-view.jsx
 import React, { useState } from "react";
 
-export const LoginView = ({ onLoggedIn, onSignup }) => {
+export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -9,45 +9,30 @@ export const LoginView = ({ onLoggedIn, onSignup }) => {
     event.preventDefault();
 
     const data = {
-      username: username.toLowerCase(), // Convert to lowercase here
+      username: username,
       password: password,
     };
 
-    // Add this console log
-    console.log("Sending login data:", data);
-
     fetch("https://j-flix-omega.vercel.app/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Origin: "http://localhost:1234",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
-      .then((response) => {
-        // Add this console log
-        console.log("Response status:", response.status);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        // Add this console log
-        console.log("Login response data:", data);
-
         if (data.token) {
-          localStorage.setItem("token", data.token);
+          onLoggedIn(data.user, data.token);
+
+          // Save user and token to localStorage for persistence
           localStorage.setItem("user", JSON.stringify(data.user));
-          onLoggedIn(data.user);
+          localStorage.setItem("token", data.token);
         } else {
           alert("Login failed");
         }
       })
       .catch((e) => {
-        console.error("Login error:", e);
-        alert("Error: " + e.message);
+        alert("Login failed");
+        console.error(e);
       });
   };
 
@@ -71,15 +56,7 @@ export const LoginView = ({ onLoggedIn, onSignup }) => {
           required
         />
       </label>
-      <button type="submit">Login</button>
-
-      {/* Button to switch to Signup */}
-      <p>
-        Don’t have an account?{" "}
-        <button type="button" onClick={onSignup}>
-          Sign Up Here
-        </button>
-      </p>
+      <button type="submit">Submit</button>
     </form>
   );
 };
