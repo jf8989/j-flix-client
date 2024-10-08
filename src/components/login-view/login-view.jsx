@@ -1,4 +1,3 @@
-// src/components/login-view/login-view.jsx
 import React, { useState } from "react";
 
 export const LoginView = ({ onLoggedIn }) => {

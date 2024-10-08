@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, Form, Row, Col } from "react-bootstrap"; // Import Row and Col
+import { Button, Card, Form, Row, Col } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 
 // Function to format the date to yyyy-MM-dd for input type="date"
 const formatDate = (dateString) => {
+  if (!dateString) return "";
   const date = new Date(dateString);
   return date.toISOString().split("T")[0]; // Get the date part only
 };
@@ -17,10 +18,12 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
 
   // Populate user data and favorite movies
   useEffect(() => {
-    setUsername(user.Username);
-    setEmail(user.Email);
-    setBirthday(formatDate(user.Birthday));
-    setFavoriteMovies(user.favoriteMovies || []); // Use favoriteMovies from user state
+    if (user) {
+      setUsername(user.Username || "");
+      setEmail(user.Email || "");
+      setBirthday(formatDate(user.Birthday));
+      setFavoriteMovies(user.FavoriteMovies || []);
+    }
   }, [user]);
 
   const handleSubmit = (event) => {
@@ -28,11 +31,11 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
 
     // Prepare the object with only modified fields
     const updatedFields = {};
-    if (username !== user.Username) updatedFields.username = username;
-    if (password) updatedFields.password = password; // If the password is not empty, update it
-    if (email !== user.Email) updatedFields.email = email;
+    if (username !== user.Username) updatedFields.Username = username;
+    if (password) updatedFields.Password = password; // If the password is not empty, update it
+    if (email !== user.Email) updatedFields.Email = email;
     if (birthday !== formatDate(user.Birthday))
-      updatedFields.birthday = birthday;
+      updatedFields.Birthday = birthday;
 
     if (Object.keys(updatedFields).length === 0) {
       alert("No fields have been updated.");
@@ -198,10 +201,10 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
         </Button>
 
         <h2>Favorite Movies</h2>
-        {movies.length > 0 && user.favoriteMovies.length > 0 ? (
+        {movies.length > 0 && favoriteMovies.length > 0 ? (
           <Row>
             {movies
-              .filter((movie) => user.favoriteMovies.includes(movie._id))
+              .filter((movie) => favoriteMovies.includes(movie._id))
               .map((movie) => (
                 <Col className="mb-4" key={movie._id} md={3}>
                   <MovieCard

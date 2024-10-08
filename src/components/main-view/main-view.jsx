@@ -14,47 +14,37 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 
 const MainView = () => {
-  let storedUser = localStorage.getItem("user");
-  let parsedUser = storedUser ? JSON.parse(storedUser) : null;
-
+  const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
 
-  const [user, setUser] = useState(
-    parsedUser
-      ? {
-          ...parsedUser,
-          favoriteMovies:
-            parsedUser.favoriteMovies || parsedUser.FavoriteMovies || [],
-        }
-      : null
-  );
-  const [token, setToken] = useState(storedToken ? storedToken : null);
+  const [user, setUser] = useState(storedUser);
+  const [token, setToken] = useState(storedToken);
   const [movies, setMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     fetch("https://j-flix-omega.vercel.app/movies", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
       .then((data) => {
-        const moviesFromApi = data.map((movie) => {
-          return {
-            _id: movie._id,
-            title: movie.title,
-            imageURL: movie.imageURL,
-            description: movie.description,
-            genre: {
-              name: movie.genre.name,
-              description: movie.genre.description,
-            },
-            director: {
-              name: movie.director.name,
-            },
-          };
-        });
+        const moviesFromApi = data.map((movie) => ({
+          _id: movie._id,
+          title: movie.title,
+          imageURL: movie.imageURL,
+          description: movie.description,
+          genre: {
+            name: movie.genre.name,
+            description: movie.genre.description,
+          },
+          director: {
+            name: movie.director.name,
+          },
+        }));
         setMovies(moviesFromApi);
       })
       .catch((error) => {
@@ -68,7 +58,7 @@ const MainView = () => {
       return;
     }
 
-    const isFavorite = user.favoriteMovies.includes(movieId);
+    const isFavorite = user.FavoriteMovies.includes(movieId);
     const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
     const method = isFavorite ? "DELETE" : "POST";
 
@@ -87,23 +77,16 @@ const MainView = () => {
       })
       .then((updatedUser) => {
         const updatedFavorites = isFavorite
-          ? user.favoriteMovies.filter((id) => id !== movieId)
-          : [...user.favoriteMovies, movieId];
+          ? user.FavoriteMovies.filter((id) => id !== movieId)
+          : [...user.FavoriteMovies, movieId];
 
-        // Update local state immediately
-        setUser({
+        const newUser = {
           ...user,
-          favoriteMovies: updatedFavorites,
-        });
+          FavoriteMovies: updatedFavorites,
+        };
 
-        // Update localStorage
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            ...user,
-            favoriteMovies: updatedFavorites,
-          })
-        );
+        setUser(newUser);
+        localStorage.setItem("user", JSON.stringify(newUser));
 
         alert(
           isFavorite
@@ -137,20 +120,7 @@ const MainView = () => {
                   <Navigate to="/" />
                 ) : (
                   <Col md={5}>
-                    <SignupView
-                      onSignupSuccess={(user, token) => {
-                        // Set the user and token in the state and localStorage
-                        const userWithFavorites = {
-                          ...user,
-                          favoriteMovies: user.favoriteMovies || [],
-                        };
-                        setUser(userWithFavorites);
-                        setToken(token);
-
-                        // Redirect to home after successful signup and login
-                        window.location.href = "/";
-                      }}
-                    />
+                    <SignupView />
                   </Col>
                 )}
               </>
@@ -167,12 +137,10 @@ const MainView = () => {
                   <Col md={5}>
                     <LoginView
                       onLoggedIn={(user, token) => {
-                        const userWithFavorites = {
-                          ...user,
-                          favoriteMovies: user.favoriteMovies || [],
-                        };
-                        setUser(userWithFavorites);
+                        setUser(user);
                         setToken(token);
+                        localStorage.setItem("user", JSON.stringify(user));
+                        localStorage.setItem("token", token);
                       }}
                     />
                   </Col>
@@ -195,7 +163,7 @@ const MainView = () => {
                       onToggleFavorite={onToggleFavorite}
                       isFavorite={(movieId) =>
                         user?.FavoriteMovies?.includes(movieId) || false
-                      } // Ensuring boolean
+                      }
                     />
                   </Col>
                 )}
@@ -224,7 +192,7 @@ const MainView = () => {
                           <MovieCard
                             movie={movie}
                             onToggleFavorite={onToggleFavorite}
-                            isFavorite={user.favoriteMovies.includes(movie._id)}
+                            isFavorite={user.FavoriteMovies.includes(movie._id)}
                           />
                         </Col>
                       ))}
