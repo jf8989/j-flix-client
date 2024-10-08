@@ -1,4 +1,3 @@
-// src/components/main-view/main-view.jsx
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -87,19 +86,25 @@ const MainView = () => {
         return response.json();
       })
       .then((updatedUser) => {
+        const updatedFavorites = isFavorite
+          ? user.favoriteMovies.filter((id) => id !== movieId)
+          : [...user.favoriteMovies, movieId];
+
+        // Update local state immediately
         setUser({
           ...user,
-          favoriteMovies:
-            updatedUser.favoriteMovies || updatedUser.FavoriteMovies,
+          favoriteMovies: updatedFavorites,
         });
+
+        // Update localStorage
         localStorage.setItem(
           "user",
           JSON.stringify({
-            ...updatedUser,
-            favoriteMovies:
-              updatedUser.favoriteMovies || updatedUser.FavoriteMovies,
+            ...user,
+            favoriteMovies: updatedFavorites,
           })
         );
+
         alert(
           isFavorite
             ? "Movie removed from favorites!"
@@ -219,9 +224,7 @@ const MainView = () => {
                           <MovieCard
                             movie={movie}
                             onToggleFavorite={onToggleFavorite}
-                            isFavorite={
-                              user?.FavoriteMovies?.includes(movie._id) || false
-                            } // Ensuring boolean
+                            isFavorite={user.favoriteMovies.includes(movie._id)}
                           />
                         </Col>
                       ))}

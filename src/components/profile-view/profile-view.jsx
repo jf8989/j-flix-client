@@ -1,4 +1,3 @@
-// src/components/profile-view/profile-view.jsx
 import React, { useState, useEffect } from "react";
 import { Button, Card, Form, Row, Col } from "react-bootstrap"; // Import Row and Col
 import { MovieCard } from "../movie-card/movie-card";
@@ -18,10 +17,10 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
 
   // Populate user data and favorite movies
   useEffect(() => {
-    setUsername(user.Username); // Adjust to user.Username
+    setUsername(user.Username);
     setEmail(user.Email);
-    setBirthday(formatDate(user.Birthday)); // Format birthday to yyyy-MM-dd
-    setFavoriteMovies(user.FavoriteMovies || []); // Ensure it's an array
+    setBirthday(formatDate(user.Birthday));
+    setFavoriteMovies(user.favoriteMovies || []); // Use favoriteMovies from user state
   }, [user]);
 
   const handleSubmit = (event) => {
@@ -199,10 +198,10 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
         </Button>
 
         <h2>Favorite Movies</h2>
-        {movies.length > 0 && favoriteMovies.length > 0 ? (
+        {movies.length > 0 && user.favoriteMovies.length > 0 ? (
           <Row>
             {movies
-              .filter((movie) => favoriteMovies.includes(movie._id))
+              .filter((movie) => user.favoriteMovies.includes(movie._id))
               .map((movie) => (
                 <Col className="mb-4" key={movie._id} md={3}>
                   <MovieCard
