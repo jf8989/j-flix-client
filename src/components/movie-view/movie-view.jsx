@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
+import defaultPoster from "../../assets/images/default-movie-poster.jpg";
 
 export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   const { movieId } = useParams();
@@ -14,14 +15,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
 
   return (
     <Card>
-      <Card.Img
-        variant="top"
-        src={
-          movie.imageURL ||
-          require("../../assets/images/default-movie-poster.jpg")
-        }
-        alt={movie.title}
-      />
+      <Card.Img variant="top" src={defaultPoster} alt={movie.title} />
       <Card.Body>
         <Card.Title>{movie.title}</Card.Title>
         <Card.Text>{movie.description}</Card.Text>

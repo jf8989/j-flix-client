@@ -16,14 +16,7 @@ import { ProfileView } from "../profile-view/profile-view";
 
 const MainView = () => {
   let storedUser = localStorage.getItem("user");
-  let parsedUser = null;
-
-  try {
-    parsedUser = storedUser ? JSON.parse(storedUser) : null;
-  } catch (error) {
-    console.error("Error parsing user from localStorage:", error);
-    parsedUser = null;
-  }
+  let parsedUser = storedUser ? JSON.parse(storedUser) : null;
 
   const storedToken = localStorage.getItem("token");
 
