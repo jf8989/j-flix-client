@@ -1,7 +1,7 @@
-// src/components/login-view/login-view.jsx
 import React, { useState } from "react";
+import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 
-export const LoginView = ({ onLoggedIn, onSignup }) => {
+export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -9,77 +9,73 @@ export const LoginView = ({ onLoggedIn, onSignup }) => {
     event.preventDefault();
 
     const data = {
-      username: username.toLowerCase(), // Convert to lowercase here
+      username: username,
       password: password,
     };
 
-    // Add this console log
-    console.log("Sending login data:", data);
-
     fetch("https://j-flix-omega.vercel.app/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Origin: "http://localhost:1234",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
-      .then((response) => {
-        // Add this console log
-        console.log("Response status:", response.status);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        // Add this console log
-        console.log("Login response data:", data);
-
         if (data.token) {
-          localStorage.setItem("token", data.token);
+          onLoggedIn(data.user, data.token);
+
+          // Save user and token to localStorage for persistence
           localStorage.setItem("user", JSON.stringify(data.user));
-          onLoggedIn(data.user);
+          localStorage.setItem("token", data.token);
         } else {
           alert("Login failed");
         }
       })
       .catch((e) => {
-        console.error("Login error:", e);
-        alert("Error: " + e.message);
+        alert("Login failed");
+        console.error(e);
       });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-      <button type="submit">Login</button>
+    <Container className="mt-5">
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <Card className="shadow">
+            <Card.Body>
+              <h2 className="text-center mb-4">Login to j-Flix</h2>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="formUsername">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </Form.Group>
 
-      {/* Button to switch to Signup */}
-      <p>
-        Don’t have an account?{" "}
-        <button type="button" onClick={onSignup}>
-          Sign Up Here
-        </button>
-      </p>
-    </form>
+                <Form.Group className="mb-3" controlId="formPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                <div className="d-grid gap-2">
+                  <Button variant="primary" type="submit" size="lg">
+                    Login
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };

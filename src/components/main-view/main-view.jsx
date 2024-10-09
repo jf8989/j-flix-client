@@ -1,111 +1,233 @@
-// src/components/main-view/main-view.jsx
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Card } from "react-bootstrap";
+import {
+  BrowserRouter as Router,
+  Route,
+  Navigate,
+  Routes,
+} from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
+import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { ProfileView } from "../profile-view/profile-view";
 
 const MainView = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedToken = localStorage.getItem("token");
+
+  const [user, setUser] = useState(storedUser);
+  const [token, setToken] = useState(storedToken);
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [user, setUser] = useState(
-    localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user"))
-      : null
-  );
-  const [showSignup, setShowSignup] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetch("https://j-flix-omega.vercel.app/movies", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((response) => response.json())
-        .then((data) => setMovies(data))
-        .catch((error) => console.error("Error fetching movies:", error));
+    if (!token) {
+      return;
     }
-  }, [user]);
 
-  const handleMovieClick = (movie) => {
-    setSelectedMovie(movie);
+    fetch("https://j-flix-omega.vercel.app/movies", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const moviesFromApi = data.map((movie) => ({
+          _id: movie._id,
+          title: movie.title,
+          imageURL: movie.imageURL,
+          description: movie.description,
+          genre: {
+            name: movie.genre.name,
+            description: movie.genre.description,
+          },
+          director: {
+            name: movie.director.name,
+          },
+        }));
+        setMovies(moviesFromApi);
+      })
+      .catch((error) => {
+        console.error("Error fetching movies:", error);
+      });
+  }, [token]);
+
+  const onToggleFavorite = (movieId) => {
+    if (!user || !user.Username) {
+      console.error("User is not logged in or username is missing");
+      return;
+    }
+
+    const isFavorite = user.FavoriteMovies.includes(movieId);
+    const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
+    const method = isFavorite ? "DELETE" : "POST";
+
+    fetch(url, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update favorites");
+        }
+        return response.json();
+      })
+      .then((updatedUser) => {
+        const updatedFavorites = isFavorite
+          ? user.FavoriteMovies.filter((id) => id !== movieId)
+          : [...user.FavoriteMovies, movieId];
+
+        const newUser = {
+          ...user,
+          FavoriteMovies: updatedFavorites,
+        };
+
+        setUser(newUser);
+        localStorage.setItem("user", JSON.stringify(newUser));
+
+        alert(
+          isFavorite
+            ? "Movie removed from favorites!"
+            : "Movie added to favorites!"
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating favorites:", error);
+      });
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-  };
-
-  if (!user) {
-    return (
-      <Row className="justify-content-md-center">
-        <Col md={6}>
-          <Card>
-            <Card.Body>
-              {showSignup ? (
-                <SignupView
-                  onSignupSuccess={() => setShowSignup(false)}
-                  onLogin={() => setShowSignup(false)}
-                />
-              ) : (
-                <LoginView
-                  onLoggedIn={(user) => setUser(user)}
-                  onSignup={() => setShowSignup(true)}
-                />
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    );
-  }
 
   return (
-    <>
-      <Row className="mb-4">
-        <Col>
-          <Button variant="primary" onClick={handleLogout}>
-            Logout
-          </Button>
-        </Col>
+    <Router>
+      <NavigationBar
+        user={user}
+        onLoggedOut={() => {
+          setUser(null);
+          setToken(null);
+          localStorage.clear();
+        }}
+        onSearch={setSearchQuery}
+      />
+      <Row className="justify-content-md-center">
+        <Routes>
+          <Route
+            path="/signup"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Col md={5}>
+                    <SignupView />
+                  </Col>
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/login"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Col md={5}>
+                    <LoginView
+                      onLoggedIn={(user, token) => {
+                        setUser(user);
+                        setToken(token);
+                        localStorage.setItem("user", JSON.stringify(user));
+                        localStorage.setItem("token", token);
+                      }}
+                    />
+                  </Col>
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/movies/:movieId"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : movies.length === 0 ? (
+                  <Col>The list is empty!</Col>
+                ) : (
+                  <Col md={8}>
+                    <MovieView
+                      movies={movies}
+                      onToggleFavorite={onToggleFavorite}
+                      isFavorite={(movieId) =>
+                        user?.FavoriteMovies?.includes(movieId) || false
+                      }
+                    />
+                  </Col>
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : movies.length === 0 ? (
+                  <Col>The list is empty!</Col>
+                ) : (
+                  <>
+                    {movies
+                      .filter((movie) =>
+                        movie.title
+                          .toLowerCase()
+                          .includes(searchQuery.toLowerCase())
+                      )
+                      .map((movie) => (
+                        <Col className="mb-4" key={movie._id} md={3}>
+                          <MovieCard
+                            movie={movie}
+                            onToggleFavorite={onToggleFavorite}
+                            isFavorite={user.FavoriteMovies.includes(movie._id)}
+                          />
+                        </Col>
+                      ))}
+                  </>
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <Col md={8}>
+                    <ProfileView
+                      user={user}
+                      token={token}
+                      setUser={setUser}
+                      movies={movies}
+                      onLoggedOut={() => {
+                        setUser(null);
+                        setToken(null);
+                        localStorage.clear();
+                      }}
+                    />
+                  </Col>
+                )}
+              </>
+            }
+          />
+        </Routes>
       </Row>
-      {selectedMovie ? (
-        <Row>
-          <Col>
-            <MovieView
-              movie={selectedMovie}
-              onBackClick={() => setSelectedMovie(null)}
-            />
-          </Col>
-        </Row>
-      ) : (
-        <Row>
-          {movies.length === 0 ? (
-            <Col>
-              <p>Loading movies...</p>
-            </Col>
-          ) : (
-            movies.map((movie) => (
-              <Col
-                key={movie._id}
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                className="mb-4"
-              >
-                <MovieCard
-                  movie={movie}
-                  onMovieClick={() => handleMovieClick(movie)}
-                />
-              </Col>
-            ))
-          )}
-        </Row>
-      )}
-    </>
+    </Router>
   );
 };
 
