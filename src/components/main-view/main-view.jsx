@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -6,7 +6,7 @@ import {
   Navigate,
   Routes,
 } from "react-router-dom";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Alert, Spinner } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -14,12 +14,14 @@ import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 import { MovieFilter } from "../movie-filter/movie-filter";
-import { setMovies } from "../../redux/moviesSlice";
+import { fetchMovies } from "../../redux/moviesSlice";
 
 const MainView = () => {
   const dispatch = useDispatch();
   const movies = useSelector((state) => state.movies.list);
   const filter = useSelector((state) => state.movies.filter);
+  const moviesStatus = useSelector((state) => state.movies.status);
+  const error = useSelector((state) => state.movies.error);
 
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
@@ -28,85 +30,80 @@ const MainView = () => {
   const [token, setToken] = useState(storedToken);
 
   useEffect(() => {
-    if (!token) {
-      return;
+    if (token && moviesStatus === "idle") {
+      dispatch(fetchMovies(token));
     }
+  }, [token, moviesStatus, dispatch]);
 
-    fetch("https://j-flix-omega.vercel.app/movies", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const moviesFromApi = data.map((movie) => ({
-          _id: movie._id,
-          title: movie.title,
-          imageURL: movie.imageURL,
-          description: movie.description,
-          genre: {
-            name: movie.genre.name,
-            description: movie.genre.description,
-          },
-          director: {
-            name: movie.director.name,
-          },
-        }));
-        dispatch(setMovies(moviesFromApi));
+  const onToggleFavorite = useCallback(
+    (movieId) => {
+      if (!user || !user.Username) {
+        console.error("User is not logged in or username is missing");
+        return;
+      }
+
+      const isFavorite = user.FavoriteMovies.includes(movieId);
+      const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
+      const method = isFavorite ? "DELETE" : "POST";
+
+      fetch(url, {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => {
-        console.error("Error fetching movies:", error);
-      });
-  }, [token, dispatch]);
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to update favorites");
+          }
+          return response.json();
+        })
+        .then((updatedUser) => {
+          const updatedFavorites = isFavorite
+            ? user.FavoriteMovies.filter((id) => id !== movieId)
+            : [...user.FavoriteMovies, movieId];
 
-  const onToggleFavorite = (movieId) => {
-    if (!user || !user.Username) {
-      console.error("User is not logged in or username is missing");
-      return;
-    }
+          const newUser = {
+            ...user,
+            FavoriteMovies: updatedFavorites,
+          };
 
-    const isFavorite = user.FavoriteMovies.includes(movieId);
-    const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
-    const method = isFavorite ? "DELETE" : "POST";
+          setUser(newUser);
+          localStorage.setItem("user", JSON.stringify(newUser));
 
-    fetch(url, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to update favorites");
-        }
-        return response.json();
-      })
-      .then((updatedUser) => {
-        const updatedFavorites = isFavorite
-          ? user.FavoriteMovies.filter((id) => id !== movieId)
-          : [...user.FavoriteMovies, movieId];
-
-        const newUser = {
-          ...user,
-          FavoriteMovies: updatedFavorites,
-        };
-
-        setUser(newUser);
-        localStorage.setItem("user", JSON.stringify(newUser));
-
-        alert(
-          isFavorite
-            ? "Movie removed from favorites!"
-            : "Movie added to favorites!"
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating favorites:", error);
-      });
-  };
-
-  const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(filter.toLowerCase())
+          alert(
+            isFavorite
+              ? "Movie removed from favorites!"
+              : "Movie added to favorites!"
+          );
+        })
+        .catch((error) => {
+          console.error("Error updating favorites:", error);
+        });
+    },
+    [user, token]
   );
+
+  const filteredMovies = useMemo(
+    () =>
+      movies.filter((movie) =>
+        movie.title.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [movies, filter]
+  );
+
+  if (moviesStatus === "loading") {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    );
+  }
+
+  if (moviesStatus === "failed") {
+    return <Alert variant="danger">Error: {error}</Alert>;
+  }
 
   return (
     <Router>
