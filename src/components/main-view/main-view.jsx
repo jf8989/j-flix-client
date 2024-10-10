@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,15 +13,19 @@ import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
+import { MovieFilter } from "../movie-filter/movie-filter";
+import { setMovies } from "../../redux/moviesSlice";
 
 const MainView = () => {
+  const dispatch = useDispatch();
+  const movies = useSelector((state) => state.movies.list);
+  const filter = useSelector((state) => state.movies.filter);
+
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
 
   const [user, setUser] = useState(storedUser);
   const [token, setToken] = useState(storedToken);
-  const [movies, setMovies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!token) {
@@ -45,12 +50,12 @@ const MainView = () => {
             name: movie.director.name,
           },
         }));
-        setMovies(moviesFromApi);
+        dispatch(setMovies(moviesFromApi));
       })
       .catch((error) => {
         console.error("Error fetching movies:", error);
       });
-  }, [token]);
+  }, [token, dispatch]);
 
   const onToggleFavorite = (movieId) => {
     if (!user || !user.Username) {
@@ -99,6 +104,10 @@ const MainView = () => {
       });
   };
 
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
     <Router>
       <NavigationBar
@@ -108,7 +117,6 @@ const MainView = () => {
           setToken(null);
           localStorage.clear();
         }}
-        onSearch={setSearchQuery}
       />
       <Row className="justify-content-md-center">
         <Routes>
@@ -181,21 +189,16 @@ const MainView = () => {
                   <Col>The list is empty!</Col>
                 ) : (
                   <>
-                    {movies
-                      .filter((movie) =>
-                        movie.title
-                          .toLowerCase()
-                          .includes(searchQuery.toLowerCase())
-                      )
-                      .map((movie) => (
-                        <Col className="mb-4" key={movie._id} md={3}>
-                          <MovieCard
-                            movie={movie}
-                            onToggleFavorite={onToggleFavorite}
-                            isFavorite={user.FavoriteMovies.includes(movie._id)}
-                          />
-                        </Col>
-                      ))}
+                    <MovieFilter />
+                    {filteredMovies.map((movie) => (
+                      <Col className="mb-4" key={movie._id} md={3}>
+                        <MovieCard
+                          movie={movie}
+                          onToggleFavorite={onToggleFavorite}
+                          isFavorite={user.FavoriteMovies.includes(movie._id)}
+                        />
+                      </Col>
+                    ))}
                   </>
                 )}
               </>

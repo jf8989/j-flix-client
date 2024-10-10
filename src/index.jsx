@@ -1,6 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Container } from "react-bootstrap";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 import MainView from "./components/main-view/main-view";
 
 // Import statement to indicate that you need to bundle `./index.scss`
@@ -9,9 +11,11 @@ import "./index.scss";
 // Main component (will eventually use all the others)
 const MyFlixApplication = () => {
   return (
-    <Container>
-      <MainView />
-    </Container>
+    <Provider store={store}>
+      <Container>
+        <MainView />
+      </Container>
+    </Provider>
   );
 };
 
