@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, Form, Row, Col } from "react-bootstrap";
+import { Button, Card, Form, Row, Col, Container } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 
 // Function to format the date to yyyy-MM-dd for input type="date"
@@ -100,7 +100,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
       });
   };
 
-  const handleToggleFavorite = (movieId) => {
+  const onToggleFavorite = (movieId) => {
     const isFavorite = favoriteMovies.includes(movieId);
     const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
     const method = isFavorite ? "DELETE" : "POST";
@@ -151,74 +151,88 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   };
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>Profile</Card.Title>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formUsername">
-            <Form.Label>Username:</Form.Label>
-            <Form.Control
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              minLength="3"
-              readOnly
-            />
-          </Form.Group>
-          <Form.Group controlId="formPassword">
-            <Form.Label>Password:</Form.Label>
-            <Form.Control
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formEmail">
-            <Form.Label>Email:</Form.Label>
-            <Form.Control
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formBirthday">
-            <Form.Label>Birthday:</Form.Label>
-            <Form.Control
-              type="date"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Update
-          </Button>
-        </Form>
-        <Button variant="danger" onClick={handleDeregister}>
-          Deregister
-        </Button>
-
-        <h2>Favorite Movies</h2>
-        {movies.length > 0 && favoriteMovies.length > 0 ? (
-          <Row>
-            {movies
-              .filter((movie) => favoriteMovies.includes(movie._id))
-              .map((movie) => (
-                <Col className="mb-4" key={movie._id} md={3}>
-                  <MovieCard
-                    movie={movie}
-                    onToggleFavorite={handleToggleFavorite}
-                    isFavorite={true}
+    <Container fluid className="profile-view p-3">
+      <Row>
+        <Col md={4} lg={3} className="mb-4">
+          <Card className="bg-dark text-white h-100">
+            <Card.Body>
+              <Card.Title as="h2" className="text-danger mb-4">
+                Profile Information
+              </Card.Title>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="formUsername" className="mb-3">
+                  <Form.Label>Username:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    minLength="3"
+                    readOnly
+                    className="bg-secondary text-white"
                   />
-                </Col>
-              ))}
-          </Row>
-        ) : (
-          <p>No favorite movies selected.</p>
-        )}
-      </Card.Body>
-    </Card>
+                </Form.Group>
+                <Form.Group controlId="formPassword" className="mb-3">
+                  <Form.Label>New Password:</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-secondary text-white"
+                  />
+                </Form.Group>
+                <Form.Group controlId="formEmail" className="mb-3">
+                  <Form.Label>Email:</Form.Label>
+                  <Form.Control
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="bg-secondary text-white"
+                  />
+                </Form.Group>
+                <Form.Group controlId="formBirthday" className="mb-3">
+                  <Form.Label>Birthday:</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={birthday}
+                    onChange={(e) => setBirthday(e.target.value)}
+                    className="bg-secondary text-white"
+                  />
+                </Form.Group>
+                <div className="d-grid gap-2">
+                  <Button variant="danger" type="submit">
+                    Update
+                  </Button>
+                  <Button variant="outline-danger" onClick={handleDeregister}>
+                    Deregister
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={8} lg={9}>
+          <h2 className="text-white mb-4">Favorite Movies</h2>
+          {movies.length > 0 && favoriteMovies.length > 0 ? (
+            <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
+              {movies
+                .filter((movie) => favoriteMovies.includes(movie._id))
+                .map((movie) => (
+                  <Col key={movie._id}>
+                    <MovieCard
+                      movie={movie}
+                      onToggleFavorite={onToggleFavorite}
+                      isFavorite={true}
+                    />
+                  </Col>
+                ))}
+            </Row>
+          ) : (
+            <p className="text-white">No favorite movies selected.</p>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };

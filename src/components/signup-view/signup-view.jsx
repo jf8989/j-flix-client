@@ -81,7 +81,7 @@ export const SignupView = ({ onSignupSuccess }) => {
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={6}>
-          <Card className="shadow">
+          <Card className="bg-dark text-white">
             <Card.Body>
               <h2 className="text-center mb-4">Sign Up for j-Flix</h2>
               <Form onSubmit={handleSubmit}>
@@ -93,6 +93,7 @@ export const SignupView = ({ onSignupSuccess }) => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
@@ -104,6 +105,7 @@ export const SignupView = ({ onSignupSuccess }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
@@ -115,6 +117,7 @@ export const SignupView = ({ onSignupSuccess }) => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
@@ -126,6 +129,7 @@ export const SignupView = ({ onSignupSuccess }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
@@ -135,13 +139,14 @@ export const SignupView = ({ onSignupSuccess }) => {
                     type="date"
                     value={birthday}
                     onChange={(e) => setBirthday(e.target.value)}
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
                 {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
                 <div className="d-grid gap-2">
-                  <Button variant="primary" type="submit" size="lg">
+                  <Button variant="danger" type="submit" size="lg">
                     Sign Up
                   </Button>
                 </div>
@@ -153,6 +158,7 @@ export const SignupView = ({ onSignupSuccess }) => {
                   <Button
                     variant="link"
                     onClick={() => (window.location.href = "/login")}
+                    className="text-danger"
                   >
                     Log In Here
                   </Button>

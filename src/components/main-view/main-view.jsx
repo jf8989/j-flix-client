@@ -6,7 +6,7 @@ import {
   Navigate,
   Routes,
 } from "react-router-dom";
-import { Row, Col, Alert, Spinner } from "react-bootstrap";
+import { Row, Col, Alert, Spinner, Container } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -115,7 +115,7 @@ const MainView = () => {
           localStorage.clear();
         }}
       />
-      <Row className="justify-content-md-center">
+      <Container fluid>
         <Routes>
           <Route
             path="/signup"
@@ -124,9 +124,11 @@ const MainView = () => {
                 {user ? (
                   <Navigate to="/" />
                 ) : (
-                  <Col md={5}>
-                    <SignupView />
-                  </Col>
+                  <Row className="justify-content-md-center">
+                    <Col md={5}>
+                      <SignupView />
+                    </Col>
+                  </Row>
                 )}
               </>
             }
@@ -139,16 +141,18 @@ const MainView = () => {
                 {user ? (
                   <Navigate to="/" />
                 ) : (
-                  <Col md={5}>
-                    <LoginView
-                      onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                        localStorage.setItem("user", JSON.stringify(user));
-                        localStorage.setItem("token", token);
-                      }}
-                    />
-                  </Col>
+                  <Row className="justify-content-md-center">
+                    <Col md={5}>
+                      <LoginView
+                        onLoggedIn={(user, token) => {
+                          setUser(user);
+                          setToken(token);
+                          localStorage.setItem("user", JSON.stringify(user));
+                          localStorage.setItem("token", token);
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 )}
               </>
             }
@@ -162,15 +166,17 @@ const MainView = () => {
                 ) : movies.length === 0 ? (
                   <Col>The list is empty!</Col>
                 ) : (
-                  <Col md={8}>
-                    <MovieView
-                      movies={movies}
-                      onToggleFavorite={onToggleFavorite}
-                      isFavorite={(movieId) =>
-                        user?.FavoriteMovies?.includes(movieId) || false
-                      }
-                    />
-                  </Col>
+                  <Row className="justify-content-md-center">
+                    <Col md={8}>
+                      <MovieView
+                        movies={movies}
+                        onToggleFavorite={onToggleFavorite}
+                        isFavorite={(movieId) =>
+                          user?.FavoriteMovies?.includes(movieId) || false
+                        }
+                      />
+                    </Col>
+                  </Row>
                 )}
               </>
             }
@@ -187,15 +193,17 @@ const MainView = () => {
                 ) : (
                   <>
                     <MovieFilter />
-                    {filteredMovies.map((movie) => (
-                      <Col className="mb-4" key={movie._id} md={3}>
-                        <MovieCard
-                          movie={movie}
-                          onToggleFavorite={onToggleFavorite}
-                          isFavorite={user.FavoriteMovies.includes(movie._id)}
-                        />
-                      </Col>
-                    ))}
+                    <Row>
+                      {filteredMovies.map((movie) => (
+                        <Col className="mb-4" key={movie._id} md={3}>
+                          <MovieCard
+                            movie={movie}
+                            onToggleFavorite={onToggleFavorite}
+                            isFavorite={user.FavoriteMovies.includes(movie._id)}
+                          />
+                        </Col>
+                      ))}
+                    </Row>
                   </>
                 )}
               </>
@@ -208,25 +216,23 @@ const MainView = () => {
                 {!user ? (
                   <Navigate to="/login" replace />
                 ) : (
-                  <Col md={8}>
-                    <ProfileView
-                      user={user}
-                      token={token}
-                      setUser={setUser}
-                      movies={movies}
-                      onLoggedOut={() => {
-                        setUser(null);
-                        setToken(null);
-                        localStorage.clear();
-                      }}
-                    />
-                  </Col>
+                  <ProfileView
+                    user={user}
+                    token={token}
+                    setUser={setUser}
+                    movies={movies}
+                    onLoggedOut={() => {
+                      setUser(null);
+                      setToken(null);
+                      localStorage.clear();
+                    }}
+                  />
                 )}
               </>
             }
           />
         </Routes>
-      </Row>
+      </Container>
     </Router>
   );
 };

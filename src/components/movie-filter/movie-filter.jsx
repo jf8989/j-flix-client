@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilter } from "../../redux/moviesSlice";
-import { Form } from "react-bootstrap";
+import { Form, Container } from "react-bootstrap";
 
 export function MovieFilter() {
   const dispatch = useDispatch();
@@ -15,11 +15,15 @@ export function MovieFilter() {
   );
 
   return (
-    <Form.Control
-      type="text"
-      placeholder="Filter movies..."
-      value={filter}
-      onChange={handleFilterChange}
-    />
+    <Container className="mb-4">
+      <Form.Control
+        type="text"
+        placeholder="Search movies..."
+        value={filter}
+        onChange={handleFilterChange}
+        className="bg-dark text-white"
+        style={{ border: "1px solid #ffffff" }}
+      />
+    </Container>
   );
 }

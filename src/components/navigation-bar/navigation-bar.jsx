@@ -4,14 +4,18 @@ import { Link } from "react-router-dom";
 
 export const NavigationBar = ({ user, onLoggedOut }) => {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container>
-        <Navbar.Brand as={Link} to="/">
+        <Navbar.Brand
+          as={Link}
+          to="/"
+          style={{ color: "var(--primary-color)", fontWeight: "bold" }}
+        >
           j-Flix
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="ms-auto">
             {!user && (
               <>
                 <Nav.Link as={Link} to="/login">

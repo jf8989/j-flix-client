@@ -22,8 +22,6 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((data) => {
         if (data.token) {
           onLoggedIn(data.user, data.token);
-
-          // Save user and token to localStorage for persistence
           localStorage.setItem("user", JSON.stringify(data.user));
           localStorage.setItem("token", data.token);
         } else {
@@ -40,7 +38,7 @@ export const LoginView = ({ onLoggedIn }) => {
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={6}>
-          <Card className="shadow">
+          <Card className="bg-dark text-white">
             <Card.Body>
               <h2 className="text-center mb-4">Login to j-Flix</h2>
               <Form onSubmit={handleSubmit}>
@@ -52,6 +50,7 @@ export const LoginView = ({ onLoggedIn }) => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
@@ -63,11 +62,12 @@ export const LoginView = ({ onLoggedIn }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    className="bg-secondary text-white"
                   />
                 </Form.Group>
 
                 <div className="d-grid gap-2">
-                  <Button variant="primary" type="submit" size="lg">
+                  <Button variant="danger" type="submit" size="lg">
                     Login
                   </Button>
                 </div>
