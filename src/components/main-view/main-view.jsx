@@ -116,25 +116,12 @@ const MainView = () => {
           localStorage.clear();
         }}
       />
-      <Container fluid>
+      <div className="main-content">
         <Routes>
           <Route
             path="/signup"
-            element={
-              <>
-                {user ? (
-                  <Navigate to="/" />
-                ) : (
-                  <Row className="justify-content-md-center">
-                    <Col md={5}>
-                      <SignupView />
-                    </Col>
-                  </Row>
-                )}
-              </>
-            }
+            element={<>{user ? <Navigate to="/" /> : <SignupView />}</>}
           />
-
           <Route
             path="/login"
             element={
@@ -142,18 +129,12 @@ const MainView = () => {
                 {user ? (
                   <Navigate to="/" />
                 ) : (
-                  <Row className="justify-content-md-center">
-                    <Col md={5}>
-                      <LoginView
-                        onLoggedIn={(user, token) => {
-                          setUser(user);
-                          setToken(token);
-                          localStorage.setItem("user", JSON.stringify(user));
-                          localStorage.setItem("token", token);
-                        }}
-                      />
-                    </Col>
-                  </Row>
+                  <LoginView
+                    onLoggedIn={(user, token) => {
+                      setUser(user);
+                      setToken(token);
+                    }}
+                  />
                 )}
               </>
             }
@@ -164,48 +145,36 @@ const MainView = () => {
               <>
                 {!user ? (
                   <Navigate to="/login" replace />
-                ) : movies.length === 0 ? (
-                  <Col>The list is empty!</Col>
                 ) : (
-                  <Row className="justify-content-md-center">
-                    <Col md={8}>
-                      <MovieView
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                        isFavorite={(movieId) =>
-                          user?.FavoriteMovies?.includes(movieId) || false
-                        }
-                      />
-                    </Col>
-                  </Row>
+                  <MovieView
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
                 )}
               </>
             }
           />
-
           <Route
             path="/"
             element={
               <>
                 {!user ? (
                   <Navigate to="/login" replace />
-                ) : movies.length === 0 ? (
-                  <Col>The list is empty!</Col>
                 ) : (
-                  <>
+                  <div className="movie-container">
                     <MovieFilter />
-                    <Row>
+                    <div className="movie-grid">
                       {filteredMovies.map((movie) => (
-                        <Col className="mb-4" key={movie._id} md={3}>
+                        <div key={movie._id} className="movie-card">
                           <MovieCard
                             movie={movie}
                             onToggleFavorite={onToggleFavorite}
                             isFavorite={user.FavoriteMovies.includes(movie._id)}
                           />
-                        </Col>
+                        </div>
                       ))}
-                    </Row>
-                  </>
+                    </div>
+                  </div>
                 )}
               </>
             }
@@ -233,8 +202,8 @@ const MainView = () => {
             }
           />
         </Routes>
-      </Container>
-      <Footer /> {/* Add the Footer component here */}
+      </div>
+      <Footer />
     </Router>
   );
 };
