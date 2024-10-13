@@ -33,7 +33,10 @@ body {
 .navbar {
   background-color: rgba(0, 0, 0, 0.9) !important;
   transition: background-color 0.3s;
-  padding: 0 4%;
+  padding: 0 2%;
+  width: 100%;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
 
   &.navbar-scrolled {
     background-color: rgb(20, 20, 20) !important;
@@ -48,7 +51,7 @@ body {
 
   .nav-link {
     color: #e5e5e5 !important;
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-left: 20px;
     transition: color 0.3s;
 
@@ -71,4 +74,87 @@ body {
       padding: 10px 0;
     }
   }
+
+  .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .navbar-collapse {
+    justify-content: space-between;
+  }
+}
+
+// Footer styles
+.footer {
+  background-color: #000000;
+  color: #757575;
+  padding: 20px 0;
+  font-size: 13px;
+
+  .container {
+    max-width: 980px;
+  }
+
+  .social-icons {
+    font-size: 20px;
+    margin-bottom: 1rem;
+
+    svg {
+      margin-right: 1.5rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .service-code {
+    background-color: transparent;
+    border: 1px solid #757575;
+    color: #757575;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    cursor: pointer;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  .copyright {
+    margin-top: 1rem;
+    font-size: 11px;
+  }
+}
+
+// Ensure footer stays at the bottom
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container-fluid {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
 }

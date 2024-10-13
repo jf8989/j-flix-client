@@ -15,6 +15,7 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 import { MovieFilter } from "../movie-filter/movie-filter";
 import { fetchMovies } from "../../redux/moviesSlice";
+import { Footer } from "../footer/footer";
 
 const MainView = () => {
   const dispatch = useDispatch();
@@ -233,6 +234,7 @@ const MainView = () => {
           />
         </Routes>
       </Container>
+      <Footer /> {/* Add the Footer component here */}
     </Router>
   );
 };
