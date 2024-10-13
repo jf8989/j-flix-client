@@ -29,3 +29,46 @@ body {
     padding-left: 15px;
   }
 }
+
+.navbar {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  transition: background-color 0.3s;
+  padding: 0 4%;
+
+  &.navbar-scrolled {
+    background-color: rgb(20, 20, 20) !important;
+  }
+
+  .navbar-brand {
+    font-size: 1.8rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 25px;
+  }
+
+  .nav-link {
+    color: #e5e5e5 !important;
+    font-size: 0.9rem;
+    margin-left: 20px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #b3b3b3 !important;
+    }
+  }
+
+  .navbar-nav {
+    align-items: center;
+  }
+
+  .navbar-toggler {
+    border: none;
+  }
+
+  @media (max-width: 991px) {
+    .navbar-collapse {
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 10px 0;
+    }
+  }
+}
