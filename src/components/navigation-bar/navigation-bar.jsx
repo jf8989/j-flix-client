@@ -1,25 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { Navbar, Container, Nav } from "react-bootstrap";
+import React, { useEffect, useState, useCallback } from "react";
+import { Navbar, Container, Nav, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setFilter } from "../../redux/moviesSlice";
+import { FaSearch } from "react-icons/fa";
 
 export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  const dispatch = useDispatch();
+
+  const handleFilterChange = useCallback(
+    (e) => {
+      setSearchValue(e.target.value);
+      dispatch(setFilter(e.target.value));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    const handleClickOutside = (event) => {
+      if (
+        showSearch &&
+        !event.target.closest(".navbar .form-control") &&
+        !event.target.closest(".navbar .fa-search")
+      ) {
+        setShowSearch(false);
+        setSearchValue("");
+        dispatch(setFilter(""));
       }
     };
 
     window.addEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [showSearch, dispatch]);
 
   return (
     <Navbar
@@ -56,7 +81,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               </>
             )}
           </Nav>
-          <Nav>
+          <Nav className="align-items-center">
             {!user && (
               <>
                 <Nav.Link as={Link} to="/login">
@@ -69,7 +94,25 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             )}
             {user && (
               <>
-                <Nav.Link href="#">Search</Nav.Link>
+                {showSearch ? (
+                  <Form
+                    className={`d-flex align-items-center ${
+                      showSearch ? "show-search" : ""
+                    }`}
+                  >
+                    <Form.Control
+                      type="text"
+                      placeholder="Search movies..."
+                      value={searchValue}
+                      onChange={handleFilterChange}
+                      className="bg-dark text-white me-2"
+                    />
+                  </Form>
+                ) : (
+                  <Nav.Link onClick={() => setShowSearch(true)}>
+                    <FaSearch />
+                  </Nav.Link>
+                )}
                 <Nav.Link href="#">Notifications</Nav.Link>
                 <Nav.Link as={Link} to="/profile">
                   Profile

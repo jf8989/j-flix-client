@@ -13,7 +13,6 @@ import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
-import { MovieFilter } from "../movie-filter/movie-filter";
 import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
 
@@ -168,7 +167,6 @@ const MainView = () => {
                   <Navigate to="/login" replace />
                 ) : (
                   <div className="movie-container">
-                    <MovieFilter />
                     <div className="movie-grid">
                       {filteredMovies.map((movie) => (
                         <div key={movie._id} className="movie-card">

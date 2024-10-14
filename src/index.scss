@@ -134,6 +134,41 @@ body {
   .navbar-collapse {
     justify-content: space-between;
   }
+
+  // Navbar search input
+  .navbar .form-control {
+    width: 0;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    border: none;
+    background-color: transparent;
+    color: #fff;
+  }
+  
+  .navbar .show-search .form-control {
+    width: 150px; // Adjust as needed
+    opacity: 1;
+    background-color: transparent; // Matches the navbar background
+    border-bottom: 1px solid #fff; // Optional underline
+  }
+  
+  .navbar .fa-search {
+    color: #e5e5e5;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: color 0.3s;
+  
+    &:hover {
+      color: #b3b3b3;
+    }
+  }
+  
+  // Adjust alignment of nav items
+  .navbar .nav-link {
+    display: flex;
+    align-items: center;
+  }
 }
 
 // Footer
