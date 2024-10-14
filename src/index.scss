@@ -313,12 +313,24 @@ body {
   .dropdown-menu {
     background-color: rgba(0, 0, 0, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.15);
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   }
+
   .dropdown-item {
     color: white;
     &:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
+  }
+
+  &:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 }
 
@@ -327,4 +339,21 @@ body {
   height: 32px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+// Add styles for smoother dropdown appearance
+.navbar .nav-item.dropdown {
+  &:hover .dropdown-menu {
+    display: block;
+  }
+}
+
+// Ensure the dropdown menu stays open when hovering
+.dropdown-menu {
+  margin-top: 0;
+}
+
+// Add a subtle animation to dropdown items
+.dropdown-item {
+  transition: background-color 0.2s ease;
 }

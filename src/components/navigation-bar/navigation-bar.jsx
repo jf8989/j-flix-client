@@ -10,6 +10,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const searchInputRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -37,6 +38,14 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     const value = e.target.value;
     setSearchValue(value);
     dispatch(setFilter(value));
+  };
+
+  const handleProfileMouseEnter = () => {
+    setIsProfileMenuOpen(true);
+  };
+
+  const handleProfileMouseLeave = () => {
+    setIsProfileMenuOpen(false);
   };
 
   return (
@@ -94,7 +103,13 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             <Nav.Link href="#" title="Notifications">
               <FaBell />
             </Nav.Link>
-            <Dropdown align="end" className="profile-dropdown">
+            <Dropdown
+              align="end"
+              className="profile-dropdown"
+              show={isProfileMenuOpen}
+              onMouseEnter={handleProfileMouseEnter}
+              onMouseLeave={handleProfileMouseLeave}
+            >
               <Dropdown.Toggle as={Nav.Link}>
                 <img src={profilePic} alt="Profile" className="profile-image" />
               </Dropdown.Toggle>
