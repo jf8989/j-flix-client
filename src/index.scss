@@ -18,14 +18,15 @@ body {
 // Movie grid styles
 .movie-container {
   width: 100%;
-  padding: 0 2%;
+  padding: 0;
   margin-top: 1rem;
 
   .movie-grid {
     display: grid;
+    width: 100%; /* Ensure grid takes full width */
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 0.5rem;
-    padding: 0.5rem 0;
+    gap: 1rem; /* Adjust gap for better spacing */
+    padding: 0; /* Remove extra padding */
 
     .movie-card {
       width: 100%;
@@ -36,11 +37,12 @@ body {
 
 @media (min-width: 768px) {
   .movie-container {
-    padding: 0 4%;
+    padding: 0; /* Ensure no side padding */
 
     .movie-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Make it more flexible */
+      gap: 1.5rem; /* Adjust gap for better spacing */
+      padding: 0; /* Remove extra padding */
     }
   }
 }

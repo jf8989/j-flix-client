@@ -86,6 +86,11 @@ const MainView = () => {
     [user, token]
   );
 
+  // Define isFavorite function
+  const isFavorite = (movieId) => {
+    return user && user.FavoriteMovies && user.FavoriteMovies.includes(movieId);
+  };
+
   const filteredMovies = useMemo(
     () =>
       movies.filter((movie) =>
@@ -149,6 +154,7 @@ const MainView = () => {
                   <MovieView
                     movies={movies}
                     onToggleFavorite={onToggleFavorite}
+                    isFavorite={isFavorite} // Pass isFavorite here
                   />
                 )}
               </>
