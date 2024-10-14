@@ -159,8 +159,13 @@ body {
     margin-left: 20px;
     transition: color 0.3s;
   
-    &:hover {
-      color: #b3b3b3;
+    svg {
+      font-size: 1.2rem; // Adjust size as needed
+      vertical-align: middle;
+    }
+
+    &:hover svg {
+      color: #b3b3b3; // This should match your existing hover color
     }
   }
   
@@ -168,6 +173,14 @@ body {
   .navbar .nav-link {
     display: flex;
     align-items: center;
+  }
+
+  .show-search .form-control {
+    width: 150px; // Adjust as needed
+    opacity: 1;
+    background-color: transparent;
+    border-bottom: 1px solid #fff;
+    color: #fff;
   }
 }
 

@@ -3,7 +3,7 @@ import { Navbar, Container, Nav, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setFilter } from "../../redux/moviesSlice";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaBell, FaSignOutAlt, FaUser } from "react-icons/fa";
 
 export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,12 +51,14 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       bg="dark"
       variant="dark"
       expand="lg"
-      className={isScrolled ? "navbar-scrolled" : ""}
+      className={`${isScrolled ? "navbar-scrolled" : ""}`}
       fixed="top"
     >
       <Container fluid>
         <Navbar.Brand as={Link} to="/">
-          <span style={{ color: "#E50914", fontWeight: "bold" }}>j-Flix</span>
+          <span style={{ color: "var(--primary-color)", fontWeight: "bold" }}>
+            j-Flix
+          </span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -81,7 +83,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               </>
             )}
           </Nav>
-          <Nav className="align-items-center">
+          <Nav>
             {!user && (
               <>
                 <Nav.Link as={Link} to="/login">
@@ -94,30 +96,32 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             )}
             {user && (
               <>
-                {showSearch ? (
-                  <Form
-                    className={`d-flex align-items-center ${
-                      showSearch ? "show-search" : ""
-                    }`}
-                  >
+                <Nav.Link
+                  onClick={() => setShowSearch(!showSearch)}
+                  title="Search"
+                >
+                  <FaSearch />
+                </Nav.Link>
+                {showSearch && (
+                  <Form className="d-flex show-search">
                     <Form.Control
                       type="text"
                       placeholder="Search movies..."
                       value={searchValue}
                       onChange={handleFilterChange}
-                      className="bg-dark text-white me-2"
+                      className="me-2"
                     />
                   </Form>
-                ) : (
-                  <Nav.Link onClick={() => setShowSearch(true)}>
-                    <FaSearch />
-                  </Nav.Link>
                 )}
-                <Nav.Link href="#">Notifications</Nav.Link>
-                <Nav.Link as={Link} to="/profile">
-                  Profile
+                <Nav.Link href="#" title="Notifications">
+                  <FaBell />
                 </Nav.Link>
-                <Nav.Link onClick={onLoggedOut}>Logout</Nav.Link>
+                <Nav.Link as={Link} to="/profile" title="Profile">
+                  <FaUser />
+                </Nav.Link>
+                <Nav.Link onClick={onLoggedOut} title="Sign out">
+                  <FaSignOutAlt />
+                </Nav.Link>
               </>
             )}
           </Nav>
