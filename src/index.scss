@@ -98,6 +98,10 @@ body {
     padding-top: 0;
     padding-bottom: 0;
     margin-right: 25px;
+
+    @media (max-width: 991px) {
+      margin-left: 1rem;
+    }
   }
 
   .nav-link {
@@ -117,12 +121,63 @@ body {
 
   .navbar-toggler {
     border: none;
+
+    @media (max-width: 991px) {
+      order: -1;
+    }
   }
 
   @media (max-width: 991px) {
     .navbar-collapse {
+      position: fixed;
+      top: 56px; // Adjust based on your navbar height
+      left: -75%;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-bottom: 15px;
+      width: 75%;
+      height: 100%;
       background-color: rgba(0, 0, 0, 0.9);
-      padding: 10px 0;
+      transition: left 300ms ease-in-out;
+
+      &.show {
+        left: 0;
+      }
+    }
+
+    .navbar-collapse.collapsing {
+      left: -75%;
+      transition: height 0s ease;
+    }
+
+    .navbar-collapse.show {
+      left: 0;
+      transition: left 300ms ease-in-out;
+    }
+
+    .navbar-toggler.collapsed ~ .navbar-collapse {
+      transition: left 300ms ease-in-out;
+    }
+  }
+
+  .mobile-icons {
+    display: none;
+    align-items: center;
+
+    @media (max-width: 991px) {
+      display: flex;
+      
+      > * {
+        margin-left: 1rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .profile-image {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+      }
     }
   }
 
@@ -181,6 +236,61 @@ body {
     background-color: transparent;
     border-bottom: 1px solid #fff;
     color: #fff;
+  }
+
+  .nav-container {
+    @media (max-width: 991px) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  .mobile-search-form {
+    display: none;
+
+    &.show {
+      display: block;
+    }
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    z-index: 1000;
+
+    .form-control {
+      width: 100%;
+      background-color: #333;
+      border: none;
+      color: white;
+      padding: 10px;
+    }
+  }
+
+  .mobile-profile-menu {
+    display: none;
+
+    &.show {
+      display: block;
+    }
+
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    z-index: 1000;
+    width: 200px;
+
+    .nav-link {
+      color: white;
+      padding: 10px;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
   }
 }
 
@@ -327,7 +437,7 @@ body {
     }
   }
 
-  &:hover .dropdown-menu {
+  &.show .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -341,14 +451,14 @@ body {
   cursor: pointer;
 }
 
-// Add styles for smoother dropdown appearance
-.navbar .nav-item.dropdown {
-  &:hover .dropdown-menu {
-    display: block;
-  }
-}
+// Remove styles that open dropdown on hover
+// .navbar .nav-item.dropdown {
+//   &:hover .dropdown-menu {
+//     display: block;
+//   }
+// }
 
-// Ensure the dropdown menu stays open when hovering
+// Ensure the dropdown menu stays properly positioned
 .dropdown-menu {
   margin-top: 0;
 }
