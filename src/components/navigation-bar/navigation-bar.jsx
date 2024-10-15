@@ -14,6 +14,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProfileMenuOpen, setIsMobileProfileMenuOpen] = useState(false);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(1); // Initialize notification count
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
   const mobileProfileMenuRef = useRef(null);
@@ -78,9 +79,20 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleNotificationsToggle = (e) => {
+  // Separate handlers for notifications
+  const handleNotificationsIconClick = (e) => {
     e.stopPropagation();
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
+    if (notificationCount > 0) {
+      setNotificationCount(0); // Reset notification count when opened
+    }
+  };
+
+  const handleNotificationsDropdownToggle = (isOpen) => {
+    setIsNotificationsMenuOpen(isOpen);
+    if (isOpen && notificationCount > 0) {
+      setNotificationCount(0); // Reset notification count when opened
+    }
   };
 
   return (
@@ -163,17 +175,23 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           <Dropdown
             align="end"
             show={isNotificationsMenuOpen}
-            onToggle={handleNotificationsToggle}
+            onToggle={handleNotificationsDropdownToggle}
           >
-            <Dropdown.Toggle as={Nav.Link} id="notifications-dropdown">
+            <Dropdown.Toggle
+              as={Nav.Link}
+              id="notifications-dropdown"
+              style={{ position: "relative" }}
+            >
               <FaBell />
-              <Badge
-                pill
-                bg="danger"
-                style={{ position: "absolute", top: "0", right: "0" }}
-              >
-                1
-              </Badge>
+              {notificationCount > 0 && (
+                <Badge
+                  pill
+                  bg="danger"
+                  style={{ position: "absolute", top: "0", right: "0" }}
+                >
+                  {notificationCount}
+                </Badge>
+              )}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>Welcome to j-Flix!</Dropdown.Item>
@@ -216,21 +234,23 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         <div className="mobile-icons order-4 d-flex d-lg-none">
           <FaSearch onClick={handleSearchToggle} />
           <div style={{ position: "relative" }}>
-            <FaBell onClick={handleNotificationsToggle} />
-            <span
-              style={{
-                position: "absolute",
-                top: "-5px",
-                right: "-10px",
-                backgroundColor: "red",
-                color: "white",
-                borderRadius: "50%",
-                padding: "2px 5px",
-                fontSize: "10px",
-              }}
-            >
-              1
-            </span>
+            <FaBell onClick={handleNotificationsIconClick} />
+            {notificationCount > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-5px",
+                  right: "-10px",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "2px 5px",
+                  fontSize: "10px",
+                }}
+              >
+                {notificationCount}
+              </span>
+            )}
           </div>
           <img
             src={profilePic}
