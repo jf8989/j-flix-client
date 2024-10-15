@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Navbar, Container, Nav, Form, Dropdown } from "react-bootstrap";
+import { Navbar, Container, Nav, Form, Dropdown, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaSearch, FaBell } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -13,9 +13,11 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProfileMenuOpen, setIsMobileProfileMenuOpen] = useState(false);
+  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
   const mobileProfileMenuRef = useRef(null);
+  const notificationsMenuRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,12 +32,15 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         navbarRef.current &&
         !navbarRef.current.contains(event.target) &&
         mobileProfileMenuRef.current &&
-        !mobileProfileMenuRef.current.contains(event.target)
+        !mobileProfileMenuRef.current.contains(event.target) &&
+        notificationsMenuRef.current &&
+        !notificationsMenuRef.current.contains(event.target)
       ) {
         setIsSearchOpen(false);
         setIsProfileMenuOpen(false);
         setIsMobileMenuOpen(false);
         setIsMobileProfileMenuOpen(false);
+        setIsNotificationsMenuOpen(false);
       }
     };
 
@@ -73,6 +78,11 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleNotificationsToggle = (e) => {
+    e.stopPropagation();
+    setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
+  };
+
   return (
     <Navbar
       variant="dark"
@@ -80,13 +90,11 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       className={`styled-navbar ${isScrolled ? "scrolled" : ""}`}
       fixed="top"
       ref={navbarRef}
+      expanded={isMobileMenuOpen}
+      onToggle={handleMobileMenuToggle}
     >
       <Container fluid className="nav-container">
-        <Navbar.Toggle
-          aria-controls="basic-navbar-nav"
-          className="order-0"
-          onClick={handleMobileMenuToggle}
-        />
+        <Navbar.Toggle aria-controls="basic-navbar-nav" className="order-0" />
         <Navbar.Brand
           as={Link}
           to="/"
@@ -95,10 +103,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         >
           j-Flix
         </Navbar.Brand>
-        <Navbar.Collapse
-          id="basic-navbar-nav"
-          className={`order-2 ${isMobileMenuOpen ? "show" : ""}`}
-        >
+        <Navbar.Collapse id="basic-navbar-nav" className="order-2">
           <Nav className="me-auto">
             <Nav.Link
               as={Link}
@@ -155,9 +160,26 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           <Nav.Link as={Link} to="/kids">
             Kids
           </Nav.Link>
-          <Nav.Link href="#" title="Notifications">
-            <FaBell />
-          </Nav.Link>
+          <Dropdown
+            align="end"
+            show={isNotificationsMenuOpen}
+            onToggle={handleNotificationsToggle}
+          >
+            <Dropdown.Toggle as={Nav.Link} id="notifications-dropdown">
+              <FaBell />
+              <Badge
+                pill
+                bg="danger"
+                style={{ position: "absolute", top: "0", right: "0" }}
+              >
+                1
+              </Badge>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item>Welcome to j-Flix!</Dropdown.Item>
+              {/* Add more notifications as needed */}
+            </Dropdown.Menu>
+          </Dropdown>
           <Dropdown
             align="end"
             className={`profile-dropdown ${isProfileMenuOpen ? "show" : ""}`}
@@ -193,7 +215,23 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         </Nav>
         <div className="mobile-icons order-4 d-flex d-lg-none">
           <FaSearch onClick={handleSearchToggle} />
-          <FaBell />
+          <div style={{ position: "relative" }}>
+            <FaBell onClick={handleNotificationsToggle} />
+            <span
+              style={{
+                position: "absolute",
+                top: "-5px",
+                right: "-10px",
+                backgroundColor: "red",
+                color: "white",
+                borderRadius: "50%",
+                padding: "2px 5px",
+                fontSize: "10px",
+              }}
+            >
+              1
+            </span>
+          </div>
           <img
             src={profilePic}
             alt="Profile"
@@ -254,6 +292,15 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         >
           Sign out of Netflix
         </Nav.Link>
+      </div>
+      <div
+        ref={notificationsMenuRef}
+        className={`mobile-notifications-menu d-lg-none ${
+          isNotificationsMenuOpen ? "show" : ""
+        }`}
+      >
+        <div className="notification-item">Welcome to j-Flix!</div>
+        {/* Add more notification items as needed */}
       </div>
     </Navbar>
   );

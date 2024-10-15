@@ -100,7 +100,7 @@ body {
     margin-right: 25px;
 
     @media (max-width: 991px) {
-      margin-left: 1rem;
+      margin-left: 0.5rem; // Adjust this value to move closer to the hamburger icon
     }
   }
 
@@ -131,32 +131,31 @@ body {
     .navbar-collapse {
       position: fixed;
       top: 56px; // Adjust based on your navbar height
-      left: -75%;
+      left: 0;
+      transform: translateX(-100%);
       padding-left: 15px;
       padding-right: 15px;
       padding-bottom: 15px;
       width: 75%;
-      height: 100%;
+      height: auto; // Adjusted to remove extra space
       background-color: rgba(0, 0, 0, 0.9);
-      transition: left 300ms ease-in-out;
+      transition: transform 0.3s ease-in-out;
 
       &.show {
-        left: 0;
+        transform: translateX(0);
       }
     }
 
     .navbar-collapse.collapsing {
-      left: -75%;
-      transition: height 0s ease;
+      transform: translateX(-100%);
     }
 
     .navbar-collapse.show {
-      left: 0;
-      transition: left 300ms ease-in-out;
+      transform: translateX(0);
     }
 
     .navbar-toggler.collapsed ~ .navbar-collapse {
-      transition: left 300ms ease-in-out;
+      transition: transform 0.3s ease-in-out;
     }
   }
 
@@ -171,12 +170,28 @@ body {
         margin-left: 1rem;
         font-size: 1.2rem;
         cursor: pointer;
+        position: relative; // For positioning the badge
       }
 
       .profile-image {
         width: 32px;
         height: 32px;
         border-radius: 4px;
+      }
+
+      // Badge for notifications icon
+      .fa-bell {
+        &:after {
+          content: '1'; // Adjust the number as needed
+          position: absolute;
+          top: -5px;
+          right: -10px;
+          background-color: red;
+          color: white;
+          border-radius: 50%;
+          padding: 2px 5px;
+          font-size: 10px;
+        }
       }
     }
   }
@@ -245,10 +260,16 @@ body {
   }
 
   .mobile-search-form {
-    display: none;
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 
     &.show {
-      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
     position: absolute;
@@ -265,14 +286,24 @@ body {
       border: none;
       color: white;
       padding: 10px;
+
+      &::placeholder {
+        color: #ccc; // Lighter placeholder text
+      }
     }
   }
 
   .mobile-profile-menu {
-    display: none;
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 
     &.show {
-      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
     position: absolute;
@@ -287,6 +318,43 @@ body {
       color: white;
       padding: 10px;
       
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  // Notifications menu
+  .mobile-notifications-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    z-index: 1000;
+    width: 250px;
+
+    .notification-item {
+      color: white;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
       }
