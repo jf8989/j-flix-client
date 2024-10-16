@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
@@ -72,6 +73,14 @@ export const LoginView = ({ onLoggedIn }) => {
                   </Button>
                 </div>
               </Form>
+              <div className="text-center mt-3">
+                <p>
+                  Don't have an account?{" "}
+                  <Link to="/signup" className="text-danger">
+                    Create an account
+                  </Link>
+                </p>
+              </div>
             </Card.Body>
           </Card>
         </Col>

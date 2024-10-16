@@ -112,19 +112,34 @@ const MainView = () => {
 
   return (
     <Router>
-      <NavigationBar
-        user={user}
-        onLoggedOut={() => {
-          setUser(null);
-          setToken(null);
-          localStorage.clear();
-        }}
-      />
+      {user && (
+        <NavigationBar
+          user={user}
+          onLoggedOut={() => {
+            setUser(null);
+            setToken(null);
+            localStorage.clear();
+          }}
+        />
+      )}
       <div className="main-content">
         <Routes>
           <Route
             path="/signup"
-            element={<>{user ? <Navigate to="/" /> : <SignupView />}</>}
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <SignupView
+                    onSignupSuccess={(user, token) => {
+                      setUser(user);
+                      setToken(token);
+                    }}
+                  />
+                )}
+              </>
+            }
           />
           <Route
             path="/login"
@@ -153,7 +168,7 @@ const MainView = () => {
                   <MovieView
                     movies={movies}
                     onToggleFavorite={onToggleFavorite}
-                    isFavorite={isFavorite} // Pass isFavorite here
+                    isFavorite={isFavorite}
                   />
                 )}
               </>
