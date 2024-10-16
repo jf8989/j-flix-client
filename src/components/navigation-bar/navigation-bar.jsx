@@ -14,11 +14,14 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProfileMenuOpen, setIsMobileProfileMenuOpen] = useState(false);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(1); // Initialize notification count
+  const [notificationCount, setNotificationCount] = useState(1);
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
-  const mobileProfileMenuRef = useRef(null);
+  const searchContainerRef = useRef(null);
+  const profileMenuRef = useRef(null);
   const notificationsMenuRef = useRef(null);
+  const mobileProfileMenuRef = useRef(null);
+  const mobileNotificationsMenuRef = useRef(null);
   const dispatch = useDispatch();
   const [isProfileHovered, setIsProfileHovered] = useState(false);
 
@@ -29,15 +32,21 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   }, []);
 
   useEffect(() => {
+    const menuRefs = [
+      navbarRef,
+      searchContainerRef,
+      profileMenuRef,
+      mobileProfileMenuRef,
+      notificationsMenuRef,
+      mobileNotificationsMenuRef,
+    ];
+
     const handleClickOutside = (event) => {
-      if (
-        navbarRef.current &&
-        !navbarRef.current.contains(event.target) &&
-        mobileProfileMenuRef.current &&
-        !mobileProfileMenuRef.current.contains(event.target) &&
-        notificationsMenuRef.current &&
-        !notificationsMenuRef.current.contains(event.target)
-      ) {
+      const clickedInsideMenu = menuRefs.some(
+        (ref) => ref.current && ref.current.contains(event.target)
+      );
+
+      if (!clickedInsideMenu) {
         setIsSearchOpen(false);
         setIsProfileMenuOpen(false);
         setIsMobileMenuOpen(false);
@@ -54,6 +63,9 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
 
   const handleSearchToggle = (e) => {
     e.stopPropagation();
+    setIsNotificationsMenuOpen(false);
+    setIsProfileMenuOpen(false);
+    setIsMobileProfileMenuOpen(false);
     setIsSearchOpen(!isSearchOpen);
     if (!isSearchOpen) {
       setSearchValue("");
@@ -68,37 +80,48 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   };
 
   const handleProfileMenuToggle = (isOpen) => {
+    setIsNotificationsMenuOpen(false);
+    setIsMobileProfileMenuOpen(false);
+    setIsSearchOpen(false);
     setIsProfileMenuOpen(isOpen);
   };
 
   const handleMobileProfileMenuToggle = (e) => {
     e.stopPropagation();
+    setIsNotificationsMenuOpen(false);
+    setIsProfileMenuOpen(false);
+    setIsSearchOpen(false);
     setIsMobileProfileMenuOpen(!isMobileProfileMenuOpen);
   };
 
   const handleMobileMenuToggle = () => {
+    setIsNotificationsMenuOpen(false);
+    setIsProfileMenuOpen(false);
+    setIsMobileProfileMenuOpen(false);
+    setIsSearchOpen(false);
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Separate handlers for notifications
   const handleNotificationsIconClick = (e) => {
     e.stopPropagation();
+    setIsProfileMenuOpen(false);
+    setIsMobileProfileMenuOpen(false);
+    setIsSearchOpen(false);
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
     if (notificationCount > 0) {
-      setNotificationCount(0); // Reset notification count when opened
+      setNotificationCount(0);
     }
   };
 
   const handleNotificationsDropdownToggle = (isOpen) => {
     setIsNotificationsMenuOpen(isOpen);
     if (isOpen && notificationCount > 0) {
-      setNotificationCount(0); // Reset notification count when opened
+      setNotificationCount(0);
     }
   };
 
   const handleProfileHover = (isHovered) => {
     if (window.innerWidth >= 992) {
-      // Only apply hover effect on desktop
       setIsProfileHovered(isHovered);
     }
   };
@@ -163,7 +186,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           </Nav>
         </Navbar.Collapse>
         <Nav className="ml-auto order-3 d-none d-lg-flex">
-          <div className="search-container">
+          <div className="search-container" ref={searchContainerRef}>
             <FaSearch
               onClick={handleSearchToggle}
               style={{ cursor: "pointer", marginRight: "20px" }}
@@ -201,7 +224,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
                 </Badge>
               )}
             </Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Menu ref={notificationsMenuRef}>
               <Dropdown.Item>Welcome to j-Flix!</Dropdown.Item>
               {/* Add more notifications as needed */}
             </Dropdown.Menu>
@@ -217,7 +240,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             <Dropdown.Toggle as={Nav.Link}>
               <img src={profilePic} alt="Profile" className="profile-image" />
             </Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Menu ref={profileMenuRef}>
               <Dropdown.Item as={Link} to="/profile">
                 Profile
               </Dropdown.Item>
@@ -324,7 +347,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         </Nav.Link>
       </div>
       <div
-        ref={notificationsMenuRef}
+        ref={mobileNotificationsMenuRef}
         className={`mobile-notifications-menu d-lg-none ${
           isNotificationsMenuOpen ? "show" : ""
         }`}
