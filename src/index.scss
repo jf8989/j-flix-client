@@ -538,6 +538,17 @@ body {
   }
 }
 
+// Add this new media query for desktop hover effect
+@media (min-width: 992px) {
+  .profile-dropdown {
+    &:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+}
+
 .profile-image {
   width: 32px;
   height: 32px;

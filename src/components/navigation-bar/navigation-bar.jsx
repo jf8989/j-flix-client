@@ -20,6 +20,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const mobileProfileMenuRef = useRef(null);
   const notificationsMenuRef = useRef(null);
   const dispatch = useDispatch();
+  const [isProfileHovered, setIsProfileHovered] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -92,6 +93,13 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     setIsNotificationsMenuOpen(isOpen);
     if (isOpen && notificationCount > 0) {
       setNotificationCount(0); // Reset notification count when opened
+    }
+  };
+
+  const handleProfileHover = (isHovered) => {
+    if (window.innerWidth >= 992) {
+      // Only apply hover effect on desktop
+      setIsProfileHovered(isHovered);
     }
   };
 
@@ -200,9 +208,11 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           </Dropdown>
           <Dropdown
             align="end"
-            className={`profile-dropdown ${isProfileMenuOpen ? "show" : ""}`}
-            show={isProfileMenuOpen}
+            className={`profile-dropdown ${isProfileHovered ? "show" : ""}`}
+            show={isProfileMenuOpen || isProfileHovered}
             onToggle={handleProfileMenuToggle}
+            onMouseEnter={() => handleProfileHover(true)}
+            onMouseLeave={() => handleProfileHover(false)}
           >
             <Dropdown.Toggle as={Nav.Link}>
               <img src={profilePic} alt="Profile" className="profile-image" />
@@ -226,7 +236,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item onClick={onLoggedOut}>
-                Sign out of Netflix
+                Sign out of j-Flix
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -310,7 +320,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             setIsMobileProfileMenuOpen(false);
           }}
         >
-          Sign out of Netflix
+          Sign out of j-Flix
         </Nav.Link>
       </div>
       <div
