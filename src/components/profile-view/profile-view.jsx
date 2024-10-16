@@ -151,7 +151,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   };
 
   return (
-    <Container fluid className="profile-view p-3">
+    <Container fluid className="profile-view p-3 custom-margin-top">
       <Row>
         <Col md={4} lg={3} className="mb-4">
           <Card className="bg-dark text-white h-100">

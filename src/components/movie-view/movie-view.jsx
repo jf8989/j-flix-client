@@ -13,7 +13,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   }
 
   return (
-    <Container>
+    <Container className="movie-view custom-margin-top">
       <Row>
         <Col md={4}>
           <Card.Img variant="top" src={defaultPoster} alt={movie.title} />
