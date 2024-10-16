@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Star, StarFill } from "react-bootstrap-icons";
+import { BsStar, BsStarFill } from "react-icons/bs"; // Updated import
 import defaultPoster from "../../assets/images/default-movie-poster.jpg";
 
 export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
@@ -36,9 +36,9 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
             style={{ cursor: "pointer" }}
           >
             {isFavorite ? (
-              <StarFill color="gold" size={24} />
+              <BsStarFill color="gold" size={24} /> // Updated usage
             ) : (
-              <Star color="white" size={24} />
+              <BsStar color="white" size={24} /> // Updated usage
             )}
           </span>
         </div>
