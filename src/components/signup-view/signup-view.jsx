@@ -78,7 +78,7 @@ export const SignupView = ({ onSignupSuccess }) => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="custom-margin-top">
       <Row className="justify-content-center">
         <Col md={6}>
           <Card className="bg-dark text-white">
