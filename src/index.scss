@@ -15,6 +15,17 @@ body {
   color: var(--text-color);
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 2rem; // Add some bottom padding
+}
+
 // Movie grid styles
 .movie-container {
   width: 100%;
