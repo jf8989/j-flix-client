@@ -34,29 +34,57 @@ body {
 
   .movie-grid {
     display: grid;
-    width: 100%; /* Ensure grid takes full width */
+    width: 100%;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem; /* Adjust gap for better spacing */
-    padding: 0; /* Remove extra padding */
+    gap: 1rem;
+    padding: 0;
 
     .movie-card {
       width: 100%;
       height: 100%;
       transition: transform 0.3s ease-in-out;
-      margin-top: 2rem;
+      margin-top: 1rem;
+
+      .movie-poster {
+        width: 100%;
+        height: auto; // This ensures the aspect ratio is maintained
+        object-fit: cover; // This ensures the image covers the area without stretching
+      }
+
+      .card-body {
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 200px); // Adjust this value based on your poster height
+      }
+
+      .card-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .movie-description {
+        font-size: 0.8rem;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 0.25rem;
+      }
+
+      .mt-auto {
+        margin-top: auto;
+      }
     }
   }
 
   .movie-card:hover {
     transform: scale(1.03);
-  }
-  
-  .movie-description {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 }
 

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { BsStar, BsStarFill } from "react-icons/bs"; // Updated import
+import { BsStar, BsStarFill } from "react-icons/bs";
 import defaultPoster from "../../assets/images/default-movie-poster.jpg";
 
 export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
@@ -17,14 +17,14 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
       <Link to={`/movies/${movie._id}`}>
         <Card.Img variant="top" src={defaultPoster} alt={movie.title} />
       </Link>
-      <Card.Body className="d-flex flex-column">
+      <Card.Body className="d-flex flex-column p-2">
         <Link
           to={`/movies/${movie._id}`}
           className="text-white text-decoration-none"
         >
-          <Card.Title className="text-truncate">{movie.title}</Card.Title>
+          <Card.Title className="text-truncate mb-1">{movie.title}</Card.Title>
         </Link>
-        <Card.Text className="movie-description flex-grow-1 small">
+        <Card.Text className="movie-description small mb-1">
           {truncateDescription(movie.description)}
         </Card.Text>
         <div className="mt-auto d-flex justify-content-end">
@@ -36,9 +36,9 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
             style={{ cursor: "pointer" }}
           >
             {isFavorite ? (
-              <BsStarFill color="gold" size={24} /> // Updated usage
+              <BsStarFill color="gold" size={20} />
             ) : (
-              <BsStar color="white" size={24} /> // Updated usage
+              <BsStar color="white" size={20} />
             )}
           </span>
         </div>
