@@ -14,14 +14,13 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProfileMenuOpen, setIsMobileProfileMenuOpen] = useState(false);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(1); // Initialize notification count
+  const [notificationCount, setNotificationCount] = useState(1);
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
   const mobileProfileMenuRef = useRef(null);
   const notificationsMenuRef = useRef(null);
   const dispatch = useDispatch();
   const [isProfileHovered, setIsProfileHovered] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll);
@@ -56,6 +55,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     e.stopPropagation();
     setIsSearchOpen(!isSearchOpen);
     if (!isSearchOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    } else {
       setSearchValue("");
       dispatch(setFilter(""));
     }
@@ -164,10 +167,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         </Navbar.Collapse>
         <Nav className="ml-auto order-3 d-none d-lg-flex">
           <div className="search-container">
-            <FaSearch
-              onClick={handleSearchToggle}
-              style={{ cursor: "pointer", marginRight: "20px" }}
-            />
             <Form.Control
               ref={searchInputRef}
               type="text"
@@ -175,6 +174,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               value={searchValue}
               onChange={handleSearchChange}
               className={`search-input ${isSearchOpen ? "open" : ""}`}
+            />
+            <FaSearch
+              onClick={handleSearchToggle}
+              style={{ cursor: "pointer", marginRight: "20px" }}
             />
           </div>
           <Nav.Link as={Link} to="/kids">
