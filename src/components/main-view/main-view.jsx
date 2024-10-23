@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
   Routes,
+  useNavigate,
 } from "react-router-dom";
 import { Row, Col, Alert, Spinner, Container } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
@@ -15,6 +16,20 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
+
+// Token validation helper
+const isTokenValid = (token) => {
+  if (!token) return false;
+
+  try {
+    // Parse the JWT token (split by dots and get the payload)
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    // Check if token has expired
+    return payload.exp * 1000 > Date.now();
+  } catch (error) {
+    return false;
+  }
+};
 
 const MainView = () => {
   const dispatch = useDispatch();
@@ -28,10 +43,32 @@ const MainView = () => {
 
   const [user, setUser] = useState(storedUser);
   const [token, setToken] = useState(storedToken);
+  const [authError, setAuthError] = useState(null);
+
+  // Check token validity on mount and when token changes
+  useEffect(() => {
+    if (token && !isTokenValid(token)) {
+      // Token is invalid or expired - log out user
+      setUser(null);
+      setToken(null);
+      localStorage.clear();
+      setAuthError("Your session has expired. Please log in again.");
+    }
+  }, [token]);
 
   useEffect(() => {
     if (token && moviesStatus === "idle") {
-      dispatch(fetchMovies(token));
+      dispatch(fetchMovies(token))
+        .unwrap()
+        .catch((error) => {
+          if (error.status === 401) {
+            // Unauthorized - clear user data and redirect to login
+            setUser(null);
+            setToken(null);
+            localStorage.clear();
+            setAuthError("Your session has expired. Please log in again.");
+          }
+        });
     }
   }, [token, moviesStatus, dispatch]);
 
@@ -54,6 +91,9 @@ const MainView = () => {
         },
       })
         .then((response) => {
+          if (response.status === 401) {
+            throw new Error("unauthorized");
+          }
           if (!response.ok) {
             throw new Error("Failed to update favorites");
           }
@@ -79,16 +119,27 @@ const MainView = () => {
           );
         })
         .catch((error) => {
-          console.error("Error updating favorites:", error);
+          if (error.message === "unauthorized") {
+            setUser(null);
+            setToken(null);
+            localStorage.clear();
+            setAuthError("Your session has expired. Please log in again.");
+          } else {
+            console.error("Error updating favorites:", error);
+          }
         });
     },
     [user, token]
   );
 
-  // Define isFavorite function
-  const isFavorite = (movieId) => {
-    return user && user.FavoriteMovies && user.FavoriteMovies.includes(movieId);
-  };
+  const isFavorite = useCallback(
+    (movieId) => {
+      return (
+        user && user.FavoriteMovies && user.FavoriteMovies.includes(movieId)
+      );
+    },
+    [user]
+  );
 
   const filteredMovies = useMemo(
     () =>
@@ -98,6 +149,14 @@ const MainView = () => {
     [movies, filter]
   );
 
+  if (authError) {
+    return (
+      <Router>
+        <Navigate to="/login" replace />
+      </Router>
+    );
+  }
+
   if (moviesStatus === "loading") {
     return (
       <Spinner animation="border" role="status">
@@ -106,7 +165,7 @@ const MainView = () => {
     );
   }
 
-  if (moviesStatus === "failed") {
+  if (moviesStatus === "failed" && error !== "unauthorized") {
     return <Alert variant="danger">Error: {error}</Alert>;
   }
 
@@ -153,7 +212,9 @@ const MainView = () => {
                       onLoggedIn={(user, token) => {
                         setUser(user);
                         setToken(token);
+                        setAuthError(null);
                       }}
+                      authError={authError}
                     />
                   )}
                 </>
@@ -189,9 +250,7 @@ const MainView = () => {
                             <MovieCard
                               movie={movie}
                               onToggleFavorite={onToggleFavorite}
-                              isFavorite={user.FavoriteMovies.includes(
-                                movie._id
-                              )}
+                              isFavorite={isFavorite(movie._id)}
                             />
                           </div>
                         ))}
