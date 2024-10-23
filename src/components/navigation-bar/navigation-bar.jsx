@@ -19,8 +19,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const navbarRef = useRef(null);
   const mobileProfileMenuRef = useRef(null);
   const notificationsMenuRef = useRef(null);
+  const searchContainerRef = useRef(null);
   const dispatch = useDispatch();
   const [isProfileHovered, setIsProfileHovered] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll);
@@ -29,19 +31,38 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Check if click is outside search container
       if (
-        navbarRef.current &&
-        !navbarRef.current.contains(event.target) &&
-        mobileProfileMenuRef.current &&
-        !mobileProfileMenuRef.current.contains(event.target) &&
-        notificationsMenuRef.current &&
-        !notificationsMenuRef.current.contains(event.target)
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target) &&
+        !event.target.closest(".mobile-search-form")
       ) {
         setIsSearchOpen(false);
-        setIsProfileMenuOpen(false);
-        setIsMobileMenuOpen(false);
-        setIsMobileProfileMenuOpen(false);
+        setSearchValue("");
+        dispatch(setFilter(""));
+      }
+
+      // Check if click is outside notifications menu
+      if (
+        notificationsMenuRef.current &&
+        !notificationsMenuRef.current.contains(event.target) &&
+        !event.target.closest(".notifications-toggle")
+      ) {
         setIsNotificationsMenuOpen(false);
+      }
+
+      // Check if click is outside mobile profile menu
+      if (
+        mobileProfileMenuRef.current &&
+        !mobileProfileMenuRef.current.contains(event.target) &&
+        !event.target.closest(".profile-image")
+      ) {
+        setIsMobileProfileMenuOpen(false);
+      }
+
+      // Check if click is outside navbar collapse
+      if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false);
       }
     };
 
@@ -49,7 +70,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [dispatch]);
 
   const handleSearchToggle = (e) => {
     e.stopPropagation();
@@ -166,7 +187,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           </Nav>
         </Navbar.Collapse>
         <Nav className="ml-auto order-3 d-none d-lg-flex">
-          <div className="search-container">
+          <div className="search-container" ref={searchContainerRef}>
             <Form.Control
               ref={searchInputRef}
               type="text"
@@ -191,6 +212,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             <Dropdown.Toggle
               as={Nav.Link}
               id="notifications-dropdown"
+              className="notifications-toggle"
               style={{ position: "relative" }}
             >
               <FaBell />
@@ -204,7 +226,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
                 </Badge>
               )}
             </Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Menu ref={notificationsMenuRef}>
               <Dropdown.Item>Welcome to j-Flix!</Dropdown.Item>
               {/* Add more notifications as needed */}
             </Dropdown.Menu>
@@ -247,7 +269,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         <div className="mobile-icons order-4 d-flex d-lg-none">
           <FaSearch onClick={handleSearchToggle} />
           <div style={{ position: "relative" }}>
-            <FaBell onClick={handleNotificationsIconClick} />
+            <FaBell
+              onClick={handleNotificationsIconClick}
+              className="notifications-toggle"
+            />
             {notificationCount > 0 && (
               <span
                 style={{

@@ -150,6 +150,38 @@ body {
     background-color: rgb(20, 20, 20) !important;
   }
 
+  .dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: none;
+    padding: 10px;
+    min-width: 250px;
+    
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .dropdown-item {
+      color: white;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
   .navbar-brand {
     font-size: 1.8rem;
     padding-top: 0;
