@@ -5,6 +5,7 @@ import { FaSearch, FaBell } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setFilter } from "../../redux/moviesSlice";
 import profilePic from "../../assets/images/profilepic.jpg";
+import "./NavigationBar.scss";
 
 export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,6 +21,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const mobileProfileMenuRef = useRef(null);
   const notificationsMenuRef = useRef(null);
   const searchContainerRef = useRef(null);
+  const navbarCollapseRef = useRef(null);
   const dispatch = useDispatch();
   const [isProfileHovered, setIsProfileHovered] = useState(false);
 
@@ -60,8 +62,13 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         setIsMobileProfileMenuOpen(false);
       }
 
-      // Check if click is outside navbar collapse
-      if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+      // Check if click is outside navbar collapse and toggle button
+      if (
+        navbarCollapseRef.current &&
+        !navbarCollapseRef.current.contains(event.target) &&
+        !event.target.closest(".navbar-toggler") &&
+        isMobileMenuOpen
+      ) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -70,7 +77,27 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch]);
+  }, [dispatch, isMobileMenuOpen]);
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      const navbarToggle = document.querySelector(".navbar-toggler");
+      const navbarCollapse = document.querySelector(".navbar-collapse");
+
+      if (
+        isMobileMenuOpen &&
+        !navbarToggle?.contains(event.target) &&
+        !navbarCollapse?.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [isMobileMenuOpen]);
 
   const handleSearchToggle = (e) => {
     e.stopPropagation();
@@ -83,6 +110,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       setSearchValue("");
       dispatch(setFilter(""));
     }
+    setIsMobileMenuOpen(false); // Close mobile menu when search icon is clicked
   };
 
   const handleSearchChange = (e) => {
@@ -95,13 +123,8 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     setIsProfileMenuOpen(isOpen);
   };
 
-  const handleMobileProfileMenuToggle = (e) => {
-    e.stopPropagation();
-    setIsMobileProfileMenuOpen(!isMobileProfileMenuOpen);
-  };
-
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const handleMobileMenuToggle = (expanded) => {
+    setIsMobileMenuOpen(expanded);
   };
 
   // Separate handlers for notifications
@@ -111,6 +134,13 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     if (notificationCount > 0) {
       setNotificationCount(0); // Reset notification count when opened
     }
+    setIsMobileMenuOpen(false); // Close mobile menu when notifications icon is clicked
+  };
+
+  const handleMobileProfileMenuToggle = (e) => {
+    e.stopPropagation();
+    setIsMobileProfileMenuOpen(!isMobileProfileMenuOpen);
+    setIsMobileMenuOpen(false); // Close mobile menu when profile icon is clicked
   };
 
   const handleNotificationsDropdownToggle = (isOpen) => {
@@ -133,7 +163,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       expand="lg"
       className={`styled-navbar ${isScrolled ? "scrolled" : ""}`}
       fixed="top"
-      ref={navbarRef}
       expanded={isMobileMenuOpen}
       onToggle={handleMobileMenuToggle}
     >
@@ -147,7 +176,11 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         >
           j-Flix
         </Navbar.Brand>
-        <Navbar.Collapse id="basic-navbar-nav" className="order-2">
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          className="order-2"
+          ref={navbarCollapseRef}
+        >
           <Nav className="me-auto">
             <Nav.Link
               as={Link}
