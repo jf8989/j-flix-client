@@ -2,8 +2,55 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>myFlix App</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <!-- Primary Meta Tags -->
+    <title>j-Flix - Your Movie Streaming Platform</title>
+    <meta name="title" content="j-Flix - Your Movie Streaming Platform" />
+    <meta
+      name="description"
+      content="Discover and stream your favorite movies with j-Flix. Enjoy a vast collection of films across all genres."
+    />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=clash-display@600&display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Prevent Flash of Unstyled Content -->
+    <style>
+      body {
+        background-color: #000000;
+        margin: 0;
+      }
+      #root {
+        opacity: 0;
+        transition: opacity 0.2s ease-in;
+      }
+      #root.loaded {
+        opacity: 1;
+      }
+    </style>
+
+    <!-- Script to handle root loading state -->
+    <script>
+      window.addEventListener("load", function () {
+        document.getElementById("root").classList.add("loaded");
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

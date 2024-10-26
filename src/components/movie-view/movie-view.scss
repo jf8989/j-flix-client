@@ -1,61 +1,206 @@
-.custom-margin-top {
-  margin-top: 5rem;
-}
+// Enhanced typography variables
+$font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+$font-display: 'Clash Display', $font-primary;
 
 .movie-view {
+  .custom-margin-top {
+    margin-top: 5rem;
+    padding: 0 1.5rem;
+  }
+
+  // Enhanced card styling
+  .card {
+    border: none;
+    background: linear-gradient(180deg, rgba(34,31,31,0.95) 0%, rgba(0,0,0,0.98) 100%);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  // Typography improvements
+  .display-4 {
+    font-family: $font-display;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    font-size: 2.75rem;
+    line-height: 1.2;
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  .lead {
+    font-family: $font-primary;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  // Section headings
+  .h4 {
+    font-family: $font-display;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 48px;
+      height: 3px;
+      background-color: #e50914;
+      border-radius: 2px;
+    }
+  }
+
+  // Enhanced metadata styling
+  .text-center span {
+    font-family: $font-primary;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin: 0 0.5rem;
+    
+    &:first-child {
+      background: linear-gradient(135deg, #e50914 0%, #ff0a16 100%);
+    }
+  }
+
+  // Cast tags styling
+  .gap-2 span {
+    background: rgba(34, 31, 31, 0.8);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-family: $font-primary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(34, 31, 31, 0.95);
+      transform: translateY(-2px);
+    }
+  }
+
+  // Enhanced button styling
   .favorite-button {
+    font-family: $font-primary;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    background-color: #221f1f;
-    border: 2px solid transparent;
+    background: rgba(34, 31, 31, 0.9);
+    border: 2px solid rgba(229, 9, 20, 0.2);
     
     &:hover {
-      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+      background: rgba(34, 31, 31, 1);
+      box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+      border-color: rgba(229, 9, 20, 0.4);
     }
     
     &:active {
-      transform: scale(0.95);
+      transform: scale(0.97);
     }
     
     &.favorite {
-      background-color: #e50914;
-      border-color: #e50914;
+      background: linear-gradient(135deg, #e50914 0%, #ff0a16 100%);
+      border-color: transparent;
       
       &:hover {
-        background-color: #ff0a16;
-        border-color: #ff0a16;
+        background: linear-gradient(135deg, #ff0a16 0%, #ff1e28 100%);
+        box-shadow: 0 4px 20px rgba(229, 9, 20, 0.6);
       }
+    }
+  }
+
+  // Info text styling
+  Card.Text {
+    font-family: $font-primary;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 1rem;
+
+    span[style*="color: #e50914"] {
+      font-weight: 600;
+      color: #ff0a16 !important;
+      margin-right: 0.5rem;
     }
   }
 }
 
-// Enhanced Snackbar with smooth fade
+// Enhanced Snackbar
 .custom-snackbar {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.95);
   z-index: 1050;
-  background-color: #e50914;
+  background: linear-gradient(135deg, #e50914 0%, #ff0a16 100%);
   color: white;
   padding: 1rem 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(229, 9, 20, 0.3);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  text-align: center;
-  min-width: 200px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.show {
     opacity: 1;
     visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .snackbar-message {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-family: $font-primary;
+    font-size: 1rem;
+    font-weight: 600;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Back button styling
+.btn-secondary {
+  font-family: $font-primary;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
