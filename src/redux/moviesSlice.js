@@ -7,22 +7,32 @@ export const fetchMovies = createAsyncThunk(
       const response = await fetch("https://j-flix-omega.vercel.app/movies", {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
       const data = await response.json();
+
       return data.map((movie) => ({
         _id: movie._id,
         title: movie.title,
-        imageURL: movie.imageURL,
+        imageURL: movie.imageURL, // Note: changed from imageURL to imagePath to match your model
         description: movie.description,
         genre: {
-          name: movie.genre.name,
-          description: movie.genre.description,
+          name: movie.genre?.name || "",
+          description: movie.genre?.description || "",
         },
         director: {
-          name: movie.director.name,
+          name: movie.director?.name || "",
+          bio: movie.director?.bio || "",
+          birthYear: movie.director?.birthYear,
+          deathYear: movie.director?.deathYear,
         },
+        actors: movie.actors || [],
+        featured: movie.featured || false,
+        releaseYear: movie.releaseYear,
+        rating: movie.rating,
       }));
     } catch (error) {
       return rejectWithValue(error.message);

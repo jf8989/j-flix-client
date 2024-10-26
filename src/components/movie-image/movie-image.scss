@@ -1,0 +1,17 @@
+.movie-image {
+    transition: opacity 0.3s ease-in-out;
+    
+    &.loading {
+      opacity: 0.5;
+    }
+    
+    // Ensure smooth loading transition
+    &[src] {
+      opacity: 1;
+    }
+    
+    // Base styles for placeholder state
+    &:not([src]), &[src=""] {
+      opacity: 0.1;
+    }
+  }
