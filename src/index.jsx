@@ -4,15 +4,18 @@ import { Container } from "react-bootstrap";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import MainView from "./components/main-view/main-view";
+import { BrowserRouter as Router } from "react-router-dom";
 import "./index.scss";
 
 // Main component (will eventually use all the others)
 const MyFlixApplication = () => {
   return (
     <Provider store={store}>
-      <Container>
-        <MainView />
-      </Container>
+      <Router>
+        <Container>
+          <MainView />
+        </Container>
+      </Router>
     </Provider>
   );
 };

@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Route,
-  Navigate,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Navigate, Routes, useLocation } from "react-router-dom";
 import { Row, Col, Alert, Spinner, Container } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
@@ -33,6 +27,7 @@ const isTokenValid = (token) => {
 
 const MainView = () => {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const movies = useSelector((state) => state.movies.list);
   const filter = useSelector((state) => state.movies.filter);
   const moviesStatus = useSelector((state) => state.movies.status);
@@ -44,6 +39,11 @@ const MainView = () => {
   const [user, setUser] = useState(storedUser);
   const [token, setToken] = useState(storedToken);
   const [authError, setAuthError] = useState(null);
+
+  // Scroll to top when route changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   // Check token validity on mount and when token changes
   useEffect(() => {
@@ -111,12 +111,6 @@ const MainView = () => {
 
           setUser(newUser);
           localStorage.setItem("user", JSON.stringify(newUser));
-
-          //alert(
-          //  isFavorite
-          //    ? "Movie removed from favorites!"
-          //    : "Movie added to favorites!"
-          //);
         })
         .catch((error) => {
           if (error.message === "unauthorized") {
@@ -150,11 +144,7 @@ const MainView = () => {
   );
 
   if (authError) {
-    return (
-      <Router>
-        <Navigate to="/login" replace />
-      </Router>
-    );
+    return <Navigate to="/login" replace />;
   }
 
   if (moviesStatus === "loading") {
@@ -170,123 +160,121 @@ const MainView = () => {
   }
 
   return (
-    <Router>
-      <div className="app-container">
-        {user && (
-          <NavigationBar
-            user={user}
-            onLoggedOut={() => {
-              setUser(null);
-              setToken(null);
-              localStorage.clear();
-            }}
+    <div className="app-container">
+      {user && (
+        <NavigationBar
+          user={user}
+          onLoggedOut={() => {
+            setUser(null);
+            setToken(null);
+            localStorage.clear();
+          }}
+        />
+      )}
+      <main className="main-content">
+        <Routes>
+          <Route
+            path="/signup"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <SignupView
+                    onSignupSuccess={(user, token) => {
+                      setUser(user);
+                      setToken(token);
+                    }}
+                  />
+                )}
+              </>
+            }
           />
-        )}
-        <main className="main-content">
-          <Routes>
-            <Route
-              path="/signup"
-              element={
-                <>
-                  {user ? (
-                    <Navigate to="/" />
-                  ) : (
-                    <SignupView
-                      onSignupSuccess={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                      }}
-                    />
-                  )}
-                </>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <>
-                  {user ? (
-                    <Navigate to="/" />
-                  ) : (
-                    <LoginView
-                      onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                        setAuthError(null);
-                      }}
-                      authError={authError}
-                    />
-                  )}
-                </>
-              }
-            />
-            <Route
-              path="/movies/:movieId"
-              element={
-                <>
-                  {!user ? (
-                    <Navigate to="/login" replace />
-                  ) : (
-                    <MovieView
-                      movies={movies}
-                      onToggleFavorite={onToggleFavorite}
-                      isFavorite={isFavorite}
-                    />
-                  )}
-                </>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <>
-                  {!user ? (
-                    <Navigate to="/login" replace />
-                  ) : (
-                    <div className="movie-container">
-                      <div className="movie-grid">
-                        {filteredMovies.map((movie) => (
-                          <div key={movie._id} className="movie-card">
-                            <MovieCard
-                              movie={movie}
-                              onToggleFavorite={onToggleFavorite}
-                              isFavorite={isFavorite(movie._id)}
-                            />
-                          </div>
-                        ))}
-                      </div>
+          <Route
+            path="/login"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <LoginView
+                    onLoggedIn={(user, token) => {
+                      setUser(user);
+                      setToken(token);
+                      setAuthError(null);
+                    }}
+                    authError={authError}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/movies/:movieId"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <MovieView
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                    isFavorite={isFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <div className="movie-container">
+                    <div className="movie-grid">
+                      {filteredMovies.map((movie) => (
+                        <div key={movie._id} className="movie-card">
+                          <MovieCard
+                            movie={movie}
+                            onToggleFavorite={onToggleFavorite}
+                            isFavorite={isFavorite(movie._id)}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <>
-                  {!user ? (
-                    <Navigate to="/login" replace />
-                  ) : (
-                    <ProfileView
-                      user={user}
-                      token={token}
-                      setUser={setUser}
-                      movies={movies}
-                      onLoggedOut={() => {
-                        setUser(null);
-                        setToken(null);
-                        localStorage.clear();
-                      }}
-                    />
-                  )}
-                </>
-              }
-            />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+                  </div>
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <ProfileView
+                    user={user}
+                    token={token}
+                    setUser={setUser}
+                    movies={movies}
+                    onLoggedOut={() => {
+                      setUser(null);
+                      setToken(null);
+                      localStorage.clear();
+                    }}
+                  />
+                )}
+              </>
+            }
+          />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
