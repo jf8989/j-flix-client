@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieImage from "../movie-image/movie-image";
 import "./movie-view.scss";
 
 export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   const { movieId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const movie = movies.find((m) => m._id === movieId);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -17,7 +19,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     if (showSnackbar) {
       snackbarTimer = setTimeout(() => {
         setShowSnackbar(false);
-      }, 1200); // Updated to 1200ms
+      }, 1200);
     }
     return () => {
       if (snackbarTimer) {
@@ -39,6 +41,14 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     },
     [isFavorite, onToggleFavorite]
   );
+
+  const handleBack = () => {
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else {
+      navigate("/");
+    }
+  };
 
   if (!movie) {
     return <div>Movie not found</div>;
@@ -88,9 +98,9 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                   ? "Remove from Favorites"
                   : "Add to Favorites"}
               </Button>
-              <Link to="/" className="d-grid mt-2">
-                <Button variant="secondary">Back</Button>
-              </Link>
+              <Button variant="secondary" onClick={handleBack} className="mt-2">
+                Back
+              </Button>
             </Card.Body>
           </Card>
         </Col>
