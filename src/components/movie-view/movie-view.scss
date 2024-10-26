@@ -19,7 +19,7 @@ $font-display: 'Clash Display', $font-primary;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: translateY(-4px);
+      //transform: translateY(-4px);
       box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
     }
   }
