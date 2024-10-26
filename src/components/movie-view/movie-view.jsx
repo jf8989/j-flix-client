@@ -1,20 +1,57 @@
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import MovieImage from "../movie-image/movie-image";
+import "./movie-view.scss";
 
 export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   const { movieId } = useParams();
   const movie = movies.find((m) => m._id === movieId);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  // Cleanup function for snackbar timer
+  useEffect(() => {
+    let snackbarTimer;
+    if (showSnackbar) {
+      snackbarTimer = setTimeout(() => {
+        setShowSnackbar(false);
+      }, 1200); // Updated to 1200ms
+    }
+    return () => {
+      if (snackbarTimer) {
+        clearTimeout(snackbarTimer);
+      }
+    };
+  }, [showSnackbar]);
+
+  // Memoize the toggle handler
+  const handleToggleFavorite = useCallback(
+    (movieId) => {
+      const currentState = isFavorite(movieId);
+      onToggleFavorite(movieId);
+
+      setSnackbarMessage(
+        currentState ? "Removed from Favorites" : "Added to Favorites"
+      );
+      setShowSnackbar(true);
+    },
+    [isFavorite, onToggleFavorite]
+  );
 
   if (!movie) {
     return <div>Movie not found</div>;
   }
 
+  const favoriteButtonClass = `favorite-button ${
+    isFavorite(movie._id) ? "favorite" : ""
+  }`;
+
   return (
     <Container className="movie-view custom-margin-top">
       <Row className="g-4">
+        {/* First column with movie image and favorite button */}
         <Col md={4}>
           <Card className="bg-dark text-white h-100">
             <MovieImage
@@ -44,29 +81,25 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 </span>
               </div>
               <Button
-                onClick={() => onToggleFavorite(movie._id)}
-                style={{
-                  backgroundColor: isFavorite(movie._id)
-                    ? "#e50914"
-                    : "#221f1f",
-                  borderColor: isFavorite(movie._id) ? "#e50914" : "#221f1f",
-                }}
-                className="mb-2"
+                onClick={() => handleToggleFavorite(movie._id)}
+                className={favoriteButtonClass}
               >
                 {isFavorite(movie._id)
                   ? "Remove from Favorites"
                   : "Add to Favorites"}
               </Button>
-              <Link to="/" className="d-grid">
+              <Link to="/" className="d-grid mt-2">
                 <Button variant="secondary">Back</Button>
               </Link>
             </Card.Body>
           </Card>
         </Col>
 
+        {/* Second column with movie details */}
         <Col md={8}>
           <Card className="bg-dark text-white h-100">
             <Card.Body>
+              {/* Movie title and description */}
               <div className="mb-4">
                 <Card.Title as="h1" className="display-4 mb-2">
                   {movie.title}
@@ -74,6 +107,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 <Card.Text className="lead">{movie.description}</Card.Text>
               </div>
 
+              {/* Director information */}
               <div className="mb-4">
                 <h3 className="h4 mb-3">Director</h3>
                 <Card.Text>
@@ -94,6 +128,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 )}
               </div>
 
+              {/* Genre information */}
               <div className="mb-4">
                 <h3 className="h4 mb-3">Genre</h3>
                 <Card.Text>
@@ -106,6 +141,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 </Card.Text>
               </div>
 
+              {/* Cast section */}
               <div className="mb-4">
                 <h3 className="h4 mb-3">Cast</h3>
                 <div className="d-flex flex-wrap gap-2">
@@ -125,6 +161,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 </div>
               </div>
 
+              {/* Additional information */}
               <div className="mt-4">
                 <h3 className="h4 mb-3">Additional Info</h3>
                 <Row>
@@ -146,6 +183,11 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
           </Card>
         </Col>
       </Row>
+
+      {/* Custom Snackbar */}
+      <div className={`custom-snackbar ${showSnackbar ? "show" : ""}`}>
+        <p className="snackbar-message">{snackbarMessage}</p>
+      </div>
     </Container>
   );
 };

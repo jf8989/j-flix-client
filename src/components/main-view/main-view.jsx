@@ -112,11 +112,11 @@ const MainView = () => {
           setUser(newUser);
           localStorage.setItem("user", JSON.stringify(newUser));
 
-          alert(
-            isFavorite
-              ? "Movie removed from favorites!"
-              : "Movie added to favorites!"
-          );
+          //alert(
+          //  isFavorite
+          //    ? "Movie removed from favorites!"
+          //    : "Movie added to favorites!"
+          //);
         })
         .catch((error) => {
           if (error.message === "unauthorized") {

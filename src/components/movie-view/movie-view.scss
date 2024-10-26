@@ -1,0 +1,61 @@
+.custom-margin-top {
+  margin-top: 5rem;
+}
+
+.movie-view {
+  .favorite-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    background-color: #221f1f;
+    border: 2px solid transparent;
+    
+    &:hover {
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    &.favorite {
+      background-color: #e50914;
+      border-color: #e50914;
+      
+      &:hover {
+        background-color: #ff0a16;
+        border-color: #ff0a16;
+      }
+    }
+  }
+}
+
+// Enhanced Snackbar with smooth fade
+.custom-snackbar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  background-color: #e50914;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  text-align: center;
+  min-width: 200px;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .snackbar-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+  }
+}
