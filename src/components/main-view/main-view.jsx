@@ -11,6 +11,8 @@ import { ProfileView } from "../profile-view/profile-view";
 import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
 import { MyListView } from "../my-list-view/my-list-view";
+import { NewPopularView } from "../new-popular/new-popular-view";
+import { UnderConstructionView } from "../under-construction/under-construction-view";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -280,6 +282,70 @@ const MainView = () => {
                   <Navigate to="/login" replace />
                 ) : (
                   <MyListView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/new"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <NewPopularView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/movies"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/tvshows"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/manage-profiles"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
                     user={user}
                     movies={movies}
                     onToggleFavorite={onToggleFavorite}

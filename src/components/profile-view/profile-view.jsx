@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Form, Row, Col, Container } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
+import { BackArrow } from "../back-arrow/back-arrow";
 
 // Function to format the date to yyyy-MM-dd for input type="date"
 const formatDate = (dateString) => {
@@ -152,6 +153,14 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
 
   return (
     <Container fluid className="profile-view p-3 content-margin">
+      <Row className="align-items-center mb-4">
+        <Col xs="auto">
+          <BackArrow className="mt-1" />
+        </Col>
+        <Col>
+          <h2 className="text-white mb-0">Profile Information</h2>
+        </Col>
+      </Row>
       <Row>
         <Col md={4} lg={3} className="mb-4">
           <Card className="bg-dark text-white h-100">
