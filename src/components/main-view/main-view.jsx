@@ -392,6 +392,193 @@ const MainView = () => {
               </>
             }
           />
+          {/* Footer Routes */}
+          <Route
+            path="/audio-description"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/investor-relations"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/legal-notices"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/jobs"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/cookie-preferences"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/gift-cards"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/terms"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/corporate-information"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/media-center"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/privacy"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+
+          <Route
+            path="/contact"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
         </Routes>
       </main>
       <Footer />
