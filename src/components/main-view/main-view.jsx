@@ -10,6 +10,7 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
+import { MyListView } from "../my-list-view/my-list-view";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -266,6 +267,22 @@ const MainView = () => {
                       setToken(null);
                       localStorage.clear();
                     }}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/mylist"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <MyListView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
                   />
                 )}
               </>
