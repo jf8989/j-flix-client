@@ -212,6 +212,14 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             </Nav.Link>
             <Nav.Link
               as={Link}
+              to="/kids"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="d-lg-none" // Only show in mobile view
+            >
+              Kids
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
               to="/mylist"
               onClick={() => setIsMobileMenuOpen(false)}
             >
