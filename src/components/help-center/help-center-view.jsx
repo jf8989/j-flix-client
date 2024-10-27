@@ -9,6 +9,8 @@ import {
   Button,
 } from "react-bootstrap";
 import { Search } from "lucide-react";
+import { BackArrow } from "../back-arrow/back-arrow";
+import "./help-center.scss";
 
 const HelpCenter = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,6 +77,7 @@ const HelpCenter = () => {
   return (
     <div className="bg-black min-h-screen text-white py-16 content-margin-help">
       <Container>
+        <BackArrow className="mb-4" />
         {/* Header Section */}
         <Row className="justify-content-center mb-8">
           <Col md={8} className="text-center">

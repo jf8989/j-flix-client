@@ -14,6 +14,7 @@ import { MyListView } from "../my-list-view/my-list-view";
 import { NewPopularView } from "../new-popular/new-popular-view";
 import { UnderConstructionView } from "../under-construction/under-construction-view";
 import { HelpCenter } from "../help-center/help-center-view";
+import { KidsView } from "../kids-view/kids-view";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -375,6 +376,21 @@ const MainView = () => {
             path="/help"
             element={
               <>{!user ? <Navigate to="/login" replace /> : <HelpCenter />}</>
+            }
+          />
+          <Route
+            path="/kids"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <KidsView
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
             }
           />
         </Routes>
