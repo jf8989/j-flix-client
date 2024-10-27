@@ -219,7 +219,10 @@ const MainView = () => {
                   <Navigate to="/login" replace />
                 ) : (
                   <MovieView
-                    movies={movies}
+                    movies={movies.map((movie) => ({
+                      ...movie,
+                      rating: movie.rating?.toString() || "N/A", // Convert rating to string
+                    }))}
                     onToggleFavorite={onToggleFavorite}
                     isFavorite={isFavorite}
                   />
