@@ -1,10 +1,12 @@
 import React from "react";
 import { Row, Col, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { MovieCard } from "../movie-card/movie-card";
 import { BackArrow } from "../back-arrow/back-arrow";
 
 export const MyListView = ({ user, movies, onToggleFavorite }) => {
   const favoriteMovies = user?.FavoriteMovies || [];
+  const filter = useSelector((state) => state.movies.filter);
 
   return (
     <Container fluid className="p-3 content-margin">
@@ -22,6 +24,9 @@ export const MyListView = ({ user, movies, onToggleFavorite }) => {
             <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
               {movies
                 .filter((movie) => favoriteMovies.includes(movie._id))
+                .filter((movie) =>
+                  movie.title.toLowerCase().includes(filter.toLowerCase())
+                )
                 .map((movie) => (
                   <Col key={movie._id}>
                     <MovieCard

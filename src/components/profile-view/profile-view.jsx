@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Form, Row, Col, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { MovieCard } from "../movie-card/movie-card";
 import { BackArrow } from "../back-arrow/back-arrow";
 
@@ -16,6 +17,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const filter = useSelector((state) => state.movies.filter);
 
   // Populate user data and favorite movies
   useEffect(() => {
@@ -227,6 +229,9 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
             <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
               {movies
                 .filter((movie) => favoriteMovies.includes(movie._id))
+                .filter((movie) =>
+                  movie.title.toLowerCase().includes(filter.toLowerCase())
+                )
                 .map((movie) => (
                   <Col key={movie._id}>
                     <MovieCard
