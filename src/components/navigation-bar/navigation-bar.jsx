@@ -279,9 +279,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               <Dropdown.Item as={Link} to="/profile">
                 Profile
               </Dropdown.Item>
-              <Dropdown.Item>Profile 2</Dropdown.Item>
-              <Dropdown.Item>Profile 3</Dropdown.Item>
-              <Dropdown.Item>Profile 4</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item as={Link} to="/manage-profiles">
                 Manage Profiles

@@ -13,6 +13,7 @@ import { Footer } from "../footer/footer";
 import { MyListView } from "../my-list-view/my-list-view";
 import { NewPopularView } from "../new-popular/new-popular-view";
 import { UnderConstructionView } from "../under-construction/under-construction-view";
+import { HelpCenter } from "../help-center/help-center-view";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -352,6 +353,28 @@ const MainView = () => {
                   />
                 )}
               </>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <UnderConstructionView
+                    user={user}
+                    movies={movies}
+                    onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/help"
+            element={
+              <>{!user ? <Navigate to="/login" replace /> : <HelpCenter />}</>
             }
           />
         </Routes>
