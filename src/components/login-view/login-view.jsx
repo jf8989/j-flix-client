@@ -1,42 +1,49 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { setLoading } from "../../redux/loadingSlice";
+import "./login-view.scss";
 
 export const LoginView = ({ onLoggedIn }) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    dispatch(setLoading(true));
 
     const data = {
       username: username,
       password: password,
     };
 
-    fetch("https://j-flix-omega.vercel.app/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
-          onLoggedIn(data.user, data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          localStorage.setItem("token", data.token);
-        } else {
-          alert("Login failed");
-        }
-      })
-      .catch((e) => {
-        alert("Login failed");
-        console.error(e);
+    try {
+      const response = await fetch("https://j-flix-omega.vercel.app/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
+      const responseData = await response.json();
+
+      if (responseData.token) {
+        localStorage.setItem("user", JSON.stringify(responseData.user));
+        localStorage.setItem("token", responseData.token);
+        onLoggedIn(responseData.user, responseData.token);
+      } else {
+        alert("Login failed");
+      }
+    } catch (e) {
+      alert("Login failed");
+      console.error(e);
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
   return (
-    <Container className="custom-margin-top">
+    <Container className="content-margin-login">
       <Row className="justify-content-center">
         <Col md={6}>
           <Card className="bg-dark text-white">

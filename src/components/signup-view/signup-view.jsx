@@ -8,6 +8,7 @@ import {
   Card,
   Alert,
 } from "react-bootstrap";
+import "./signup-view.scss";
 
 export const SignupView = ({ onSignupSuccess }) => {
   const [username, setUsername] = useState("");
@@ -78,7 +79,7 @@ export const SignupView = ({ onSignupSuccess }) => {
   };
 
   return (
-    <Container className="custom-margin-top">
+    <Container className="content-margin-signup">
       <Row className="justify-content-center">
         <Col md={6}>
           <Card className="bg-dark text-white">

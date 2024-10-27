@@ -15,6 +15,7 @@ import { NewPopularView } from "../new-popular/new-popular-view";
 import { UnderConstructionView } from "../under-construction/under-construction-view";
 import { HelpCenter } from "../help-center/help-center-view";
 import { KidsView } from "../kids-view/kids-view";
+import LoadingSpinner from "../loading-spinner/loading-spinner";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -153,11 +154,7 @@ const MainView = () => {
   }
 
   if (moviesStatus === "loading") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    );
+    return <LoadingSpinner />;
   }
 
   if (moviesStatus === "failed" && error !== "unauthorized") {
