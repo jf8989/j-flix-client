@@ -11,9 +11,8 @@ import { ProfileView } from "../profile-view/profile-view";
 import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
 import { MyListView } from "../my-list-view/my-list-view";
-import { NewPopularView } from "../new-popular/new-popular-view";
 import { UnderConstructionView } from "../under-construction/under-construction-view";
-import { HelpCenter } from "../help-center/help-center-view";
+import { HelpCenter } from "../help-center/help-center";
 import { KidsView } from "../kids-view/kids-view";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 
@@ -299,7 +298,7 @@ const MainView = () => {
                 {!user ? (
                   <Navigate to="/login" replace />
                 ) : (
-                  <NewPopularView
+                  <UnderConstructionView
                     user={user}
                     movies={movies}
                     onToggleFavorite={onToggleFavorite}

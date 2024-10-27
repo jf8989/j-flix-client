@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import { Search } from "lucide-react";
 import { BackArrow } from "../back-arrow/back-arrow";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./help-center.scss";
 
 const HelpCenter = () => {
