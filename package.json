@@ -11,9 +11,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@reduxjs/toolkit": "2.2.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "framer-motion": "^11.11.10",
     "lucide-react": "^0.453.0",
     "prop-types": "15.8.1",
     "react": "^18.3.1",
