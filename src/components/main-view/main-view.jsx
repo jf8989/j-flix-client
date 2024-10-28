@@ -20,6 +20,7 @@ import CookiePreferences from "../cookies/cookie-preferences";
 import Jobs from "../jobs-view/jobs-view";
 import Contact from "../contact-view/contact-view";
 import Privacy from "../privacy-view/privacy-view";
+import "./main-view.scss";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -241,19 +242,31 @@ const MainView = () => {
                 {!user ? (
                   <Navigate to="/login" replace />
                 ) : (
-                  <div className="movie-container">
-                    <div className="movie-grid">
-                      {filteredMovies.map((movie) => (
-                        <div key={movie._id} className="movie-card">
-                          <MovieCard
-                            movie={movie}
-                            onToggleFavorite={onToggleFavorite}
-                            isFavorite={isFavorite(movie._id)}
-                          />
-                        </div>
-                      ))}
+                  <>
+                    <div className="welcome-section">
+                      <h1>
+                        Welcome back,{" "}
+                        <span className="highlight">{user.Username}</span>!
+                      </h1>
+                      <p>
+                        Discover new stories or continue watching where you left
+                        off.
+                      </p>
                     </div>
-                  </div>
+                    <div className="movie-container">
+                      <div className="movie-grid">
+                        {filteredMovies.map((movie) => (
+                          <div key={movie._id} className="movie-card">
+                            <MovieCard
+                              movie={movie}
+                              onToggleFavorite={onToggleFavorite}
+                              isFavorite={isFavorite(movie._id)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
                 )}
               </>
             }
