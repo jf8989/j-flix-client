@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieImage from "../movie-image/movie-image";
+import { BackArrow } from "../back-arrow/back-arrow";
 import "./movie-view.scss";
 
 export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
@@ -42,14 +43,6 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     [isFavorite, onToggleFavorite]
   );
 
-  const handleBack = () => {
-    if (location.state?.from) {
-      navigate(location.state.from);
-    } else {
-      navigate("/");
-    }
-  };
-
   if (!movie) {
     return <div>Movie not found</div>;
   }
@@ -61,6 +54,14 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   return (
     <div className="movie-view">
       <Container className="custom-margin-top">
+        <Row className="align-items-center mb-4">
+          <Col xs="auto">
+            <BackArrow className="mt-1" />
+          </Col>
+          <Col>
+            <h2 className="text-white mb-0">{movie.title}</h2>
+          </Col>
+        </Row>
         <Row className="g-4">
           {/* First column with movie image and favorite button */}
           <Col md={4}>
@@ -99,13 +100,6 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                     ? "Remove from Favorites"
                     : "Add to Favorites"}
                 </Button>
-                <Button
-                  variant="secondary"
-                  onClick={handleBack}
-                  className="mt-2"
-                >
-                  Back
-                </Button>
               </Card.Body>
             </Card>
           </Col>
@@ -114,11 +108,8 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
           <Col md={8}>
             <Card className="bg-dark text-white h-100">
               <Card.Body>
-                {/* Movie title and description */}
+                {/* Movie description */}
                 <div className="mb-4">
-                  <Card.Title as="h1" className="display-4 mb-2">
-                    {movie.title}
-                  </Card.Title>
                   <Card.Text className="lead">{movie.description}</Card.Text>
                 </div>
 
