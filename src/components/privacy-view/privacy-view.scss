@@ -1,0 +1,312 @@
+// privacy.scss
+
+.privacy {
+    &__container {
+      max-width: 48rem;
+      margin: 6rem auto 2rem;
+      padding: 2rem;
+      background-color: var(--background-color);
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    }
+  
+    &__header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      color: var(--text-color);
+  
+      &-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: var(--primary-color);
+      }
+  
+      &-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        font-family: 'Clash Display', sans-serif;
+        letter-spacing: -0.02em;
+      }
+    }
+  
+    &__content {
+      color: var(--text-color);
+  
+      &-section {
+        margin-bottom: 2.5rem;
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+  
+      &-intro {
+        padding: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          rgba(229, 9, 20, 0.1) 0%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        border-radius: 0.5rem;
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        margin-bottom: 2rem;
+      }
+  
+      &-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        font-family: 'Clash Display', sans-serif;
+        letter-spacing: -0.01em;
+      }
+  
+      &-text {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  
+    &__info {
+      &-card {
+        padding: 1.25rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+  
+      &-subtitle {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 1rem;
+        color: var(--text-color);
+        font-family: 'Clash Display', sans-serif;
+      }
+  
+      &-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9375rem;
+  
+        li {
+          margin-bottom: 0.5rem;
+          padding-left: 1.5rem;
+          position: relative;
+  
+          &:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+          }
+  
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  
+    &__usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  
+    &__usage-item {
+      padding: 1.25rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      transition: transform 0.3s ease;
+  
+      &:hover {
+        transform: translateY(-2px);
+      }
+  
+      h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+        color: var(--text-color);
+        font-family: 'Clash Display', sans-serif;
+      }
+  
+      p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+  
+    &__security-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  
+    &__security-item {
+      padding: 1.25rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+  
+      h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+        color: var(--text-color);
+        font-family: 'Clash Display', sans-serif;
+      }
+  
+      p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+  
+    &__rights-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  
+    &__rights-item {
+      padding: 1.25rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background-color: rgba(229, 9, 20, 0.1);
+        border-color: rgba(229, 9, 20, 0.2);
+      }
+  
+      h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+        color: var(--text-color);
+        font-family: 'Clash Display', sans-serif;
+      }
+  
+      p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+  
+    &__contact-info {
+      padding: 1.5rem;
+      background-color: rgba(255, 255, 255, 0.02);
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  
+    &__contact-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 1rem 0 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+  
+      li {
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+  
+        &:before {
+          content: "•";
+          position: absolute;
+          left: 0;
+          color: var(--primary-color);
+        }
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  
+    &__footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+  
+      &-text {
+        color: rgba(255, 255, 255, 0.6);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        margin: 0;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      &__container {
+        margin: 5rem 1rem 2rem;
+        padding: 1.5rem;
+      }
+  
+      &__header {
+        &-title {
+          font-size: 1.25rem;
+        }
+      }
+  
+      &__content {
+        &-title {
+          font-size: 1.125rem;
+        }
+  
+        &-text {
+          font-size: 0.875rem;
+        }
+      }
+  
+      &__info {
+        &-subtitle {
+          font-size: 1rem;
+        }
+  
+        &-list {
+          font-size: 0.875rem;
+        }
+      }
+  
+      &__usage-grid,
+      &__security-features,
+      &__rights-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
