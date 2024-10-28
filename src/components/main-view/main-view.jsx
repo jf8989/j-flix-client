@@ -17,6 +17,7 @@ import { KidsView } from "../kids-view/kids-view";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 import TermsOfUse from "../tos-view/tos-view";
 import CookiePreferences from "../cookies/cookie-preferences";
+import Jobs from "../jobs-view/jobs-view";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -448,19 +449,7 @@ const MainView = () => {
 
           <Route
             path="/jobs"
-            element={
-              <>
-                {!user ? (
-                  <Navigate to="/login" replace />
-                ) : (
-                  <UnderConstructionView
-                    user={user}
-                    movies={movies}
-                    onToggleFavorite={onToggleFavorite}
-                  />
-                )}
-              </>
-            }
+            element={<>{!user ? <Navigate to="/login" replace /> : <Jobs />}</>}
           />
 
           <Route
