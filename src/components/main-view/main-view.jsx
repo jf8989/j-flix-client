@@ -16,6 +16,7 @@ import { HelpCenter } from "../help-center/help-center";
 import { KidsView } from "../kids-view/kids-view";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 import TermsOfUse from "../tos-view/tos-view";
+import CookiePreferences from "../cookies/cookie-preferences";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -469,11 +470,7 @@ const MainView = () => {
                 {!user ? (
                   <Navigate to="/login" replace />
                 ) : (
-                  <UnderConstructionView
-                    user={user}
-                    movies={movies}
-                    onToggleFavorite={onToggleFavorite}
-                  />
+                  <CookiePreferences />
                 )}
               </>
             }
