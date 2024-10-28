@@ -42,19 +42,32 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
         <Card.Text className="movie-description small mb-1">
           {truncateDescription(movie.description)}
         </Card.Text>
-        <div className="mt-auto d-flex justify-content-end">
+        <div className="mt-auto d-flex justify-content-end favorite-icon-container">
           <span
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               onToggleFavorite(movie._id);
             }}
-            style={{ cursor: "pointer" }}
+            className="movie-favorite-icon" // More specific class name
+            style={{
+              cursor: "pointer",
+              position: "relative", // Add this
+              zIndex: "5", // Add this
+            }}
           >
             {isFavorite ? (
-              <BsStarFill color="gold" size={20} />
+              <BsStarFill
+                className="star-icon-filled"
+                size={20}
+                style={{ color: "#FFD700" }}
+              />
             ) : (
-              <BsStar color="white" size={20} />
+              <BsStar
+                className="star-icon-empty"
+                size={20}
+                style={{ color: "#ffffff" }}
+              />
             )}
           </span>
         </div>

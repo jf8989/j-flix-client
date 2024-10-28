@@ -1,52 +1,88 @@
-    // Welcome section styles
+// Welcome section styles - Keep original margin
 .welcome-section {
-    width: 100%;
-    padding: 2rem 1.5rem;
-    margin-top: 4rem;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 100%);
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
-  
-    h1 {
-      font-family: 'Clash Display', sans-serif;
-      font-weight: 600;
-      font-size: 2.5rem;
-      color: var(--text-color);
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.02em;
-  
-      @media (max-width: 768px) {
-        font-size: 2rem;
-      }
-    }
-  
-    p {
-      font-family: 'Inter', sans-serif;
-      font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 0;
-      letter-spacing: -0.01em;
-      max-width: 600px;
-  
-      @media (max-width: 768px) {
-        font-size: 1rem;
-      }
-    }
-  
-    .highlight {
-      color: var(--primary-color);
+  width: 100%;
+  padding: 2rem 1.5rem;
+  margin-top: 4rem;  // This is crucial for staying below navbar
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 100%);
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: 'Clash Display', sans-serif;
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
     }
   }
+
+  p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0;
+    letter-spacing: -0.01em;
+    max-width: 600px;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+
+  .highlight {
+    color: var(--primary-color);
+  }
+}
+
+// Movie container should start with no margin since welcome section handles spacing
+.movie-container {
+  width: 100%;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+// Card spacing fixes
+.movie-card {
+.card-body {
+  position: relative;
+  padding: 0.75rem !important;
   
-  // Update movie container margin
-  .movie-container {
-    width: 100%;
-    padding: 0;
-    margin-top: 0; // Reduced since we now have the welcome section
-    margin-bottom: 0rem;
+  .movie-description {
+    margin-bottom: 0.5rem !important;
   }
   
-  // Add smooth transitions
-  .welcome-section, .movie-container {
-    transition: all 0.3s ease-in-out;
+  .mt-auto {
+    margin-top: 0.5rem !important;
+    position: relative;
+    z-index: 10;
+    
+    span {
+      display: inline-block;
+      padding: 4px;
+    }
   }
+}
+}
+
+// Star icon styles
+.favorite-star-icon {
+z-index: 2;
+.star-filled {
+  color: gold !important;
+  fill: gold !important;
+}
+.star-empty {
+  color: white !important;
+  fill: none !important;
+}
+}
+
+// Keep transitions
+.welcome-section, .movie-container {
+  transition: all 0.3s ease-in-out;
+}
