@@ -17,7 +17,7 @@ export const fetchMovies = createAsyncThunk(
       return data.map((movie) => ({
         _id: movie._id,
         title: movie.title,
-        imageURL: movie.imageURL, // Note: changed from imageURL to imagePath to match your model
+        imageURL: movie.imageURL,
         description: movie.description,
         genre: {
           name: movie.genre?.name || "",
