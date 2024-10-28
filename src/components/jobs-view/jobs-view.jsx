@@ -69,7 +69,7 @@ const Jobs = () => {
             </a>
 
             <a
-              href="mailto:juanfra2280@gmail.com"
+              href="mailto:juanfrajs.contacto@gmail.com"
               className="careers__social-link"
             >
               <Mail className="careers__social-icon" />
