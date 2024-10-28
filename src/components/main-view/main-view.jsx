@@ -15,6 +15,7 @@ import { UnderConstructionView } from "../under-construction/under-construction-
 import { HelpCenter } from "../help-center/help-center";
 import { KidsView } from "../kids-view/kids-view";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
+import TermsOfUse from "../tos-view/tos-view";
 
 // Token validation helper
 const isTokenValid = (token) => {
@@ -577,6 +578,13 @@ const MainView = () => {
                   />
                 )}
               </>
+            }
+          />
+
+          <Route
+            path="/tos"
+            element={
+              <>{!user ? <Navigate to="/login" replace /> : <TermsOfUse />}</>
             }
           />
         </Routes>
