@@ -1,6 +1,12 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { Container } from "react-bootstrap";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTwitter,
+  FaGithub,
+  FaLinkedinIn,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./footer.scss";
 
@@ -9,10 +15,46 @@ export const Footer = () => {
     <footer className="footer">
       <Container>
         <div className="social-icons">
-          <FaFacebookF />
-          <FaInstagram />
-          <FaTwitter />
-          <FaYoutube />
+          <a
+            href="https://www.facebook.com/jfma89"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
+            <FaFacebookF />
+          </a>
+          <a
+            href="https://www.instagram.com/jfma89/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <FaInstagram />
+          </a>
+          <a
+            href="https://x.com/PriestAi_jf"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter"
+          >
+            <FaTwitter />
+          </a>
+          <a
+            href="https://github.com/jf8989?tab=repositories"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <FaGithub />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/jfmarcenaroa/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <FaLinkedinIn />
+          </a>
         </div>
         <div className="footer-links">
           <div className="col">

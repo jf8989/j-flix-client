@@ -1,9 +1,163 @@
-.footer-link {
-    color: #737373;
-    text-decoration: none;
+// Variables
+$footer-bg: #141414;
+$footer-text: #737373;
+$footer-hover: #fff;
+$mobile-breakpoint: 740px;
+$small-mobile-breakpoint: 500px;
+
+// Mixins
+@mixin mobile {
+  @media (max-width: #{$mobile-breakpoint}) {
+    @content;
   }
-  
-  .footer-link:hover {
-    color: #fff;  /* If you want the white hover effect like Netflix */
-    text-decoration: none;
+}
+
+@mixin small-mobile {
+  @media (max-width: #{$small-mobile-breakpoint}) {
+    @content;
   }
+}
+
+// Footer Styles
+.footer {
+  padding: 1rem 0;
+  background-color: $footer-bg;
+  color: $footer-text;
+  margin-top: auto;
+  width: 100%;
+  overflow-x: hidden;
+
+  // Container styles
+  .container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  // Social Icons Section
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+
+    @include mobile {
+      gap: 1.5rem;
+    }
+
+    a {
+      color: $footer-text;
+      font-size: 1.25rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem;
+
+      @include mobile {
+        font-size: 1.5rem;
+      }
+
+      &:hover, 
+      &:active {
+        color: $footer-hover;
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  // Footer Links Section
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    max-width: 100%;
+
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .col {
+      @include mobile {
+        padding: 0 0.5rem;
+      }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 0.5rem;
+
+        @include mobile {
+          margin-bottom: 0.75rem;
+        }
+
+        .footer-link {
+          color: $footer-text;
+          text-decoration: none;
+          font-size: 0.813rem;
+          transition: color 0.2s ease;
+          display: block;
+          padding: 0.25rem 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &:hover,
+          &:active {
+            color: $footer-hover;
+          }
+        }
+      }
+    }
+  }
+
+  // Service Code Button
+  .text-center {
+    text-align: center;
+  }
+
+  .service-code {
+    background: transparent;
+    border: 1px solid $footer-text;
+    color: $footer-text;
+    padding: 0.4rem 0.8rem;
+    margin: 1rem auto;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    font-size: 0.813rem;
+
+    &:hover,
+    &:active {
+      color: $footer-hover;
+      border-color: $footer-hover;
+    }
+
+    @include mobile {
+      margin: 0.75rem auto;
+    }
+  }
+
+  // Copyright
+  .copyright {
+    text-align: center;
+    margin-top: 1rem;
+    color: $footer-text;
+    font-size: 0.813rem;
+    padding: 0 1rem;
+
+    @include mobile {
+      margin-top: 0.75rem;
+    }
+  }
+}
