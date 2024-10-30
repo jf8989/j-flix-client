@@ -54,7 +54,9 @@ const Contact = () => {
           <div className="connect__info">
             <h2 className="connect__info-title">Contact Information</h2>
             <p className="connect__info-text">
-              Fill out the form and I'll get back to you within 24 hours.
+              Fill out the form and I'll get back to you within 24 hours. (This
+              is a demo form and it does not send any email, but you can reach
+              out to me by email.)
             </p>
 
             <div className="connect__info-items">
@@ -62,7 +64,7 @@ const Contact = () => {
                 <Mail className="connect__info-icon" />
                 <div>
                   <h3>Email</h3>
-                  <p>juanfrajs.contacto@gmail.com</p>
+                  <p>juanfrajf.contacto@gmail.com</p>
                 </div>
               </div>
 
