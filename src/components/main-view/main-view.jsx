@@ -1,27 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Navigate, Routes, useLocation } from "react-router-dom";
-import { Row, Col, Alert, Spinner, Container } from "react-bootstrap";
-import { MovieCard } from "../movie-card/movie-card";
-import { MovieView } from "../movie-view/movie-view";
-import { LoginView } from "../login-view/login-view";
-import { SignupView } from "../signup-view/signup-view";
+import { useLocation, Navigate } from "react-router-dom";
+import { Alert } from "react-bootstrap";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
-import { ProfileView } from "../profile-view/profile-view";
 import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
-import { MyListView } from "../my-list-view/my-list-view";
-import { UnderConstructionView } from "../under-construction/under-construction-view";
-import { HelpCenter } from "../help-center/help-center";
-import { KidsView } from "../kids-view/kids-view";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
-import TermsOfUse from "../tos-view/tos-view";
-import CookiePreferences from "../cookies/cookie-preferences";
-import Jobs from "../jobs-view/jobs-view";
-import Contact from "../contact-view/contact-view";
-import Privacy from "../privacy-view/privacy-view";
-import PageTransition from "../page-transition/PageTransition";
-import { AnimatePresence } from "framer-motion";
+import AppRoutes from "../app-routes/app-routes";
 import "./main-view.scss";
 
 // Token validation helper
@@ -168,423 +153,35 @@ const MainView = () => {
     return <Alert variant="danger">Error: {error}</Alert>;
   }
 
+  const handleLoggedIn = (user, token) => {
+    setUser(user);
+    setToken(token);
+    setAuthError(null);
+  };
+
+  const handleLoggedOut = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
+
   return (
     <div className="app-container">
-      {user && (
-        <NavigationBar
-          user={user}
-          onLoggedOut={() => {
-            setUser(null);
-            setToken(null);
-            localStorage.clear();
-          }}
-        />
-      )}
+      {user && <NavigationBar user={user} onLoggedOut={handleLoggedOut} />}
       <main className="main-content">
-        <AnimatePresence mode="wait">
-          <PageTransition
-            key={location.pathname}
-            transitionType="fade"
-            timing="smooth"
-          >
-            <Routes location={location} key={location.pathname}>
-              <Route
-                path="/signup"
-                element={
-                  <>
-                    {user ? (
-                      <Navigate to="/" />
-                    ) : (
-                      <SignupView
-                        onSignupSuccess={(user, token) => {
-                          setUser(user);
-                          setToken(token);
-                        }}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/login"
-                element={
-                  <>
-                    {user ? (
-                      <Navigate to="/" />
-                    ) : (
-                      <LoginView
-                        onLoggedIn={(user, token) => {
-                          setUser(user);
-                          setToken(token);
-                          setAuthError(null);
-                        }}
-                        authError={authError}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/movies/:movieId"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <MovieView
-                        movies={movies.map((movie) => ({
-                          ...movie,
-                          rating: movie.rating?.toString() || "N/A", // Convert rating to string
-                        }))}
-                        onToggleFavorite={onToggleFavorite}
-                        isFavorite={isFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <>
-                        <div className="welcome-section">
-                          <h1>
-                            Welcome back,{" "}
-                            <span className="highlight">{user.Username}</span>!
-                          </h1>
-                          <p>
-                            Discover new stories or continue watching where you
-                            left off.
-                          </p>
-                        </div>
-                        <div className="movie-container">
-                          <div className="movie-grid">
-                            {filteredMovies.map((movie) => (
-                              <div key={movie._id} className="movie-card">
-                                <MovieCard
-                                  movie={movie}
-                                  onToggleFavorite={onToggleFavorite}
-                                  isFavorite={isFavorite(movie._id)}
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <ProfileView
-                        user={user}
-                        token={token}
-                        setUser={setUser}
-                        movies={movies}
-                        onLoggedOut={() => {
-                          setUser(null);
-                          setToken(null);
-                          localStorage.clear();
-                        }}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/mylist"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <MyListView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/new"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/movies"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/tvshows"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/manage-profiles"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/account"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              <Route
-                path="/help"
-                element={
-                  <>
-                    {!user ? <Navigate to="/login" replace /> : <HelpCenter />}
-                  </>
-                }
-              />
-              <Route
-                path="/kids"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <KidsView
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-              {/* Footer Routes */}
-              <Route
-                path="/audio-description"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/investor-relations"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/legal-notices"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/jobs"
-                element={
-                  <>{!user ? <Navigate to="/login" replace /> : <Jobs />}</>
-                }
-              />
-
-              <Route
-                path="/cookie-preferences"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <CookiePreferences />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/gift-cards"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/terms"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/corporate-information"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/media-center"
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-
-              <Route
-                path="/privacy"
-                element={
-                  <>{!user ? <Navigate to="/login" replace /> : <Privacy />}</>
-                }
-              />
-
-              <Route
-                path="/contact"
-                element={
-                  <>{!user ? <Navigate to="/login" replace /> : <Contact />}</>
-                }
-              />
-
-              <Route
-                path="/tos"
-                element={
-                  <>
-                    {!user ? <Navigate to="/login" replace /> : <TermsOfUse />}
-                  </>
-                }
-              />
-            </Routes>
-          </PageTransition>
-        </AnimatePresence>
+        <AppRoutes
+          user={user}
+          token={token}
+          movies={movies}
+          onLoggedIn={handleLoggedIn}
+          onLoggedOut={handleLoggedOut}
+          setUser={setUser}
+          setToken={setToken}
+          authError={authError}
+          onToggleFavorite={onToggleFavorite}
+          isFavorite={isFavorite}
+          filteredMovies={filteredMovies}
+        />
       </main>
       <Footer />
     </div>
