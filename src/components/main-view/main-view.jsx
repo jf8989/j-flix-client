@@ -184,7 +184,7 @@ const MainView = () => {
         <AnimatePresence mode="wait">
           <PageTransition
             key={location.pathname}
-            transitionType="slideLeft"
+            transitionType="fade"
             timing="smooth"
           >
             <Routes location={location} key={location.pathname}>

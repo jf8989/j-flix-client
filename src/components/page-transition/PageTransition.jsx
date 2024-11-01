@@ -30,7 +30,7 @@ const timingPresets = {
   smooth: {
     type: "tween",
     ease: "easeInOut",
-    duration: 0.3,
+    duration: 0.2,
   },
   snappy: {
     type: "spring",
