@@ -78,7 +78,14 @@ const MainView = () => {
       }
 
       const isFavorite = user.FavoriteMovies.includes(movieId);
+      // Add console.log for debugging
+      console.log("User:", user.Username);
+      console.log("MovieId:", movieId);
+      console.log("IsFavorite:", isFavorite);
+
       const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
+      console.log("Request URL:", url); // Log the constructed URL
+
       const method = isFavorite ? "DELETE" : "POST";
 
       fetch(url, {
@@ -89,6 +96,7 @@ const MainView = () => {
         },
       })
         .then((response) => {
+          console.log("Response status:", response.status); // Log response status
           if (response.status === 401) {
             throw new Error("unauthorized");
           }
