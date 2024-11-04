@@ -4,6 +4,8 @@ import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieImage from "../movie-image/movie-image";
 import { BackArrow } from "../back-arrow/back-arrow";
+import { useDispatch } from "react-redux";
+import { clearFilter } from "../../redux/moviesSlice";
 import "./movie-view.scss";
 
 export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
@@ -13,6 +15,12 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   const movie = movies.find((m) => m._id === movieId);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Clear filter when entering movie view
+    dispatch(clearFilter());
+  }, [dispatch]);
 
   // Cleanup function for snackbar timer
   useEffect(() => {

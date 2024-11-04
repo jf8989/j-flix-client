@@ -54,6 +54,9 @@ export const moviesSlice = createSlice({
     setFilter: (state, action) => {
       state.filter = action.payload;
     },
+    clearFilter: (state) => {
+      state.filter = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -71,6 +74,6 @@ export const moviesSlice = createSlice({
   },
 });
 
-export const { setFilter } = moviesSlice.actions;
+export const { setFilter, clearFilter } = moviesSlice.actions;
 
 export default moviesSlice.reducer;

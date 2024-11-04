@@ -4,8 +4,11 @@ import { Card } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { BsStar, BsStarFill } from "react-icons/bs";
 import defaultPoster from "../../assets/images/default-movie-poster.jpg";
+import { useDispatch } from "react-redux";
+import { clearFilter } from "../../redux/moviesSlice";
 
 export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,6 +20,7 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
 
   const handleMovieClick = (e) => {
     e.preventDefault();
+    dispatch(clearFilter()); // Clear filter when navigating to movie details
     navigate(`/movies/${movie._id}`, {
       state: { from: location.pathname },
     });

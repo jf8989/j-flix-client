@@ -48,9 +48,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         !searchContainerRef.current.contains(event.target) &&
         !event.target.closest(".mobile-search-form")
       ) {
-        setIsSearchOpen(false);
-        setSearchValue("");
-        dispatch(setFilter(""));
+        setIsSearchOpen(false); // Only close the search input
+        // Remove these lines:
+        // setSearchValue("");
+        // dispatch(setFilter(""));
       }
 
       // Check if click is outside notifications menu
@@ -86,7 +87,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch, isMobileMenuOpen]);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleDocumentClick = (event) => {
@@ -115,11 +116,12 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       setTimeout(() => {
         searchInputRef.current?.focus();
       }, 100);
-    } else {
-      setSearchValue("");
-      dispatch(setFilter(""));
     }
-    setIsMobileMenuOpen(false); // Close mobile menu when search icon is clicked
+    // Only clear filter when explicitly closing the search
+    if (isSearchOpen && filter !== "") {
+      dispatch(clearFilter());
+    }
+    setIsMobileMenuOpen(false);
   };
 
   const handleSearchChange = (e) => {
