@@ -6,13 +6,13 @@ import { BsStar, BsStarFill } from "react-icons/bs";
 import defaultPoster from "../../assets/images/default-movie-poster.jpg";
 import { useDispatch } from "react-redux";
 import { clearFilter } from "../../redux/moviesSlice";
+import "./movie-card.scss";
 
 export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Function to truncate description to two lines
   const truncateDescription = (text, maxLength = 60) => {
     if (text.length <= maxLength) return text;
     return text.substr(0, text.lastIndexOf(" ", maxLength)) + "...";
@@ -20,7 +20,7 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
 
   const handleMovieClick = (e) => {
     e.preventDefault();
-    dispatch(clearFilter()); // Clear filter when navigating to movie details
+    dispatch(clearFilter());
     navigate(`/movies/${movie._id}`, {
       state: { from: location.pathname },
     });
@@ -28,7 +28,22 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
 
   return (
     <Card className="h-100 bg-dark text-white d-flex flex-column movie-card">
-      <div onClick={handleMovieClick} style={{ cursor: "pointer" }}>
+      <div
+        onClick={handleMovieClick}
+        style={{ cursor: "pointer", position: "relative" }}
+      >
+        {/* Badges container */}
+        <div className="badges-container">
+          {movie.rating && (
+            <span className="rating-badge">★ {String(movie.rating)}</span>
+          )}
+          {(movie.releaseYear || movie.year) && (
+            <span className="year-badge">
+              {movie.releaseYear || movie.year}
+            </span>
+          )}
+        </div>
+
         <Card.Img
           variant="top"
           src={movie.imageURL || defaultPoster}
@@ -53,11 +68,11 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
               e.stopPropagation();
               onToggleFavorite(movie._id);
             }}
-            className="movie-favorite-icon" // More specific class name
+            className="movie-favorite-icon"
             style={{
               cursor: "pointer",
-              position: "relative", // Add this
-              zIndex: "5", // Add this
+              position: "relative",
+              zIndex: "5",
             }}
           >
             {isFavorite ? (
@@ -86,7 +101,12 @@ MovieCard.propTypes = {
     title: PropTypes.string.isRequired,
     imageURL: PropTypes.string,
     description: PropTypes.string.isRequired,
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    releaseYear: PropTypes.number,
+    year: PropTypes.number,
   }).isRequired,
   onToggleFavorite: PropTypes.func.isRequired,
   isFavorite: PropTypes.bool.isRequired,
 };
+
+export default MovieCard;
