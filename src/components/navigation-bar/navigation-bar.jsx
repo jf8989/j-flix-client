@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Nav, Form, Dropdown, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaSearch, FaBell } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; // Ensure useSelector is imported
 import { setFilter } from "../../redux/moviesSlice";
 import profilePic from "../../assets/images/profilepic.jpg";
 import "./NavigationBar.scss";
@@ -10,20 +10,29 @@ import "./NavigationBar.scss";
 export const NavigationBar = ({ user, onLoggedOut }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProfileMenuOpen, setIsMobileProfileMenuOpen] = useState(false);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(1);
+  const [isProfileHovered, setIsProfileHovered] = useState(false);
+
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
   const mobileProfileMenuRef = useRef(null);
   const notificationsMenuRef = useRef(null);
   const searchContainerRef = useRef(null);
   const navbarCollapseRef = useRef(null);
+
   const dispatch = useDispatch();
-  const [isProfileHovered, setIsProfileHovered] = useState(false);
+  const filter = useSelector((state) => state.movies.filter); // Get filter from Redux
+
+  const [searchValue, setSearchValue] = useState(filter); // Initialize with filter
+
+  // Synchronize searchValue with filter whenever filter changes
+  useEffect(() => {
+    setSearchValue(filter);
+  }, [filter]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -115,7 +124,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
-    setSearchValue(value);
+    // setSearchValue(value); // Remove this line
     dispatch(setFilter(value));
   };
 
@@ -233,7 +242,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               ref={searchInputRef}
               type="text"
               placeholder="Titles, people, genres"
-              value={searchValue}
+              value={filter} // Use filter from Redux directly
               onChange={handleSearchChange}
               className={`search-input ${isSearchOpen ? "open" : ""}`}
             />

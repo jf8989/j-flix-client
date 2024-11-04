@@ -1,12 +1,14 @@
+// index.js
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Container } from "react-bootstrap";
 import { Provider } from "react-redux";
 import { useSelector } from "react-redux";
-import { store } from "./redux/store";
+import { store, persistor } from "./redux/store"; // Import persistor
 import MainView from "./components/main-view/main-view";
 import { BrowserRouter as Router } from "react-router-dom";
 import LoadingSpinner from "./components/loading-spinner/loading-spinner";
+import { PersistGate } from "redux-persist/integration/react";
 import "./index.scss";
 
 // Wrapper component to use hooks
@@ -29,7 +31,11 @@ const App = () => {
 const MyFlixApplication = () => {
   return (
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        {" "}
+        {/* Use persistor here */}
+        <App />
+      </PersistGate>
     </Provider>
   );
 };
