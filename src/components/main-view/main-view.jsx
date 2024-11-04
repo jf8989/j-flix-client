@@ -38,6 +38,10 @@ const MainView = () => {
   const [token, setToken] = useState(storedToken);
   const [authError, setAuthError] = useState(null);
 
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
+
   // Scroll to top when route changes
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -55,7 +59,7 @@ const MainView = () => {
   }, [token]);
 
   useEffect(() => {
-    if (token && moviesStatus === "idle") {
+    if (token) {
       dispatch(fetchMovies(token))
         .unwrap()
         .catch((error) => {
@@ -68,7 +72,7 @@ const MainView = () => {
           }
         });
     }
-  }, [token, moviesStatus, dispatch]);
+  }, [token, dispatch]);
 
   const onToggleFavorite = useCallback(
     (movieId) => {

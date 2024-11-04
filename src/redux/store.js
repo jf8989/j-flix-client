@@ -17,7 +17,7 @@ import storage from "redux-persist/lib/storage"; // Uses localStorage
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["movies"], // Specify which slices you want to persist
+  whitelist: [], // Remove 'movies' from the whitelist
 };
 
 const rootReducer = combineReducers({
