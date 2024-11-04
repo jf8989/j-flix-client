@@ -1,0 +1,174 @@
+// genre-group.scss
+// Additional styles for scroll buttons
+.genre-slider-container {
+  position: relative;
+  
+  .scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    z-index: 3;
+    transition: background-color 0.3s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    
+    &.left {
+      left: 0;
+    }
+    
+    &.right {
+      right: 0;
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.genre-groups-wrapper {
+  width: 100%;
+  padding: 0 1.5rem;
+  margin-top: 4rem; // Space for fixed navbar
+  
+  .genre-category-section {
+    margin-bottom: 2rem;
+    
+    .genre-category-title {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--text-color);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      padding-left: 0.5rem;
+      
+      @media (max-width: 768px) {
+        font-size: 1.25rem;
+      }
+    }
+    
+    .genre-movies-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding: 0.5rem;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+      
+      &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+      }
+
+      .genre-movie-card {
+        flex: 0 0 auto;
+        width: 200px;
+        scroll-snap-align: start;
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+        
+        &:hover {
+          transform: scale(1.05);
+          z-index: 2;
+        }
+
+        .genre-movie-poster {
+          width: 100%;
+          height: 300px;
+          object-fit: cover;
+          border-radius: 4px;
+        }
+
+        .genre-card-body {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0));
+          padding: 1rem;
+          border-radius: 0 0 4px 4px;
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+
+          .genre-card-title {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+          }
+
+          .genre-movie-description {
+            display: none;
+          }
+
+          .mt-auto {
+            display: flex;
+            justify-content: flex-end;
+            
+            .favorite-star-icon {
+              background: rgba(0,0,0,0.5);
+              border-radius: 50%;
+              padding: 0.5rem;
+              cursor: pointer;
+              
+              i {
+                font-size: 1.25rem;
+              }
+            }
+          }
+        }
+
+        &:hover .genre-card-body {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // Welcome section styles
+  .welcome-section {
+    width: 100%;
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+    border-radius: 0.5rem;
+
+    h1 {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      
+      .highlight {
+        color: var(--primary-color);
+      }
+    }
+
+    p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      max-width: 600px;
+    }
+  }
+}
+
+// Add smooth scrolling to the document
+html {
+  scroll-behavior: smooth;
+}

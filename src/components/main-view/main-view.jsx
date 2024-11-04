@@ -7,6 +7,7 @@ import { fetchMovies } from "../../redux/moviesSlice";
 import { Footer } from "../footer/footer";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 import AppRoutes from "../app-routes/app-routes";
+import MoviesByGenre from "../genre-group/genre-group";
 import "./main-view.scss";
 
 // Token validation helper
@@ -14,9 +15,7 @@ const isTokenValid = (token) => {
   if (!token) return false;
 
   try {
-    // Parse the JWT token (split by dots and get the payload)
     const payload = JSON.parse(atob(token.split(".")[1]));
-    // Check if token has expired
     return payload.exp * 1000 > Date.now();
   } catch (error) {
     return false;
@@ -31,26 +30,21 @@ const MainView = () => {
   const moviesStatus = useSelector((state) => state.movies.status);
   const error = useSelector((state) => state.movies.error);
 
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const storedToken = localStorage.getItem("token");
+  // Initialize state from localStorage
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-  const [user, setUser] = useState(storedUser);
-  const [token, setToken] = useState(storedToken);
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token");
+  });
+
   const [authError, setAuthError] = useState(null);
-
-  useEffect(() => {
-    localStorage.clear();
-  }, []);
-
-  // Scroll to top when route changes
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
 
   // Check token validity on mount and when token changes
   useEffect(() => {
     if (token && !isTokenValid(token)) {
-      // Token is invalid or expired - log out user
       setUser(null);
       setToken(null);
       localStorage.clear();
@@ -58,13 +52,13 @@ const MainView = () => {
     }
   }, [token]);
 
+  // Fetch movies when token is available
   useEffect(() => {
     if (token) {
       dispatch(fetchMovies(token))
         .unwrap()
         .catch((error) => {
           if (error.status === 401) {
-            // Unauthorized - clear user data and redirect to login
             setUser(null);
             setToken(null);
             localStorage.clear();
@@ -130,9 +124,7 @@ const MainView = () => {
 
   const isFavorite = useCallback(
     (movieId) => {
-      return (
-        user && user.FavoriteMovies && user.FavoriteMovies.includes(movieId)
-      );
+      return user?.FavoriteMovies?.includes(movieId) || false;
     },
     [user]
   );
@@ -157,9 +149,11 @@ const MainView = () => {
     return <Alert variant="danger">Error: {error}</Alert>;
   }
 
-  const handleLoggedIn = (user, token) => {
-    setUser(user);
-    setToken(token);
+  const handleLoggedIn = (userData, tokenData) => {
+    setUser(userData);
+    setToken(tokenData);
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", tokenData);
     setAuthError(null);
   };
 
@@ -173,19 +167,28 @@ const MainView = () => {
     <div className="app-container">
       {user && <NavigationBar user={user} onLoggedOut={handleLoggedOut} />}
       <main className="main-content">
-        <AppRoutes
-          user={user}
-          token={token}
-          movies={movies}
-          onLoggedIn={handleLoggedIn}
-          onLoggedOut={handleLoggedOut}
-          setUser={setUser}
-          setToken={setToken}
-          authError={authError}
-          onToggleFavorite={onToggleFavorite}
-          isFavorite={isFavorite}
-          filteredMovies={filteredMovies}
-        />
+        {user && pathname === "/" ? (
+          <MoviesByGenre
+            movies={movies}
+            onToggleFavorite={onToggleFavorite}
+            isFavorite={isFavorite}
+            filter={filter}
+          />
+        ) : (
+          <AppRoutes
+            user={user}
+            token={token}
+            movies={movies}
+            onLoggedIn={handleLoggedIn}
+            onLoggedOut={handleLoggedOut}
+            setUser={setUser}
+            setToken={setToken}
+            authError={authError}
+            onToggleFavorite={onToggleFavorite}
+            isFavorite={isFavorite}
+            filteredMovies={filteredMovies}
+          />
+        )}
       </main>
       <Footer />
     </div>
