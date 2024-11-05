@@ -1,7 +1,7 @@
-// src/components/page-transition/PageTransition.jsx
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigationType } from "react-router-dom";
+import "./PageTransition.scss";
 
 const transitions = {
   fade: {
@@ -52,6 +52,22 @@ const PageTransition = ({
   className = "",
 }) => {
   const location = useLocation();
+  const navigationType = useNavigationType();
+
+  useEffect(() => {
+    // Only scroll to top if it's not a POP navigation (back button or navigate(-1))
+    if (navigationType !== "POP") {
+      const timeoutId = setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location.pathname, navigationType]);
 
   return (
     <motion.div
@@ -62,6 +78,11 @@ const PageTransition = ({
       variants={transitions[transitionType]}
       transition={timingPresets[timing]}
       className={`page-transition ${className}`}
+      style={{
+        position: "relative",
+        width: "100%",
+        minHeight: "100%",
+      }}
     >
       {children}
     </motion.div>
