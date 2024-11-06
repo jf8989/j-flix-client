@@ -83,19 +83,45 @@ const GenreCategoryGroup = ({
 
 const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
   const groupedMovies = useMemo(() => {
-    // Group movies by genre and ensure each movie has at least 3 items
-    const grouped = _.groupBy(
-      movies.filter((movie) =>
-        movie.title.toLowerCase().includes(filter.toLowerCase())
-      ),
-      "genre.name"
+    // Filter movies based on search first
+    const filteredMovies = movies.filter((movie) =>
+      movie.title.toLowerCase().includes(filter.toLowerCase())
     );
 
-    // Only return genres with 3 or more movies
-    return Object.fromEntries(
-      Object.entries(grouped).filter(([_, movies]) => movies.length >= 3)
+    // Group movies by genre
+    const grouped = _.groupBy(
+      filteredMovies,
+      (movie) => movie.genre?.name || "Other"
     );
+
+    // Sort genres by movie count (descending) and alphabetically
+    return Object.entries(grouped)
+      .sort(([genreA, moviesA], [genreB, moviesB]) => {
+        // First sort by number of movies (descending)
+        const countDiff = moviesB.length - moviesA.length;
+        if (countDiff !== 0) return countDiff;
+        // Then alphabetically
+        return genreA.localeCompare(genreB);
+      })
+      .reduce((acc, [genre, movies]) => {
+        acc[genre] = movies;
+        return acc;
+      }, {});
   }, [movies, filter]);
+
+  // If no movies match the filter, show a message
+  if (Object.values(groupedMovies).flat().length === 0) {
+    return (
+      <div className="genre-groups-wrapper">
+        <div className="welcome-section">
+          <h1>
+            Welcome to <span className="highlight">J-Flix</span>
+          </h1>
+          <p>No movies found matching your search criteria.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="genre-groups-wrapper">
@@ -109,17 +135,15 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
         </p>
       </div>
 
-      {Object.entries(groupedMovies)
-        .sort(([genreA], [genreB]) => genreA.localeCompare(genreB))
-        .map(([genre, movies]) => (
-          <GenreCategoryGroup
-            key={genre}
-            title={genre || "Uncategorized"}
-            movies={movies}
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={isFavorite}
-          />
-        ))}
+      {Object.entries(groupedMovies).map(([genre, genreMovies]) => (
+        <GenreCategoryGroup
+          key={genre}
+          title={genre}
+          movies={genreMovies}
+          onToggleFavorite={onToggleFavorite}
+          isFavorite={isFavorite}
+        />
+      ))}
     </div>
   );
 };
