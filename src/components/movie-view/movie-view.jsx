@@ -1,3 +1,4 @@
+// MovieView.jsx
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
@@ -18,11 +19,9 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Clear filter when entering movie view
     dispatch(clearFilter());
   }, [dispatch]);
 
-  // Cleanup function for snackbar timer
   useEffect(() => {
     let snackbarTimer;
     if (showSnackbar) {
@@ -37,7 +36,6 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     };
   }, [showSnackbar]);
 
-  // Memoize the toggle handler
   const handleToggleFavorite = useCallback(
     (movieId) => {
       const currentState = isFavorite(movieId);
@@ -97,7 +95,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                       display: "inline-block",
                     }}
                   >
-                    {movie.releaseYear || movie.year || "N/A"}
+                    {movie.releaseYear || "N/A"}
                   </span>
                 </div>
                 <Button
@@ -145,36 +143,21 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 {/* Genre information */}
                 <div className="mb-4">
                   <h3 className="h4 mb-3">Genres</h3>
-                  {movie.genres && movie.genres.length > 0 ? (
-                    movie.genres.map((genre, index) => (
-                      <div key={index} className="mb-3">
-                        <Card.Text>
-                          <span style={{ color: "#e50914" }}>Category: </span>
+                  <div className="d-flex flex-wrap gap-2">
+                    {movie.genres && movie.genres.length > 0 ? (
+                      movie.genres.map((genre, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 rounded"
+                          style={{ backgroundColor: "#221f1f" }}
+                        >
                           {genre.name}
-                        </Card.Text>
-                        <Card.Text>
-                          <span style={{ color: "#e50914" }}>
-                            Description:{" "}
-                          </span>
-                          {genre.description}
-                        </Card.Text>
-                      </div>
-                    ))
-                  ) : movie.genre ? (
-                    // Fallback for legacy single genre
-                    <>
-                      <Card.Text>
-                        <span style={{ color: "#e50914" }}>Category: </span>
-                        {movie.genre.name}
-                      </Card.Text>
-                      <Card.Text>
-                        <span style={{ color: "#e50914" }}>Description: </span>
-                        {movie.genre.description}
-                      </Card.Text>
-                    </>
-                  ) : (
-                    <Card.Text>No genre information available</Card.Text>
-                  )}
+                        </span>
+                      ))
+                    ) : (
+                      <Card.Text>No genre information available</Card.Text>
+                    )}
+                  </div>
                 </div>
 
                 {/* Cast section */}
@@ -186,10 +169,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                         <span
                           key={index}
                           className="px-2 py-1 rounded"
-                          style={{
-                            backgroundColor: "#221f1f",
-                            margin: "0 5px 5px 0",
-                          }}
+                          style={{ backgroundColor: "#221f1f" }}
                         >
                           {actor}
                         </span>
@@ -204,7 +184,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                     <Col sm={6}>
                       <Card.Text>
                         <span style={{ color: "#e50914" }}>Release Year: </span>
-                        {movie.releaseYear || movie.year || "N/A"}
+                        {movie.releaseYear || "N/A"}
                       </Card.Text>
                     </Col>
                     <Col sm={6}>
@@ -235,17 +215,11 @@ MovieView.propTypes = {
       _id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      // Updated to handle both structures
       genres: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string.isRequired,
-          description: PropTypes.string.isRequired,
         })
       ),
-      genre: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-      }),
       director: PropTypes.shape({
         name: PropTypes.string.isRequired,
         bio: PropTypes.string,
@@ -253,9 +227,8 @@ MovieView.propTypes = {
       }).isRequired,
       imageURL: PropTypes.string,
       featured: PropTypes.bool,
-      year: PropTypes.number,
       actors: PropTypes.arrayOf(PropTypes.string),
-      rating: PropTypes.string,
+      rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       releaseYear: PropTypes.number,
     })
   ).isRequired,

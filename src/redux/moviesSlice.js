@@ -1,3 +1,4 @@
+// moviesSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchMovies = createAsyncThunk(
@@ -19,16 +20,11 @@ export const fetchMovies = createAsyncThunk(
         title: movie.title,
         imageURL: movie.imageURL,
         description: movie.description,
-        // Convert single genre to array of genres
+        // Convert genres to simple array of names
         genres: Array.isArray(movie.genres)
-          ? movie.genres
+          ? movie.genres.map((genre) => ({ name: genre.name }))
           : movie.genre
-          ? [
-              {
-                name: movie.genre?.name || "",
-                description: movie.genre?.description || "",
-              },
-            ]
+          ? [{ name: movie.genre.name }]
           : [],
         director: {
           name: movie.director?.name || "",
