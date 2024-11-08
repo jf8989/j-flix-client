@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useCallback } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
+import { useNavigate } from "react-router-dom"; // Add this import
 import _ from "lodash";
 import "./genre-group.scss";
 
@@ -10,6 +11,7 @@ const GenreCategoryGroup = ({
   isFavorite,
 }) => {
   const scrollContainerRef = useRef(null);
+  const navigate = useNavigate(); // Add navigation hook
 
   const scroll = useCallback((direction) => {
     const container = scrollContainerRef.current;
@@ -40,7 +42,12 @@ const GenreCategoryGroup = ({
         </button>
         <div className="genre-movies-grid" ref={scrollContainerRef}>
           {movies.map((movie) => (
-            <div key={movie._id} className="genre-movie-card">
+            <div
+              key={movie._id}
+              className="genre-movie-card"
+              onClick={() => navigate(`/movies/${movie._id}`)} // Add click handler
+              style={{ cursor: "pointer" }} // Add cursor pointer
+            >
               <img
                 src={movie.imageURL}
                 alt={movie.title}
@@ -52,7 +59,7 @@ const GenreCategoryGroup = ({
                 <div className="mt-auto">
                   <span
                     onClick={(e) => {
-                      e.stopPropagation();
+                      e.stopPropagation(); // Prevent navigation when clicking the star
                       onToggleFavorite(movie._id);
                     }}
                     className="favorite-star-icon"
