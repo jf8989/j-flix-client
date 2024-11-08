@@ -144,15 +144,37 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
 
                 {/* Genre information */}
                 <div className="mb-4">
-                  <h3 className="h4 mb-3">Genre</h3>
-                  <Card.Text>
-                    <span style={{ color: "#e50914" }}>Category: </span>
-                    {movie.genre.name}
-                  </Card.Text>
-                  <Card.Text>
-                    <span style={{ color: "#e50914" }}>Description: </span>
-                    {movie.genre.description}
-                  </Card.Text>
+                  <h3 className="h4 mb-3">Genres</h3>
+                  {movie.genres && movie.genres.length > 0 ? (
+                    movie.genres.map((genre, index) => (
+                      <div key={index} className="mb-3">
+                        <Card.Text>
+                          <span style={{ color: "#e50914" }}>Category: </span>
+                          {genre.name}
+                        </Card.Text>
+                        <Card.Text>
+                          <span style={{ color: "#e50914" }}>
+                            Description:{" "}
+                          </span>
+                          {genre.description}
+                        </Card.Text>
+                      </div>
+                    ))
+                  ) : movie.genre ? (
+                    // Fallback for legacy single genre
+                    <>
+                      <Card.Text>
+                        <span style={{ color: "#e50914" }}>Category: </span>
+                        {movie.genre.name}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ color: "#e50914" }}>Description: </span>
+                        {movie.genre.description}
+                      </Card.Text>
+                    </>
+                  ) : (
+                    <Card.Text>No genre information available</Card.Text>
+                  )}
                 </div>
 
                 {/* Cast section */}
@@ -213,10 +235,17 @@ MovieView.propTypes = {
       _id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
+      // Updated to handle both structures
+      genres: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          description: PropTypes.string.isRequired,
+        })
+      ),
       genre: PropTypes.shape({
         name: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
-      }).isRequired,
+      }),
       director: PropTypes.shape({
         name: PropTypes.string.isRequired,
         bio: PropTypes.string,

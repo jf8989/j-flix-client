@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useCallback } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { useNavigate } from "react-router-dom"; // Add this import
+import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import "./genre-group.scss";
 
@@ -11,7 +11,7 @@ const GenreCategoryGroup = ({
   isFavorite,
 }) => {
   const scrollContainerRef = useRef(null);
-  const navigate = useNavigate(); // Add navigation hook
+  const navigate = useNavigate();
 
   const scroll = useCallback((direction) => {
     const container = scrollContainerRef.current;
@@ -45,8 +45,8 @@ const GenreCategoryGroup = ({
             <div
               key={movie._id}
               className="genre-movie-card"
-              onClick={() => navigate(`/movies/${movie._id}`)} // Add click handler
-              style={{ cursor: "pointer" }} // Add cursor pointer
+              onClick={() => navigate(`/movies/${movie._id}`)}
+              style={{ cursor: "pointer" }}
             >
               <img
                 src={movie.imageURL}
@@ -59,7 +59,7 @@ const GenreCategoryGroup = ({
                 <div className="mt-auto">
                   <span
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent navigation when clicking the star
+                      e.stopPropagation();
                       onToggleFavorite(movie._id);
                     }}
                     className="favorite-star-icon"
@@ -95,14 +95,25 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
       movie.title.toLowerCase().includes(filter.toLowerCase())
     );
 
-    // Group movies by genre
-    const grouped = _.groupBy(
-      filteredMovies,
-      (movie) => movie.genre?.name || "Other"
-    );
+    // Create a map to store movies by genre
+    const genreMoviesMap = new Map();
 
-    // Sort genres by movie count (descending) and alphabetically
-    return Object.entries(grouped)
+    // Iterate through each movie and add it to all its genres
+    filteredMovies.forEach((movie) => {
+      const genres = Array.isArray(movie.genres) ? movie.genres : [movie.genre];
+      genres.forEach((genre) => {
+        if (!genre?.name) return;
+
+        const genreName = genre.name;
+        if (!genreMoviesMap.has(genreName)) {
+          genreMoviesMap.set(genreName, []);
+        }
+        genreMoviesMap.get(genreName).push(movie);
+      });
+    });
+
+    // Convert map to object and sort by movie count and alphabetically
+    const grouped = Array.from(genreMoviesMap.entries())
       .sort(([genreA, moviesA], [genreB, moviesB]) => {
         // First sort by number of movies (descending)
         const countDiff = moviesB.length - moviesA.length;
@@ -110,10 +121,12 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
         // Then alphabetically
         return genreA.localeCompare(genreB);
       })
-      .reduce((acc, [genre, movies]) => {
-        acc[genre] = movies;
+      .reduce((acc, [genre, genreMovies]) => {
+        acc[genre] = genreMovies;
         return acc;
       }, {});
+
+    return grouped;
   }, [movies, filter]);
 
   // If no movies match the filter, show a message

@@ -19,10 +19,17 @@ export const fetchMovies = createAsyncThunk(
         title: movie.title,
         imageURL: movie.imageURL,
         description: movie.description,
-        genre: {
-          name: movie.genre?.name || "",
-          description: movie.genre?.description || "",
-        },
+        // Convert single genre to array of genres
+        genres: Array.isArray(movie.genres)
+          ? movie.genres
+          : movie.genre
+          ? [
+              {
+                name: movie.genre?.name || "",
+                description: movie.genre?.description || "",
+              },
+            ]
+          : [],
         director: {
           name: movie.director?.name || "",
           bio: movie.director?.bio || "",
@@ -43,7 +50,7 @@ export const fetchMovies = createAsyncThunk(
 const initialState = {
   list: [],
   filter: "",
-  status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: "idle",
   error: null,
 };
 
