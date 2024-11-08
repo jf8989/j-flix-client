@@ -1,7 +1,6 @@
-import React, { useMemo, useRef, useCallback } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import _ from "lodash";
 import "./genre-group.scss";
 
 const GenreCategoryGroup = ({
@@ -12,6 +11,9 @@ const GenreCategoryGroup = ({
 }) => {
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const scroll = useCallback((direction) => {
     const container = scrollContainerRef.current;
@@ -27,12 +29,45 @@ const GenreCategoryGroup = ({
     }
   }, []);
 
+  // Mouse Events for Desktop
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeft(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = x - startX;
+    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  // Touch Events for Mobile
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeft(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
+    const walk = x - startX;
+    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
   return (
     <div className="genre-category-section">
       <div className="genre-header">
         <h2 className="genre-category-title">{title}</h2>
       </div>
-      <div className="genre-slider-container">
+      <div className="genre-slider-wrapper">
         <button
           className="scroll-button left"
           onClick={() => scroll("left")}
@@ -40,19 +75,33 @@ const GenreCategoryGroup = ({
         >
           <BsChevronLeft />
         </button>
-        <div className="genre-movies-grid" ref={scrollContainerRef}>
+        <div
+          className="genre-movies-grid"
+          ref={scrollContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleDragEnd}
+        >
           {movies.map((movie) => (
             <div
               key={movie._id}
               className="genre-movie-card"
-              onClick={() => navigate(`/movies/${movie._id}`)}
-              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                if (!isDragging) {
+                  navigate(`/movies/${movie._id}`);
+                }
+              }}
             >
               <img
                 src={movie.imageURL}
                 alt={movie.title}
                 className="genre-movie-poster"
                 loading="lazy"
+                draggable="false"
               />
               <div className="genre-card-body">
                 <h5 className="genre-card-title">{movie.title}</h5>
