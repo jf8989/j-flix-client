@@ -2,13 +2,13 @@
 
 // Navbar
 .navbar {
-  background-color: rgba(0, 0, 0, 0.9) !important;
+  background-color: var(--background-color) !important;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0.6rem 4%;
   width: 100%;
 
   &.navbar-scrolled {
-    background-color: rgb(20, 20, 20) !important;
+    background-color: transparent !important;
   }
 
   .nav-container {
