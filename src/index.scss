@@ -1,3 +1,4 @@
+// index.scss
 @import '~bootstrap/scss/bootstrap.scss';
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
@@ -5,7 +6,7 @@
   --primary-color: #e50914;
   --secondary-color: #221f1f;
   --text-color: #ffffff;
-  --background-color: #1c1b1b;
+  --background-color: #201f1f;
 }
 
 body {
@@ -140,100 +141,6 @@ body {
   .col-lg-9 {
     padding-right: 15px;
     padding-left: 15px;
-  }
-}
-
-// Footer
-.footer {
-  background-color: #000000;
-  color: #757575;
-  padding: 50px 0 20px;
-  font-size: 13px;
-  flex-shrink: 0;
-  margin-top: auto; // Ensures footer stays at bottom
-  width: 100%;
-  position: relative; // Ensures footer stays above content
-  z-index: 1; // Ensures footer stays above other elements
-
-  .container {
-    max-width: 980px;
-  }
-
-  .social-icons {
-    font-size: 24px;
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: center;
-
-    svg {
-      margin: 0 0.75rem;
-      cursor: pointer;
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: #ffffff;
-      }
-    }
-  }
-
-  .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-
-    .col {
-      flex: 0 0 25%;
-      margin-bottom: 1rem;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-
-      li {
-        margin-bottom: 1rem;
-        cursor: pointer;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: #ffffff;
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-
-  .service-code {
-    background-color: transparent;
-    border: 1px solid #757575;
-    color: #757575;
-    padding: 0.5rem 1rem;
-    margin: 1rem 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      color: #ffffff;
-      border-color: #ffffff;
-    }
-  }
-
-  .copyright {
-    margin-top: 2rem;
-    font-size: 11px;
-    text-align: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .footer {
-    .footer-links {
-      .col {
-        flex: 0 0 50%;
-      }
-    }
   }
 }
 

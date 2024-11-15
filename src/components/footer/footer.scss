@@ -1,11 +1,21 @@
-// Variables
-$footer-bg: #141414;
-$footer-text: #737373;
+// src/components/footer/footer.scss
+
+// Variables (copied from index but keeping them in index.scss too)
+:root {
+  --primary-color: #e50914;
+  --secondary-color: #221f1f;
+  --text-color: #ffffff;
+  --background-color: #201f1f;
+}
+
+// Original footer variables
+$footer-bg: var(--background-color);  // Updated to use root variable
+$footer-text: #a1a1a1;
 $footer-hover: #fff;
 $mobile-breakpoint: 740px;
 $small-mobile-breakpoint: 500px;
 
-// Mixins
+// Mixins (keeping original)
 @mixin mobile {
   @media (max-width: #{$mobile-breakpoint}) {
     @content;
@@ -18,31 +28,33 @@ $small-mobile-breakpoint: 500px;
   }
 }
 
-// Footer Styles
+// Footer Styles (merged with index.scss footer styles)
 .footer {
-  padding: 1rem 0;
   background-color: $footer-bg;
   color: $footer-text;
+  padding: 50px 0 20px;
+  font-size: 13px;
+  flex-shrink: 0;
   margin-top: auto;
   width: 100%;
+  position: relative;
+  z-index: 1;
   overflow-x: hidden;
 
-  // Container styles
   .container {
+    max-width: 980px;
     width: 100%;
-    max-width: 100%;
     margin: 0 auto;
     padding: 0;
     overflow-x: hidden;
   }
 
-  // Social Icons Section
   .social-icons {
+    font-size: 24px;
+    margin-bottom: 2rem;
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-bottom: 1rem;
-    padding: 0 1rem;
 
     @include mobile {
       gap: 1.5rem;
@@ -57,19 +69,23 @@ $small-mobile-breakpoint: 500px;
       justify-content: center;
       padding: 0.25rem;
 
-      @include mobile {
-        font-size: 1.5rem;
-      }
-
-      &:hover, 
-      &:active {
+      &:hover {
         color: $footer-hover;
         transform: scale(1.1);
       }
     }
+
+    svg {
+      margin: 0 0.75rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $footer-hover;
+      }
+    }
   }
 
-  // Footer Links Section
   .footer-links {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -112,18 +128,12 @@ $small-mobile-breakpoint: 500px;
           overflow: hidden;
           text-overflow: ellipsis;
 
-          &:hover,
-          &:active {
+          &:hover {
             color: $footer-hover;
           }
         }
       }
     }
-  }
-
-  // Service Code Button
-  .text-center {
-    text-align: center;
   }
 
   .service-code {
@@ -137,8 +147,7 @@ $small-mobile-breakpoint: 500px;
     display: inline-block;
     font-size: 0.813rem;
 
-    &:hover,
-    &:active {
+    &:hover {
       color: $footer-hover;
       border-color: $footer-hover;
     }
@@ -148,16 +157,24 @@ $small-mobile-breakpoint: 500px;
     }
   }
 
-  // Copyright
   .copyright {
     text-align: center;
     margin-top: 1rem;
-    color: $footer-text;
     font-size: 0.813rem;
     padding: 0 1rem;
 
     @include mobile {
       margin-top: 0.75rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    .footer-links {
+      .col {
+        flex: 0 0 50%;
+      }
     }
   }
 }
