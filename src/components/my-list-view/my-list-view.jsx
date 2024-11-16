@@ -15,7 +15,7 @@ export const MyListView = ({ user, movies, onToggleFavorite }) => {
           <BackArrow className="mt-1" />
         </Col>
         <Col>
-          <h2 className="text-white mb-0">My List</h2>
+          <h2 className="text-white mb-0">Watch List</h2>
         </Col>
       </Row>
       <Row>

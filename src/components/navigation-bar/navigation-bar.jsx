@@ -234,7 +234,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               to="/mylist"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              My List
+              Watch List
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
