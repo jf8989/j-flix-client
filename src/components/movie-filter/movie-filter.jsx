@@ -32,7 +32,9 @@ export function MovieFilter() {
   }, [dispatch]);
 
   return (
-    <Container className="mb-4 mt-5 pt-5">
+    <Container
+      className={`mb-4 mt-5 pt-5 ${filter ? "movie-filter-active" : ""}`}
+    >
       <Form.Control
         type="text"
         placeholder="Search movies..."
@@ -41,6 +43,15 @@ export function MovieFilter() {
         className="bg-dark text-white"
         style={{ border: "1px solid #ffffff", zIndex: 1050 }}
       />
+      <style>
+        {`
+          @media (max-width: 767px) {
+            .movie-filter-active {
+              margin-bottom: 7rem !important;
+            }
+          }
+        `}
+      </style>
     </Container>
   );
 }
