@@ -76,7 +76,7 @@ const HelpCenter = () => {
     .filter((category) => category.questions.length > 0);
 
   return (
-    <div className="bg-black min-h-screen text-white py-16 content-margin-help">
+    <div className="help-center">
       <Container>
         <BackArrow className="mb-4" />
         {/* Header Section */}

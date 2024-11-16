@@ -4,9 +4,12 @@
 
 :root {
   --primary-color: #e50914;
+  --primary-color-dark: #c30812;
   --secondary-color: #221f1f;
   --text-color: #ffffff;
   --background-color: #201f1f;
+  --card-bg: #201f1f;        // Add this new variable
+  --card-hover-bg: #454545;  // Add this new variable
 }
 
 body {
