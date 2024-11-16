@@ -2,6 +2,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import moviesReducer from "./moviesSlice";
 import loadingReducer from "./loadingSlice";
+import scrollPositionReducer from "./scrollPositionSlice";
 import {
   persistStore,
   persistReducer,
@@ -12,17 +13,18 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Uses localStorage
+import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [], // Remove 'movies' from the whitelist
+  whitelist: ["scrollPosition"], // Only persist scroll positions
 };
 
 const rootReducer = combineReducers({
   movies: moviesReducer,
   loading: loadingReducer,
+  scrollPosition: scrollPositionReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,7 +34,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore Redux Persist actions
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
