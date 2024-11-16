@@ -29,7 +29,7 @@ const GenreCategoryGroup = ({
     }
   }, []);
 
-  // Mouse Events for Desktop
+  // Mouse Events for Desktop only
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
@@ -40,20 +40,6 @@ const GenreCategoryGroup = ({
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = x - startX;
-    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  // Touch Events for Mobile
-  const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
     const walk = x - startX;
     scrollContainerRef.current.scrollLeft = scrollLeft - walk;
   };
@@ -82,9 +68,6 @@ const GenreCategoryGroup = ({
           onMouseMove={handleMouseMove}
           onMouseUp={handleDragEnd}
           onMouseLeave={handleDragEnd}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleDragEnd}
         >
           {movies.map((movie) => (
             <div
@@ -178,32 +161,19 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
     return grouped;
   }, [movies, filter]);
 
-  // If no movies match the filter, show a message
+  // If no movies match the filter, show a simple message
   if (Object.values(groupedMovies).flat().length === 0) {
     return (
       <div className="genre-groups-wrapper">
-        <div className="welcome-section">
-          <h1>
-            Welcome to <span className="highlight">J-Flix</span>
-          </h1>
-          <p>No movies found matching your search criteria.</p>
-        </div>
+        <p className="no-results">
+          No movies found matching your search criteria.
+        </p>
       </div>
     );
   }
 
   return (
     <div className="genre-groups-wrapper">
-      <div className="welcome-section">
-        <h1>
-          Welcome to <span className="highlight">J-Flix</span>
-        </h1>
-        <p>
-          Discover movies across different genres. Add your favorites to your
-          personal collection.
-        </p>
-      </div>
-
       {Object.entries(groupedMovies).map(([genre, genreMovies]) => (
         <GenreCategoryGroup
           key={genre}
