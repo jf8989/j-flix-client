@@ -127,10 +127,16 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
       movie.title.toLowerCase().includes(filter.toLowerCase())
     );
 
-    // Create a map to store movies by genre
+    // If there's a filter active, show all filtered movies in a single "Search Results" category
+    if (filter) {
+      return {
+        "Search Results": filteredMovies,
+      };
+    }
+
+    // If no filter, group by genre as before
     const genreMoviesMap = new Map();
 
-    // Iterate through each movie and add it to all its genres
     filteredMovies.forEach((movie) => {
       const genres = Array.isArray(movie.genres) ? movie.genres : [movie.genre];
       genres.forEach((genre) => {
@@ -177,7 +183,7 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
       {Object.entries(groupedMovies).map(([genre, genreMovies]) => (
         <GenreCategoryGroup
           key={genre}
-          title={genre}
+          title={filter ? `Search Results for "${filter}"` : genre}
           movies={genreMovies}
           onToggleFavorite={onToggleFavorite}
           isFavorite={isFavorite}
