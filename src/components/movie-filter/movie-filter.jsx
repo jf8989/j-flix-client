@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilter } from "../../redux/moviesSlice";
 import { Form, Container } from "react-bootstrap";
@@ -14,10 +14,25 @@ export function MovieFilter() {
     [dispatch]
   );
 
+  // Handle ESC key press
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") {
+        dispatch(setFilter("")); // Clear the filter
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("keydown", handleEscKey);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [dispatch]);
+
   return (
     <Container className="mb-4 mt-5 pt-5">
-      {" "}
-      {/* Added mt-5 and pt-5 for top margin and padding */}
       <Form.Control
         type="text"
         placeholder="Search movies..."

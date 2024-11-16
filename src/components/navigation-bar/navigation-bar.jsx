@@ -48,10 +48,12 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         !searchContainerRef.current.contains(event.target) &&
         !event.target.closest(".mobile-search-form")
       ) {
-        setIsSearchOpen(false); // Only close the search input
-        // Remove these lines:
-        // setSearchValue("");
-        // dispatch(setFilter(""));
+        // Only keep the search open if there's actual text in the filter
+        if (filter && filter.trim() !== "") {
+          // Do nothing - keep it open
+        } else {
+          setIsSearchOpen(false); // Close it if there's no text
+        }
       }
 
       // Check if click is outside notifications menu
@@ -87,7 +89,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch]);
+  }, [dispatch, filter]);
 
   useEffect(() => {
     const handleDocumentClick = (event) => {
@@ -117,9 +119,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         searchInputRef.current?.focus();
       }, 100);
     }
-    // Only clear filter when explicitly closing the search
-    if (isSearchOpen && filter !== "") {
-      dispatch(clearFilter());
+    // Clear filter when closing search
+    if (isSearchOpen) {
+      dispatch(setFilter(""));
+      setSearchValue("");
     }
     setIsMobileMenuOpen(false);
   };
@@ -168,6 +171,11 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     }
   };
 
+  const handleHomeClick = () => {
+    dispatch(setFilter("")); // Clear the filter
+    setIsMobileMenuOpen(false); // Keep existing functionality
+  };
+
   return (
     <Navbar
       variant="dark"
@@ -193,11 +201,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           ref={navbarCollapseRef}
         >
           <Nav className="me-auto">
-            <Nav.Link
-              as={Link}
-              to="/"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
+            <Nav.Link as={Link} to="/" onClick={handleHomeClick}>
               Home
             </Nav.Link>
             <Nav.Link
@@ -229,25 +233,45 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             >
               Kids
             </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/mylist"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
+            <Nav.Link as={Link} to="/mylist" onClick={() => handleHomeClick}>
               Watch List
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <Nav className="ml-auto order-3 d-none d-lg-flex">
           <div className="search-container" ref={searchContainerRef}>
-            <Form.Control
-              ref={searchInputRef}
-              type="text"
-              placeholder="Titles, people, genres"
-              value={filter} // Use filter from Redux directly
-              onChange={handleSearchChange}
-              className={`search-input ${isSearchOpen ? "open" : ""}`}
-            />
+            <div
+              className="position-relative"
+              style={{ display: "inline-block" }}
+            >
+              <Form.Control
+                ref={searchInputRef}
+                type="text"
+                placeholder="Titles, people, genres"
+                value={filter}
+                onChange={handleSearchChange}
+                className={`search-input ${isSearchOpen ? "open" : ""}`}
+              />
+              {filter && filter.trim() !== "" && (
+                <button
+                  className="position-absolute bg-transparent border-0"
+                  onClick={() => dispatch(setFilter(""))}
+                  type="button"
+                  aria-label="Clear search"
+                  style={{
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#333",
+                    fontSize: "20px",
+                    zIndex: 10,
+                    cursor: "pointer",
+                  }}
+                >
+                  ×
+                </button>
+              )}
+            </div>
             <FaSearch
               onClick={handleSearchToggle}
               style={{ cursor: "pointer", marginRight: "20px" }}
@@ -350,12 +374,27 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       <Form
         className={`mobile-search-form d-lg-none ${isSearchOpen ? "show" : ""}`}
       >
-        <Form.Control
-          type="text"
-          placeholder="Titles, people, genres"
-          value={searchValue}
-          onChange={handleSearchChange}
-        />
+        <div className="position-relative">
+          <Form.Control
+            type="text"
+            placeholder="Titles, people, genres"
+            value={searchValue}
+            onChange={handleSearchChange}
+          />
+          {searchValue && searchValue.trim() !== "" && (
+            <button
+              className="position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent text-white pe-2"
+              onClick={() => {
+                dispatch(setFilter(""));
+                setSearchValue("");
+              }}
+              type="button"
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </Form>
       <div
         ref={mobileProfileMenuRef}
