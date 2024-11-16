@@ -24,7 +24,7 @@ $hover-shadow: 0 10px 20px rgba(255, 215, 0, 0.15);
 }
 
 .kids-view {
-  background-color: $dark-bg;
+  background-color: --background-color;
   min-height: 100vh;
 
   // Header Styles
@@ -94,7 +94,7 @@ $hover-shadow: 0 10px 20px rgba(255, 215, 0, 0.15);
         
         &.active {
           background-color: $primary-yellow;
-          color: $dark-bg;
+          color: --background-color;
           font-weight: 600;
           
           &:hover {
@@ -253,7 +253,7 @@ $hover-shadow: 0 10px 20px rgba(255, 215, 0, 0.15);
 
           .rating-badge {
             background-color: $primary-yellow !important;
-            color: $dark-bg;
+            color: --background-color;
             font-weight: 500;
             padding: 0.5em 1em;
           }
@@ -282,7 +282,7 @@ $hover-shadow: 0 10px 20px rgba(255, 215, 0, 0.15);
           
           &:hover {
             background-color: $primary-yellow;
-            color: $dark-bg;
+            color: --background-color;
             transform: scale(1.02);
           }
         }
