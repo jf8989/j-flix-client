@@ -482,6 +482,9 @@
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   
+  // Floating animation
+  animation: float 8s ease-in-out infinite;
+  
   &:hover {
     background: linear-gradient(135deg,
       #ff3333 0%,
@@ -490,5 +493,18 @@
     );
     -webkit-background-clip: text;
     background-clip: text;
+  }
+}
+
+// Floating keyframes
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
