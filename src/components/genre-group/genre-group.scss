@@ -106,6 +106,26 @@
         }
       }
     }
+    @media (min-width: 1024px) {
+      &.left {
+        left: -20px; // Scoot left arrow more to the left
+      }
+      
+      &.right {
+        right: -20px; // Scoot right arrow more to the right
+      }
+    }
+  
+    // Even larger screens might need different positioning
+    @media (min-width: 1440px) {
+      &.left {
+        left: -40px; // More offset for larger screens
+      }
+      
+      &.right {
+        right: -40px; // More offset for larger screens
+      }
+    }
   }
 
   &:hover {
