@@ -233,7 +233,8 @@ $font-display: 'Clash Display', $font-primary;
       scroll-behavior: smooth;
       -ms-overflow-style: none;
       scrollbar-width: none;
-      padding-right: calc(2vw + 140px); /* Add extra padding to the right */
+      padding-right: calc(2vw + 170px); /* Add extra padding to the right */
+      padding-left: calc(2vw + 60px);
       
       &::-webkit-scrollbar {
         display: none;
