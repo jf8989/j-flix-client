@@ -1,3 +1,4 @@
+// genre-group.jsx
 import React, { useRef, useState, useCallback, useMemo } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +8,7 @@ const GenreCategoryGroup = ({
   title,
   movies,
   onToggleFavorite,
-  isFavorite,
+  userFavorites, // Changed from isFavorite to userFavorites
 }) => {
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
@@ -69,44 +70,48 @@ const GenreCategoryGroup = ({
           onMouseUp={handleDragEnd}
           onMouseLeave={handleDragEnd}
         >
-          {movies.map((movie) => (
-            <div
-              key={movie._id}
-              className="genre-movie-card"
-              onClick={(e) => {
-                if (!isDragging) {
-                  navigate(`/movies/${movie._id}`);
-                }
-              }}
-            >
-              <img
-                src={movie.imageURL}
-                alt={movie.title}
-                className="genre-movie-poster"
-                loading="lazy"
-                draggable="false"
-              />
-              <div className="genre-card-body">
-                <h5 className="genre-card-title">{movie.title}</h5>
-                <div className="mt-auto">
-                  <span
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleFavorite(movie._id);
-                    }}
-                    className="favorite-star-icon"
-                    role="button"
-                  >
-                    {isFavorite(movie._id) ? (
-                      <i className="bi bi-star-fill star-filled"></i>
-                    ) : (
-                      <i className="bi bi-star star-empty"></i>
-                    )}
-                  </span>
+          {movies.map((movie) => {
+            const isFav = userFavorites.includes(movie._id); // Determine if movie is favorite
+
+            return (
+              <div
+                key={movie._id}
+                className="genre-movie-card"
+                onClick={(e) => {
+                  if (!isDragging) {
+                    navigate(`/movies/${movie._id}`);
+                  }
+                }}
+              >
+                <img
+                  src={movie.imageURL}
+                  alt={movie.title}
+                  className="genre-movie-poster"
+                  loading="lazy"
+                  draggable="false"
+                />
+                <div className="genre-card-body">
+                  <h5 className="genre-card-title">{movie.title}</h5>
+                  <div className="mt-auto">
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleFavorite(movie._id);
+                      }}
+                      className="favorite-star-icon"
+                      role="button"
+                    >
+                      {isFav ? (
+                        <i className="bi bi-star-fill star-filled"></i>
+                      ) : (
+                        <i className="bi bi-star star-empty"></i>
+                      )}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <button
           className="scroll-button right"
@@ -120,7 +125,7 @@ const GenreCategoryGroup = ({
   );
 };
 
-const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
+const MoviesByGenre = ({ movies, onToggleFavorite, userFavorites, filter }) => {
   const groupedMovies = useMemo(() => {
     // Filter movies based on search first
     const filteredMovies = movies.filter((movie) =>
@@ -130,7 +135,7 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
     // If there's a filter active, show all filtered movies in a single "Search Results" category
     if (filter) {
       return {
-        "Search Results": filteredMovies,
+        [`Search Results for "${filter}"`]: filteredMovies,
       };
     }
 
@@ -183,11 +188,11 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
       {Object.entries(groupedMovies).map(([genre, genreMovies], index) => (
         <GenreCategoryGroup
           key={genre}
-          title={filter ? `Search Results for "${filter}"` : genre}
+          title={genre}
           movies={genreMovies}
           onToggleFavorite={onToggleFavorite}
-          isFavorite={isFavorite}
-          style={{ "--animation-order": index }} // Add this line
+          userFavorites={userFavorites} // Pass userFavorites to GenreCategoryGroup
+          style={{ "--animation-order": index }}
         />
       ))}
     </div>

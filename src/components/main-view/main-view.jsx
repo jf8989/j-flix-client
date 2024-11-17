@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Navigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
@@ -43,23 +49,25 @@ const MainView = () => {
 
   const [authError, setAuthError] = useState(null);
 
-  // Add this new state for animation
+  // State for controlling animation
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
-  // Reset scroll position when returning to home view
+  // Ref to store previous pathname
+  const prevPathnameRef = useRef();
+
   useEffect(() => {
     if (pathname === "/" && user) {
-      // Reset animation state
-      setShouldAnimate(false);
-
-      // Trigger animation after a brief delay
-      const timeoutId = setTimeout(() => {
-        setShouldAnimate(true);
-      }, 50);
-
-      return () => clearTimeout(timeoutId);
+      // Only trigger animation when navigating to home page
+      if (prevPathnameRef.current !== pathname) {
+        setShouldAnimate(false);
+        const timeoutId = setTimeout(() => {
+          setShouldAnimate(true);
+        }, 50);
+        return () => clearTimeout(timeoutId);
+      }
     }
-  }, [pathname, user]);
+    prevPathnameRef.current = pathname;
+  }, [pathname]); // Removed 'user' from dependencies
 
   // Check token validity on mount and when token changes
   useEffect(() => {
@@ -195,7 +203,7 @@ const MainView = () => {
             <MoviesByGenre
               movies={movies}
               onToggleFavorite={onToggleFavorite}
-              isFavorite={isFavorite}
+              userFavorites={user?.FavoriteMovies || []}
               filter={filter}
             />
           </div>
