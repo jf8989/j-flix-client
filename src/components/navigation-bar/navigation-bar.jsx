@@ -223,11 +223,10 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         <Navbar.Brand
           as={Link}
           to="/"
-          className="order-1"
-          style={{ color: "#e50914", fontWeight: "bold" }}
-          onClick={handleHomeClick} // Add this line
+          className="order-1 j-flix-brand"
+          onClick={handleHomeClick}
         >
-          j-Flix
+          j-FLIX
         </Navbar.Brand>
         <Navbar.Collapse
           id="basic-navbar-nav"
