@@ -126,50 +126,41 @@ const GenreCategoryGroup = ({
 };
 
 const MoviesByGenre = ({ movies, onToggleFavorite, userFavorites, filter }) => {
+  // In MoviesByGenre component, update the grouping logic:
+
   const groupedMovies = useMemo(() => {
     // Filter movies based on search first
     const filteredMovies = movies.filter((movie) =>
       movie.title.toLowerCase().includes(filter.toLowerCase())
     );
 
-    // If there's a filter active, show all filtered movies in a single "Search Results" category
+    // If there's a filter active, show all filtered movies in a single group
     if (filter) {
       return {
         [`Search Results for "${filter}"`]: filteredMovies,
       };
     }
 
-    // If no filter, group by genre as before
-    const genreMoviesMap = new Map();
+    // Group by primary genre
+    const genreMoviesMap = filteredMovies.reduce((acc, movie) => {
+      const genreName = movie.primaryGenre;
+      if (!acc[genreName]) {
+        acc[genreName] = [];
+      }
+      acc[genreName].push(movie);
+      return acc;
+    }, {});
 
-    filteredMovies.forEach((movie) => {
-      const genres = Array.isArray(movie.genres) ? movie.genres : [movie.genre];
-      genres.forEach((genre) => {
-        if (!genre?.name) return;
-
-        const genreName = genre.name;
-        if (!genreMoviesMap.has(genreName)) {
-          genreMoviesMap.set(genreName, []);
-        }
-        genreMoviesMap.get(genreName).push(movie);
-      });
-    });
-
-    // Convert map to object and sort by movie count and alphabetically
-    const grouped = Array.from(genreMoviesMap.entries())
+    // Sort genres by number of movies (descending) and then alphabetically
+    return Object.entries(genreMoviesMap)
       .sort(([genreA, moviesA], [genreB, moviesB]) => {
-        // First sort by number of movies (descending)
         const countDiff = moviesB.length - moviesA.length;
-        if (countDiff !== 0) return countDiff;
-        // Then alphabetically
-        return genreA.localeCompare(genreB);
+        return countDiff !== 0 ? countDiff : genreA.localeCompare(genreB);
       })
-      .reduce((acc, [genre, genreMovies]) => {
-        acc[genre] = genreMovies;
+      .reduce((acc, [genre, movies]) => {
+        acc[genre] = movies;
         return acc;
       }, {});
-
-    return grouped;
   }, [movies, filter]);
 
   // If no movies match the filter, show a simple message

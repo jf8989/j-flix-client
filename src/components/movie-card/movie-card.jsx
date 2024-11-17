@@ -61,6 +61,18 @@ export const MovieCard = ({ movie, onToggleFavorite, isFavorite }) => {
         <Card.Text className="movie-description small mb-1">
           {truncateDescription(movie.description)}
         </Card.Text>
+        <div className="genre-badges mb-2">
+          {movie.genres.map((genre, index) => (
+            <span
+              key={`${movie._id}-${genre.name}`}
+              className={`genre-badge ${
+                genre.name === movie.primaryGenre ? "primary" : "secondary"
+              }`}
+            >
+              {genre.name}
+            </span>
+          ))}
+        </div>
         <div className="mt-auto d-flex justify-content-end favorite-icon-container">
           <span
             onClick={(e) => {

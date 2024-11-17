@@ -20,7 +20,11 @@ export const fetchMovies = createAsyncThunk(
         title: movie.title,
         imageURL: movie.imageURL,
         description: movie.description,
-        // Convert genres to simple array of names
+        // Enhanced genre handling
+        primaryGenre:
+          Array.isArray(movie.genres) && movie.genres.length > 0
+            ? movie.genres[0].name
+            : movie.genre?.name || "Uncategorized",
         genres: Array.isArray(movie.genres)
           ? movie.genres.map((genre) => ({ name: genre.name }))
           : movie.genre

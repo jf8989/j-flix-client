@@ -34,3 +34,24 @@
       }
     }
   }
+
+  .genre-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    
+    .genre-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      
+      &.primary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 500;
+      }
+    }
+  }
