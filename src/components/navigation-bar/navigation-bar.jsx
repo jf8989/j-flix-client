@@ -174,6 +174,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const handleHomeClick = () => {
     dispatch(setFilter("")); // Clear the filter
     setIsMobileMenuOpen(false); // Keep existing functionality
+    window.scrollTo(0, 0); // Add this line to scroll to top
   };
 
   return (
@@ -192,6 +193,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           to="/"
           className="order-1"
           style={{ color: "#e50914", fontWeight: "bold" }}
+          onClick={handleHomeClick} // Add this line
         >
           j-Flix
         </Navbar.Brand>
