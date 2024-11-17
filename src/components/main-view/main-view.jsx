@@ -43,10 +43,21 @@ const MainView = () => {
 
   const [authError, setAuthError] = useState(null);
 
+  // Add this new state for animation
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
   // Reset scroll position when returning to home view
   useEffect(() => {
     if (pathname === "/" && user) {
-      window.scrollTo(0, 0);
+      // Reset animation state
+      setShouldAnimate(false);
+
+      // Trigger animation after a brief delay
+      const timeoutId = setTimeout(() => {
+        setShouldAnimate(true);
+      }, 50);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [pathname, user]);
 
@@ -176,12 +187,18 @@ const MainView = () => {
       {user && <NavigationBar user={user} onLoggedOut={handleLoggedOut} />}
       <main className="main-content">
         {user && pathname === "/" ? (
-          <MoviesByGenre
-            movies={movies}
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={isFavorite}
-            filter={filter}
-          />
+          <div
+            className={`movie-groups-container ${
+              shouldAnimate ? "animate" : ""
+            }`}
+          >
+            <MoviesByGenre
+              movies={movies}
+              onToggleFavorite={onToggleFavorite}
+              isFavorite={isFavorite}
+              filter={filter}
+            />
+          </div>
         ) : (
           <AppRoutes
             user={user}
