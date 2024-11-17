@@ -111,8 +111,40 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     };
   }, [isMobileMenuOpen]);
 
+  // Add keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      // Check if the pressed key is 'S' and Shift is held
+      if (event.key === "S" && event.shiftKey) {
+        event.preventDefault(); // Prevent default behavior
+        setIsSearchOpen(true);
+        setTimeout(() => {
+          searchInputRef.current?.focus();
+        }, 100);
+      }
+
+      // Handle Escape key to close search
+      if (event.key === "Escape") {
+        setIsSearchOpen(false);
+        dispatch(setFilter(""));
+        setSearchValue("");
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("keydown", handleKeyPress);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [dispatch]);
+
   const handleSearchToggle = (e) => {
-    e.stopPropagation();
+    if (e) {
+      // If event exists (click event)
+      e.stopPropagation();
+    }
     setIsSearchOpen(!isSearchOpen);
     if (!isSearchOpen) {
       setTimeout(() => {
