@@ -180,13 +180,14 @@ const MoviesByGenre = ({ movies, onToggleFavorite, isFavorite, filter }) => {
 
   return (
     <div className="genre-groups-wrapper">
-      {Object.entries(groupedMovies).map(([genre, genreMovies]) => (
+      {Object.entries(groupedMovies).map(([genre, genreMovies], index) => (
         <GenreCategoryGroup
           key={genre}
           title={filter ? `Search Results for "${filter}"` : genre}
           movies={genreMovies}
           onToggleFavorite={onToggleFavorite}
           isFavorite={isFavorite}
+          style={{ "--animation-order": index }} // Add this line
         />
       ))}
     </div>

@@ -1,258 +1,345 @@
 // genre-group.scss
-// Additional styles for scroll buttons
-.genre-slider-container {
-  position: relative;
-  
-  .scroll-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #201f1f;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    z-index: 3;
-    transition: background-color 0.3s ease;
-    
-    &:hover {
-      background: #201f1f;
-    }
-    
-    &.left {
-      left: 0;
-    }
-    
-    &.right {
-      right: 0;
-    }
-    
-    svg {
-      width: 20px;
-      height: 20px;
-  }
-  }
-}
 
+// Root wrapper styles
 .genre-groups-wrapper {
   width: 100%;
-  padding: 0 0.75rem; // Reduced padding for mobile
-  margin-top: 8rem;
+  padding: 0 0.75rem;
+  margin-top: 6rem;
   
   @media (min-width: 768px) {
-    padding: 0 1.5rem; // Original padding for desktop
-  }
-  
-  .genre-category-section {
-    margin-bottom: 1.5rem;
-    
-    @media (min-width: 768px) {
-      margin-bottom: 2rem;
-    }
-    
-    .genre-category-title {
-      font-size: 1.25rem;
-      padding-left: 0.25rem;
-      margin-bottom: 0.75rem;
-      
-      @media (min-width: 768px) {
-        font-size: 1.5rem;
-        padding-left: 0.5rem;
-        margin-bottom: 1rem;
-      }
-    }
-    
-    .genre-movies-grid {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 0.75rem; // Reduced gap for mobile
-      padding: 0.5rem;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    
-      .genre-movie-card {
-        flex: 0 0 auto;
-        width: 140px; // Smaller base width for mobile
-        scroll-snap-align: start;
-        transition: transform 0.3s ease-in-out;
-        position: relative;
-        
-        @media (min-width: 768px) {
-          width: 200px; // Larger width for desktop
-        }
-    
-        .genre-movie-poster {
-          width: 100%;
-          height: 210px; // Adjusted height for mobile
-          object-fit: cover;
-          border-radius: 4px;
-          
-          @media (min-width: 768px) {
-            height: 300px; // Original height for desktop
-          }
-        }
-
-        .genre-card-body {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0));
-          padding: 1rem;
-          border-radius: 0 0 4px 4px;
-          opacity: 0;
-          transition: opacity 0.3s ease-in-out;
-
-          .genre-card-title {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: var(--text-color);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-          }
-
-          .genre-movie-description {
-            display: none;
-          }
-
-          .mt-auto {
-            display: flex;
-            justify-content: flex-end;
-            
-            .favorite-star-icon {
-              background: rgba(0,0,0,0.5);
-              border-radius: 50%;
-              padding: 0.5rem;
-              cursor: pointer;
-              
-              i {
-                font-size: 1.25rem;
-              }
-            }
-          }
-        }
-
-        &:hover .genre-card-body {
-          opacity: 1;
-        }
-      }
-    }
+    padding: 0 1.5rem;
   }
 
-  // Welcome section update
-  .welcome-section {
-    margin-top: 4rem; // Reduced top margin for mobile
-    padding: 2rem 1.5rem; // Reduced padding for mobile
-    
-    @media (min-width: 768px) {
-      margin-top: 6rem;
-      padding: 2.5rem 3rem;
-    }
-    
-    h1 {
-      font-size: 2rem; // Smaller font size for mobile
-      
-      @media (min-width: 768px) {
-        font-size: 3rem;
-      }
-    }
-    
-    p {
-      font-size: 1rem; // Smaller font size for mobile
-      
-      @media (min-width: 768px) {
-        font-size: 1.25rem;
-      }
-    }
+  .no-results {
+    color: var(--text-color);
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    font-weight: 500;
   }
-
-// Add smooth scrolling to the document
-html {
-  scroll-behavior: smooth;
 }
 
+// Individual category section
+.genre-category-section {
+  margin-bottom: 3vw;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+  animation-delay: calc(var(--animation-order, 0) * 0.1s);
+  position: relative;
+  z-index: 1;
+
+  .genre-header {
+    padding: 0 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+
+    .genre-category-title {
+      color: var(--text-color);
+      font-size: clamp(1.2rem, 1.4vw, 1.8rem);
+      font-weight: 600;
+      margin: 0;
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+      letter-spacing: -0.01em;
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Slider container and navigation
 .genre-slider-wrapper {
   position: relative;
-  padding: 0 4%;
+  padding: 0 2%;
   
+  // Scroll buttons
   .scroll-button {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 4%;
-    background: #201f1f;
     border: none;
     z-index: 20;
     cursor: pointer;
-    transition: all 0.3s ease;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-
-    &:hover {
-      background: #201f1f;
-      opacity: 1;
-    }
+    padding: 0;
     
     &.left {
       left: 0;
+      background: linear-gradient(to right, 
+        rgba(20, 20, 20, 0.7) 0%,
+        rgba(20, 20, 20, 0.4) 50%,
+        transparent 100%);
     }
     
     &.right {
       right: 0;
+      background: linear-gradient(to left, 
+        rgba(20, 20, 20, 0.7) 0%,
+        rgba(20, 20, 20, 0.4) 50%,
+        transparent 100%);
     }
     
     svg {
-      width: 24px;
-      height: 24px;
-      color: #fff;
+      width: clamp(20px, 1.5vw, 24px);
+      height: clamp(20px, 1.5vw, 24px);
+      color: var(--text-color);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+      transition: transform 0.2s ease;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 1;
+        width: 5%;
+
+        svg {
+          transform: scale(1.2);
+        }
+      }
     }
   }
 
   &:hover {
     .scroll-button {
-      opacity: 1;
+      opacity: 0.8;
+    }
+
+    .genre-movies-grid .genre-movie-card {
+      transform: translateX(-2%);
+      
+      &:hover {
+        transform: scale(1.05);
+        
+        ~ .genre-movie-card {
+          transform: translateX(4%);
+        }
+      }
     }
   }
 }
 
+// Movies grid container
 .genre-movies-grid {
+  display: flex;
+  gap: 0.4vw;
+  overflow-x: auto;
+  padding: 1.5rem 0;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  transition: transform 0.3s ease-out;
-  padding: 0.5rem 0;
+  -webkit-overflow-scrolling: touch;
   
   &::-webkit-scrollbar {
     display: none;
   }
-}
 
-// Update scroll smoothness
-.genre-slider-wrapper {
-  .genre-movies-grid {
-    &::-webkit-scrollbar {
-      display: none;
+  // Movie cards
+  .genre-movie-card {
+    flex: 0 0 calc(50% - 0.4vw);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+
+    @media (min-width: 640px) {
+      flex: 0 0 calc(33.333% - 0.4vw);
     }
-    
-    &.sliding {
-      scroll-behavior: smooth;
+
+    @media (min-width: 768px) {
+      flex: 0 0 calc(25% - 0.4vw);
+    }
+
+    @media (min-width: 1024px) {
+      flex: 0 0 calc(20% - 0.4vw);
+    }
+
+    @media (min-width: 1280px) {
+      flex: 0 0 calc(16.666% - 0.4vw);
+    }
+
+    // Movie poster image
+    .genre-movie-poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      background-color: #1a1a1a;
+      will-change: transform;
+      
+      &.loading {
+        animation: shimmer 1.5s infinite;
+        background: linear-gradient(
+          90deg,
+          #1a1a1a 0%,
+          #2a2a2a 50%,
+          #1a1a1a 100%
+        );
+        background-size: 200% 100%;
+      }
+    }
+
+    // Card overlay content
+    .genre-card-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.7) 50%,
+        transparent 100%
+      );
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      border-radius: 0 0 4px 4px;
+
+      .genre-card-title {
+        color: var(--text-color);
+        font-size: clamp(0.9rem, 1vw, 1.1rem);
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      // Favorite button container
+      .mt-auto {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+        
+        .favorite-star-icon {
+          background: rgba(0, 0, 0, 0.5);
+          border-radius: 50%;
+          padding: 0.5rem;
+          transition: all 0.2s ease;
+          z-index: 2;
+          
+          &:hover {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.7);
+          }
+
+          i {
+            font-size: clamp(1rem, 1.2vw, 1.4rem);
+            line-height: 1;
+            display: block;
+            
+            &.star-filled {
+              color: #ffd700;
+            }
+            
+            &.star-empty {
+              color: var(--text-color);
+            }
+          }
+        }
+      }
+    }
+
+    // Hover effects for desktop
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.05);
+        z-index: 10;
+
+        .genre-movie-poster {
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .genre-card-body {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        ~ .genre-movie-card {
+          transform: translateX(5%);
+        }
+      }
     }
   }
 }
+
+// Touch device optimizations
+@media (hover: none) {
+  .genre-movie-card {
+    .genre-card-body {
+      opacity: 1;
+      transform: none;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.4) 70%,
+        transparent 100%
+      );
+    }
+  }
+
+  .scroll-button {
+    display: none;
+  }
+}
+
+// Animation keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Dragging styles
+.genre-movies-grid.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+
+  .genre-movie-card {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+// Loading state
+.genre-category-section.loading {
+  .genre-movie-poster {
+    animation: shimmer 1.5s infinite;
+    background: linear-gradient(
+      90deg,
+      #1a1a1a 0%,
+      #2a2a2a 50%,
+      #1a1a1a 100%
+    );
+    background-size: 200% 100%;
+  }
 }
