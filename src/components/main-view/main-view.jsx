@@ -29,6 +29,7 @@ const MainView = () => {
   const filter = useSelector((state) => state.movies.filter);
   const moviesStatus = useSelector((state) => state.movies.status);
   const error = useSelector((state) => state.movies.error);
+  const location = useLocation();
 
   // Initialize state from localStorage
   const [user, setUser] = useState(() => {
@@ -41,6 +42,13 @@ const MainView = () => {
   });
 
   const [authError, setAuthError] = useState(null);
+
+  // Reset scroll position when returning to home view
+  useEffect(() => {
+    if (pathname === "/" && user) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, user]);
 
   // Check token validity on mount and when token changes
   useEffect(() => {
