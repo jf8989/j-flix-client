@@ -168,7 +168,9 @@ $font-display: 'Clash Display', $font-primary;
 
     .genre-slider-wrapper {
       position: relative;
-      padding: 0 2%;
+      padding: 0;
+      margin: 0 -2vw; /* Negative margin to align with container */
+      overflow: hidden; /* Ensure no horizontal scrollbar appears */
       
       .scroll-button {
         position: absolute;
@@ -231,6 +233,7 @@ $font-display: 'Clash Display', $font-primary;
       scroll-behavior: smooth;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      padding-right: calc(2vw + 140px); /* Add extra padding to the right */
       
       &::-webkit-scrollbar {
         display: none;
