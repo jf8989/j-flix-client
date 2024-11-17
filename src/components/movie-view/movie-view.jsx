@@ -1,18 +1,139 @@
-// MovieView.jsx
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import MovieImage from "../movie-image/movie-image";
 import { BackArrow } from "../back-arrow/back-arrow";
 import { useDispatch } from "react-redux";
 import { clearFilter } from "../../redux/moviesSlice";
 import "./movie-view.scss";
 
+const SimilarMovies = ({
+  currentMovie,
+  movies,
+  onToggleFavorite,
+  isFavorite,
+}) => {
+  const navigate = useNavigate();
+  const scrollContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  // Get similar movies based on first genre match
+  const similarMovies = movies.filter(
+    (movie) =>
+      movie._id !== currentMovie._id &&
+      movie.genres[0]?.name === currentMovie.genres[0]?.name
+  );
+
+  if (similarMovies.length === 0) return null;
+
+  const scroll = (direction) => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollAmount = container.clientWidth * 0.8;
+      container.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeft(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = x - startX;
+    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div className="similar-movies-section">
+      <div className="genre-header">
+        <h3 className="genre-category-title">More Like This</h3>
+      </div>
+      <div className="genre-slider-wrapper">
+        <button
+          className="scroll-button left"
+          onClick={() => scroll("left")}
+          aria-label="Scroll left"
+        >
+          <BsChevronLeft />
+        </button>
+        <div
+          className="genre-movies-grid"
+          ref={scrollContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}
+        >
+          {similarMovies.map((movie) => (
+            <div
+              key={movie._id}
+              className="genre-movie-card"
+              onClick={() => {
+                if (!isDragging) {
+                  navigate(`/movies/${movie._id}`);
+                }
+              }}
+            >
+              <img
+                src={movie.imageURL}
+                alt={movie.title}
+                className="genre-movie-poster"
+                loading="lazy"
+                draggable="false"
+              />
+              <div className="genre-card-body">
+                <h5 className="genre-card-title">{movie.title}</h5>
+                <div className="mt-auto">
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite(movie._id);
+                    }}
+                    className="favorite-star-icon"
+                    role="button"
+                  >
+                    {isFavorite(movie._id) ? (
+                      <i className="bi bi-star-fill star-filled"></i>
+                    ) : (
+                      <i className="bi bi-star star-empty"></i>
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          className="scroll-button right"
+          onClick={() => scroll("right")}
+          aria-label="Scroll right"
+        >
+          <BsChevronRight />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
   const { movieId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const movie = movies.find((m) => m._id === movieId);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -199,6 +320,14 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
             </Card>
           </Col>
         </Row>
+
+        {/* Similar Movies Section */}
+        <SimilarMovies
+          currentMovie={movie}
+          movies={movies}
+          onToggleFavorite={onToggleFavorite}
+          isFavorite={isFavorite}
+        />
 
         {/* Custom Snackbar */}
         <div className={`custom-snackbar ${showSnackbar ? "show" : ""}`}>
