@@ -134,15 +134,26 @@
   gap: 0.4vw;
   overflow-x: auto;
   padding: 1.5rem 2vw;
-  padding-right: calc(2vw + 170px); /* Add extra padding to the right */
-  padding-left: calc(2vw + 60px);
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  width: 97vw;  // Increased from 100vw for more width
-  margin-left: calc(-44vw + 50%);  // Half of 98vw
-  margin-right: calc(-48vw + 50%);  // Half of 98vw
+  width: 97vw;
+  margin-left: calc(-44vw + 50%);
+  margin-right: calc(-48vw + 50%);
+  
+  // Desktop padding
+  @media (min-width: 768px) {
+    padding-right: calc(2vw + 170px);
+    padding-left: calc(2vw + 60px);
+  }
+  
+  // Mobile padding reset
+  @media (max-width: 767px) {
+    padding: 1.5rem 1rem;
+    padding-right: calc(2vw + 30px);
+    padding-left: calc(2vw + 10px);
+  }
   
   &::-webkit-scrollbar {
     display: none;

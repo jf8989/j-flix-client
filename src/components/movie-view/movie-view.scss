@@ -229,12 +229,23 @@ $font-display: 'Clash Display', $font-primary;
       display: flex;
       gap: 0.4vw;
       overflow-x: auto;
-      padding: 1.5rem 2vw;
+      padding: 1.5rem 2vw;  // Base padding
       scroll-behavior: smooth;
       -ms-overflow-style: none;
       scrollbar-width: none;
-      padding-right: calc(2vw + 170px); /* Add extra padding to the right */
-      padding-left: calc(2vw + 60px);
+      
+      // Desktop padding
+      @media (min-width: 768px) {
+        padding-right: calc(2vw + 170px);
+        padding-left: calc(2vw + 60px);
+      }
+      
+      // Mobile padding reset
+      @media (max-width: 767px) {
+        padding: 1.5rem 1rem;
+        padding-right: calc(2vw + 30px);
+        padding-left: calc(2vw + 10px);
+      }
       
       &::-webkit-scrollbar {
         display: none;
