@@ -139,7 +139,7 @@ const AppRoutes = ({
             }
           />
           <Route
-            path="/mylist"
+            path="/watchlist"
             element={
               <>
                 {!user ? (

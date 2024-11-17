@@ -233,7 +233,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
             >
               Kids
             </Nav.Link>
-            <Nav.Link as={Link} to="/mylist" onClick={() => handleHomeClick}>
+            <Nav.Link as={Link} to="/watchlist" onClick={() => handleHomeClick}>
               Watch List
             </Nav.Link>
           </Nav>
