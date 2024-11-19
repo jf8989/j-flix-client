@@ -2,8 +2,9 @@
 
 // Root wrapper styles
 .genre-groups-wrapper {
-  width: 100%;
-  padding: 0 0.75rem;
+  
+  margin: 0 auto;    /* Center the container */
+  padding: 0 1rem;   /* Add padding for small screens */
   margin-top: 6rem;
   
   @media (min-width: 768px) {
@@ -143,6 +144,7 @@
         ~ .genre-movie-card {
           transform: translateX(4%);
         }
+
       }
     }
   }
@@ -151,16 +153,16 @@
 // Movies grid container
 .genre-movies-grid {
   display: flex;
-  gap: 0.4vw;
+  gap: 8px;
   overflow-x: auto;
   padding: 1.5rem 2vw;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  width: 100%;          // Changed from 97vw to 100%
-  margin-left: 0;       // Removed negative margins
-  margin-right: 0;      // Removed negative margins
+  width: 100%; 
+  margin-left: 0;       
+  margin-right: 0;      
 
   
   
@@ -176,33 +178,39 @@
   }
 
   // Movie cards
-  .genre-movie-card {
-    // Keep mobile sizes the same
-    flex: 0 0 calc(50% - 0.4vw);
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+.genre-movie-card {
+  // Keep mobile sizes the same
+  flex: 0 0 clamp(126px, 36%, 180px); /* Reduce sizes */
+  max-width: 180px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 
-    @media (min-width: 640px) {
-      flex: 0 0 calc(33.333% - 0.4vw);
-    }
+  @media (min-width: 640px) {
+    flex: 0 0 clamp(126px, 22.5%, 162px); /* Smaller sizes for tablets */
+    max-width: 162px;
+  }
 
-    @media (min-width: 768px) {
-      flex: 0 0 calc(25% - 0.4vw);
-    }
+  @media (min-width: 768px) {
+    flex: 0 0 clamp(135px, 18%, 180px); /* Fit more cards on medium screens */
+    max-width: 180px;
+  }
 
-    @media (min-width: 1024px) {
-      flex: 0 0 calc(16.666% - 0.4vw); // Show 6 cards
-    }
+  @media (min-width: 1024px) {
+    flex: 0 0 clamp(144px, 16.2%, 198px); /* Smaller for desktops */
+    max-width: 198px;
+  }
 
-    @media (min-width: 1280px) {
-      flex: 0 0 calc(12.5% - 0.4vw); // Show 8 cards
-    }
+  @media (min-width: 1280px) {
+    flex: 0 0 clamp(153px, 14.4%, 216px); /* More cards on larger screens */
+    max-width: 216px;
+  }
 
-    @media (min-width: 1536px) {
-      flex: 0 0 calc(10% - 0.4vw); // Adjusted to show 10 cards
-    }
+  @media (min-width: 1536px) {
+    flex: 0 0 clamp(162px, 13.5%, 234px); /* Even smaller for ultra-wide screens */
+    max-width: 234px;
+  }
 
     // Movie poster image
     .genre-movie-poster {
@@ -214,6 +222,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       background-color: #1a1a1a;
       will-change: transform;
+      background-size: cover;
       
       &.loading {
         animation: shimmer 1.5s infinite;

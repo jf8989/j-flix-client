@@ -33,7 +33,8 @@ body {
 
 // Movie grid styles
 .movie-container {
-  width: 100%;
+  
+  margin: 0 auto;
   padding: 0;
   margin-top: 0rem; // Reduced from 3rem to bring cards closer to nav
   margin-bottom: 3rem; // Added to ensure space before footer
@@ -119,6 +120,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 1rem; /* Adjust for smaller padding */
 
   > div:not(.footer) {
     flex: 1 0 auto;

@@ -19,7 +19,7 @@ const App = () => {
     <div className="app-wrapper">
       {isLoading && <LoadingSpinner />}
       <Router>
-        <Container className="main-container">
+        <Container fluid className="main-container">
           <MainView />
         </Container>
       </Router>
