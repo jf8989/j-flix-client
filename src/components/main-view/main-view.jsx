@@ -10,6 +10,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { fetchMovies } from "../../redux/moviesSlice";
+import { fetchSeries } from "../../redux/seriesSlice";
 import { Footer } from "../footer/footer";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 import AppRoutes from "../app-routes/app-routes";
@@ -32,9 +33,13 @@ const MainView = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const movies = useSelector((state) => state.movies.list);
-  const filter = useSelector((state) => state.movies.filter);
+  const series = useSelector((state) => state.series.list);
+  const filter = useSelector((state) => state.movies.filter); // Using movies filter for both
   const moviesStatus = useSelector((state) => state.movies.status);
-  const error = useSelector((state) => state.movies.error);
+  const seriesStatus = useSelector((state) => state.series.status);
+  const error = useSelector(
+    (state) => state.movies.error || state.series.error
+  );
   const location = useLocation();
 
   // Initialize state from localStorage
@@ -67,7 +72,7 @@ const MainView = () => {
       }
     }
     prevPathnameRef.current = pathname;
-  }, [pathname]); // Removed 'user' from dependencies
+  }, [pathname]);
 
   // Check token validity on mount and when token changes
   useEffect(() => {
@@ -79,31 +84,32 @@ const MainView = () => {
     }
   }, [token]);
 
-  // Fetch movies when token is available
+  // Fetch both movies and series when token is available
   useEffect(() => {
     if (token) {
-      dispatch(fetchMovies(token))
-        .unwrap()
-        .catch((error) => {
-          if (error.status === 401) {
-            setUser(null);
-            setToken(null);
-            localStorage.clear();
-            setAuthError("Your session has expired. Please log in again.");
-          }
-        });
+      Promise.all([
+        dispatch(fetchMovies(token)).unwrap(),
+        dispatch(fetchSeries(token)).unwrap(),
+      ]).catch((error) => {
+        if (error.status === 401) {
+          setUser(null);
+          setToken(null);
+          localStorage.clear();
+          setAuthError("Your session has expired. Please log in again.");
+        }
+      });
     }
   }, [token, dispatch]);
 
   const onToggleFavorite = useCallback(
-    (movieId) => {
+    (contentId) => {
       if (!user || !user.Username) {
         console.error("User is not logged in or username is missing");
         return;
       }
 
-      const isFavorite = user.FavoriteMovies.includes(movieId);
-      const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${movieId}`;
+      const isFavorite = user.FavoriteMovies.includes(contentId);
+      const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${contentId}`;
       const method = isFavorite ? "DELETE" : "POST";
 
       fetch(url, {
@@ -124,8 +130,8 @@ const MainView = () => {
         })
         .then((updatedUser) => {
           const updatedFavorites = isFavorite
-            ? user.FavoriteMovies.filter((id) => id !== movieId)
-            : [...user.FavoriteMovies, movieId];
+            ? user.FavoriteMovies.filter((id) => id !== contentId)
+            : [...user.FavoriteMovies, contentId];
 
           const newUser = {
             ...user,
@@ -150,29 +156,38 @@ const MainView = () => {
   );
 
   const isFavorite = useCallback(
-    (movieId) => {
-      return user?.FavoriteMovies?.includes(movieId) || false;
+    (contentId) => {
+      return user?.FavoriteMovies?.includes(contentId) || false;
     },
     [user]
   );
 
-  const filteredMovies = useMemo(
-    () =>
-      movies.filter((movie) =>
-        movie.title.toLowerCase().includes(filter.toLowerCase())
-      ),
-    [movies, filter]
-  );
+  // Combine and filter both movies and series
+  const filteredContent = useMemo(() => {
+    const lowerFilter = filter.toLowerCase();
+    const filteredMovies = movies.filter((movie) =>
+      movie.title.toLowerCase().includes(lowerFilter)
+    );
+    const filteredSeries = series.filter((show) =>
+      show.title.toLowerCase().includes(lowerFilter)
+    );
+    return [...filteredMovies, ...filteredSeries];
+  }, [movies, series, filter]);
 
   if (authError) {
     return <Navigate to="/login" replace />;
   }
 
-  if (moviesStatus === "loading") {
+  // Show loading spinner if either movies or series are loading
+  if (moviesStatus === "loading" || seriesStatus === "loading") {
     return <LoadingSpinner />;
   }
 
-  if (moviesStatus === "failed" && error !== "unauthorized") {
+  // Show error if either movies or series failed to load
+  if (
+    (moviesStatus === "failed" || seriesStatus === "failed") &&
+    error !== "unauthorized"
+  ) {
     return <Alert variant="danger">Error: {error}</Alert>;
   }
 
@@ -201,7 +216,7 @@ const MainView = () => {
             }`}
           >
             <MoviesByGenre
-              movies={movies}
+              movies={[...movies, ...series]}
               onToggleFavorite={onToggleFavorite}
               userFavorites={user?.FavoriteMovies || []}
               filter={filter}
@@ -212,6 +227,7 @@ const MainView = () => {
             user={user}
             token={token}
             movies={movies}
+            series={series}
             onLoggedIn={handleLoggedIn}
             onLoggedOut={handleLoggedOut}
             setUser={setUser}
@@ -219,7 +235,7 @@ const MainView = () => {
             authError={authError}
             onToggleFavorite={onToggleFavorite}
             isFavorite={isFavorite}
-            filteredMovies={filteredMovies}
+            filteredContent={filteredContent}
           />
         )}
       </main>

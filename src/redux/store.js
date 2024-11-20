@@ -1,6 +1,7 @@
 // store.js
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import moviesReducer from "./moviesSlice";
+import seriesReducer from "./seriesSlice";
 import loadingReducer from "./loadingSlice";
 import scrollPositionReducer from "./scrollPositionSlice";
 import {
@@ -18,11 +19,12 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["scrollPosition"], // Only persist scroll positions
+  whitelist: ["scrollPosition"],
 };
 
 const rootReducer = combineReducers({
   movies: moviesReducer,
+  series: seriesReducer,
   loading: loadingReducer,
   scrollPosition: scrollPositionReducer,
 });
