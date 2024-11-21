@@ -6,6 +6,25 @@
     padding: 2rem 4%; // Reduced padding
     margin-bottom: 0; // Changed from 2rem to 0
     
+    // Add this new section for the flex container
+    .d-flex {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+
+      // Style for the back arrow if needed
+      .back-arrow {
+        color: var(--text-color);
+        opacity: 0.8;
+        transition: opacity 0.2s ease;
+        
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+    
     h1 {
       color: var(--text-color);
       font-size: clamp(1.8rem, 2.5vw, 2.5rem);

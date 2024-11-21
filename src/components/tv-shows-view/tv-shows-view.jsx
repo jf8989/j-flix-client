@@ -2,6 +2,7 @@
 import React from "react";
 import { useSelector } from "react-redux"; // Add this import
 import MoviesByGenre from "../genre-group/genre-group";
+import { BackArrow } from "../back-arrow/back-arrow";
 import "./tv-shows-view.scss";
 
 const TVShowsView = ({ onToggleFavorite, userFavorites, filter }) => {
@@ -11,7 +12,10 @@ const TVShowsView = ({ onToggleFavorite, userFavorites, filter }) => {
   return (
     <div className="tv-shows-view">
       <div className="tv-shows-header">
-        <h1>TV Shows</h1>
+        <div className="d-flex align-items-center mb-3">
+          <BackArrow className="me-3" />
+          <h1>TV Shows</h1>
+        </div>
         <p>Discover your next binge-worthy series</p>
       </div>
       <MoviesByGenre
