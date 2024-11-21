@@ -4,12 +4,41 @@ import { createRoot } from "react-dom/client";
 import { Container } from "react-bootstrap";
 import { Provider } from "react-redux";
 import { useSelector } from "react-redux";
-import { store, persistor } from "./redux/store"; // Import persistor
+import { store, persistor } from "./redux/store";
 import MainView from "./components/main-view/main-view";
-import { BrowserRouter as Router } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
 import LoadingSpinner from "./components/loading-spinner/loading-spinner";
 import { PersistGate } from "redux-persist/integration/react";
 import "./index.scss";
+
+// Create router with ALL future flags
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route
+      path="*"
+      element={
+        <Container fluid className="main-container">
+          <MainView />
+        </Container>
+      }
+    />
+  ),
+  {
+    future: {
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+    },
+  }
+);
 
 // Wrapper component to use hooks
 const App = () => {
@@ -18,11 +47,7 @@ const App = () => {
   return (
     <div className="app-wrapper">
       {isLoading && <LoadingSpinner />}
-      <Router>
-        <Container fluid className="main-container">
-          <MainView />
-        </Container>
-      </Router>
+      <RouterProvider router={router} />
     </div>
   );
 };
@@ -32,8 +57,6 @@ const MyFlixApplication = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {" "}
-        {/* Use persistor here */}
         <App />
       </PersistGate>
     </Provider>

@@ -110,10 +110,15 @@ const MainView = () => {
 
       const isFavorite = user.FavoriteMovies.includes(contentId);
 
-      // Local check using the Redux store data
-      const contentType = movies.find((m) => m._id === contentId)
-        ? "movies"
-        : "series";
+      // Improved content type detection
+      const isMovie = movies.some((m) => m._id === contentId);
+      const isSeries = series.some((s) => s._id === contentId);
+      const contentType = isMovie ? "movies" : isSeries ? "series" : null;
+
+      if (!contentType) {
+        console.error("Content type could not be determined");
+        return;
+      }
 
       const url = `https://j-flix-omega.vercel.app/users/${user.Username}/${contentType}/${contentId}`;
       const method = isFavorite ? "DELETE" : "POST";
@@ -158,7 +163,7 @@ const MainView = () => {
           }
         });
     },
-    [user, token] // No need to include movies or series in dependencies as they're from Redux
+    [user, token, movies, series] // Added movies and series to dependencies
   );
 
   const isFavorite = useCallback(
