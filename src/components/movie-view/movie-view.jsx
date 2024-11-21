@@ -178,9 +178,11 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     isFavorite(movie._id) ? "favorite" : ""
   }`;
 
+  // This will be the return statement for MovieView component
   return (
     <div className="movie-view">
       <Container className="custom-margin-top">
+        {/* Header Row with Title */}
         <Row className="align-items-center mb-4">
           <Col xs="auto">
             <BackArrow className="mt-1" />
@@ -189,8 +191,9 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
             <h2 className="text-white mb-0">{movie.title}</h2>
           </Col>
         </Row>
+
         <Row className="g-4">
-          {/* First column with movie image and favorite button */}
+          {/* Left Column: Image and Favorite Button */}
           <Col md={4}>
             <Card className="bg-dark text-white h-100">
               <MovieImage
@@ -199,6 +202,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                 className="w-full h-auto"
               />
               <Card.Body className="d-flex flex-column">
+                {/* Rating and Year Info - Conditional Rendering */}
                 <div className="text-center mb-3">
                   <span
                     className="me-2 px-2 py-1 rounded"
@@ -209,16 +213,42 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                   >
                     ★ {movie.rating || "N/A"}
                   </span>
-                  <span
-                    className="px-2 py-1 rounded"
-                    style={{
-                      backgroundColor: "#221f1f",
-                      display: "inline-block",
-                    }}
-                  >
-                    {movie.releaseYear || "N/A"}
-                  </span>
+                  {movie.releaseYear ? (
+                    // Movie year display
+                    <span
+                      className="px-2 py-1 rounded"
+                      style={{
+                        backgroundColor: "#221f1f",
+                        display: "inline-block",
+                      }}
+                    >
+                      {movie.releaseYear}
+                    </span>
+                  ) : (
+                    // Series year range and status
+                    <>
+                      <span
+                        className="px-2 py-1 rounded"
+                        style={{
+                          backgroundColor: "#221f1f",
+                          display: "inline-block",
+                        }}
+                      >
+                        {movie.firstAirYear}-{movie.lastAirYear || "Present"}
+                      </span>
+                      <span
+                        className="ms-2 px-2 py-1 rounded"
+                        style={{
+                          backgroundColor: "#221f1f",
+                          display: "inline-block",
+                        }}
+                      >
+                        {movie.status}
+                      </span>
+                    </>
+                  )}
                 </div>
+                {/* Favorite Button */}
                 <Button
                   onClick={() => handleToggleFavorite(movie._id)}
                   className={favoriteButtonClass}
@@ -231,37 +261,57 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
             </Card>
           </Col>
 
-          {/* Second column with movie details */}
+          {/* Right Column: Content Details */}
           <Col md={8}>
             <Card className="bg-dark text-white h-100">
               <Card.Body>
-                {/* Movie description */}
+                {/* Description */}
                 <div className="mb-4">
                   <Card.Text className="lead">{movie.description}</Card.Text>
                 </div>
 
-                {/* Director information */}
+                {/* Director/Creator Information - Conditional Rendering */}
                 <div className="mb-4">
-                  <h3 className="h4 mb-3">Director</h3>
-                  <Card.Text>
-                    <span style={{ color: "#e50914" }}>Name: </span>
-                    {movie.director.name}
-                  </Card.Text>
-                  {movie.director.bio && (
-                    <Card.Text>
-                      <span style={{ color: "#e50914" }}>Bio: </span>
-                      {movie.director.bio}
-                    </Card.Text>
-                  )}
-                  {movie.director.birthYear && (
-                    <Card.Text>
-                      <span style={{ color: "#e50914" }}>Birth Year: </span>
-                      {movie.director.birthYear}
-                    </Card.Text>
+                  {movie.director ? (
+                    // Movie Director Info
+                    <>
+                      <h3 className="h4 mb-3">Director</h3>
+                      <Card.Text>
+                        <span style={{ color: "#e50914" }}>Name: </span>
+                        {movie.director.name}
+                      </Card.Text>
+                      {movie.director.bio && (
+                        <Card.Text>
+                          <span style={{ color: "#e50914" }}>Bio: </span>
+                          {movie.director.bio}
+                        </Card.Text>
+                      )}
+                      {movie.director.birthYear && (
+                        <Card.Text>
+                          <span style={{ color: "#e50914" }}>Birth Year: </span>
+                          {movie.director.birthYear}
+                        </Card.Text>
+                      )}
+                    </>
+                  ) : (
+                    // Series Creator Info
+                    <>
+                      <h3 className="h4 mb-3">Creator</h3>
+                      <Card.Text>
+                        <span style={{ color: "#e50914" }}>Name: </span>
+                        {movie.creator.name}
+                      </Card.Text>
+                      {movie.creator.bio && (
+                        <Card.Text>
+                          <span style={{ color: "#e50914" }}>Bio: </span>
+                          {movie.creator.bio}
+                        </Card.Text>
+                      )}
+                    </>
                   )}
                 </div>
 
-                {/* Genre information */}
+                {/* Genres */}
                 <div className="mb-4">
                   <h3 className="h4 mb-3">Genres</h3>
                   <div className="d-flex flex-wrap gap-2">
@@ -281,7 +331,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                   </div>
                 </div>
 
-                {/* Cast section */}
+                {/* Cast */}
                 <div className="mb-4">
                   <h3 className="h4 mb-3">Cast</h3>
                   <div className="d-flex flex-wrap gap-2">
@@ -298,22 +348,69 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                   </div>
                 </div>
 
-                {/* Additional information */}
+                {/* Additional Information - Conditional Rendering */}
                 <div className="mt-4">
                   <h3 className="h4 mb-3">Additional Info</h3>
                   <Row>
-                    <Col sm={6}>
-                      <Card.Text>
-                        <span style={{ color: "#e50914" }}>Release Year: </span>
-                        {movie.releaseYear || "N/A"}
-                      </Card.Text>
-                    </Col>
-                    <Col sm={6}>
-                      <Card.Text>
-                        <span style={{ color: "#e50914" }}>Featured: </span>
-                        {movie.featured ? "Yes" : "No"}
-                      </Card.Text>
-                    </Col>
+                    {movie.releaseYear ? (
+                      // Movie Information
+                      <>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>
+                              Release Year:{" "}
+                            </span>
+                            {movie.releaseYear}
+                          </Card.Text>
+                        </Col>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>Featured: </span>
+                            {movie.featured ? "Yes" : "No"}
+                          </Card.Text>
+                        </Col>
+                      </>
+                    ) : (
+                      // Series Information
+                      <>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>
+                              First Air Year:{" "}
+                            </span>
+                            {movie.firstAirYear}
+                          </Card.Text>
+                        </Col>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>
+                              Last Air Year:{" "}
+                            </span>
+                            {movie.lastAirYear || "Present"}
+                          </Card.Text>
+                        </Col>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>
+                              Number of Seasons:{" "}
+                            </span>
+                            {movie.numberOfSeasons}
+                          </Card.Text>
+                        </Col>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>Status: </span>
+                            {movie.status}
+                          </Card.Text>
+                        </Col>
+                        <Col sm={6}>
+                          <Card.Text>
+                            <span style={{ color: "#e50914" }}>Featured: </span>
+                            {movie.featured ? "Yes" : "No"}
+                          </Card.Text>
+                        </Col>
+                      </>
+                    )}
                   </Row>
                 </div>
               </Card.Body>
@@ -321,7 +418,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
           </Col>
         </Row>
 
-        {/* Similar Movies Section */}
+        {/* Similar Content Section */}
         <SimilarMovies
           currentMovie={movie}
           movies={movies}
@@ -329,7 +426,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
           isFavorite={isFavorite}
         />
 
-        {/* Custom Snackbar */}
+        {/* Snackbar for Favorites */}
         <div className={`custom-snackbar ${showSnackbar ? "show" : ""}`}>
           <p className="snackbar-message">{snackbarMessage}</p>
         </div>
