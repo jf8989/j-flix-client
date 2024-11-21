@@ -179,9 +179,10 @@ const AppRoutes = ({
                   <Navigate to="/login" replace />
                 ) : (
                   <TVShowsView
+                    user={user} // Add this line
                     onToggleFavorite={onToggleFavorite}
                     userFavorites={user?.FavoriteMovies || []}
-                    filter={filter || ""} // We'll get series data from Redux directly
+                    filter={filter || ""}
                   />
                 )}
               </>

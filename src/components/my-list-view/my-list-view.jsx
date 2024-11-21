@@ -8,11 +8,14 @@ import "./my-list-view.scss";
 export const MyListView = ({ user, movies, onToggleFavorite }) => {
   const favoriteMovies = user?.FavoriteMovies || [];
   const filter = useSelector((state) => state.movies.filter);
+  // Get series from Redux store
+  const series = useSelector((state) => state.series.list);
 
-  const filteredMovies = movies
-    .filter((movie) => favoriteMovies.includes(movie._id))
-    .filter((movie) =>
-      movie.title.toLowerCase().includes(filter.toLowerCase())
+  // Combine and filter both movies and series
+  const filteredContent = [...movies, ...series]
+    .filter((content) => favoriteMovies.includes(content._id))
+    .filter((content) =>
+      content.title.toLowerCase().includes(filter.toLowerCase())
     );
 
   return (
@@ -23,12 +26,12 @@ export const MyListView = ({ user, movies, onToggleFavorite }) => {
           <h2>Watch List</h2>
         </div>
 
-        {filteredMovies.length > 0 ? (
+        {filteredContent.length > 0 ? (
           <div className="movies-grid">
-            {filteredMovies.map((movie) => (
+            {filteredContent.map((content) => (
               <MovieCard
-                key={movie._id}
-                movie={movie}
+                key={content._id}
+                movie={content}
                 onToggleFavorite={onToggleFavorite}
                 isFavorite={true}
               />
@@ -36,7 +39,7 @@ export const MyListView = ({ user, movies, onToggleFavorite }) => {
           </div>
         ) : (
           <div className="empty-state">
-            <p>No movies in your list yet.</p>
+            <p>Nothing in your list yet.</p>
           </div>
         )}
       </Container>

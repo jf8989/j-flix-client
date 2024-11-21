@@ -5,9 +5,16 @@ import MoviesByGenre from "../genre-group/genre-group";
 import { BackArrow } from "../back-arrow/back-arrow";
 import "./tv-shows-view.scss";
 
-const TVShowsView = ({ onToggleFavorite, userFavorites, filter }) => {
+const TVShowsView = ({ user, onToggleFavorite, userFavorites, filter }) => {
+  // Add user to props
   // Get series directly from Redux store
   const series = useSelector((state) => state.series.list);
+
+  // Combine both favorite arrays if they exist
+  const allFavorites = [
+    ...(userFavorites || []),
+    ...(user?.FavoriteSeries || []),
+  ];
 
   return (
     <div className="tv-shows-view">
@@ -19,9 +26,9 @@ const TVShowsView = ({ onToggleFavorite, userFavorites, filter }) => {
         <p>Discover your next binge-worthy series</p>
       </div>
       <MoviesByGenre
-        movies={series} // Pass only series data
+        movies={series}
         onToggleFavorite={onToggleFavorite}
-        userFavorites={userFavorites}
+        userFavorites={allFavorites}
         filter={filter}
       />
     </div>

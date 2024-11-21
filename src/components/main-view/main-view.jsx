@@ -108,17 +108,16 @@ const MainView = () => {
         return;
       }
 
-      const isFavorite = user.FavoriteMovies.includes(contentId);
+      // Check which array contains the content
+      const isInMovies = user.FavoriteMovies?.includes(contentId);
+      const isInSeries = user.FavoriteSeries?.includes(contentId);
 
-      // Improved content type detection
+      // Determine if it's currently a favorite
+      const isFavorite = isInMovies || isInSeries;
+
+      // Check content type
       const isMovie = movies.some((m) => m._id === contentId);
-      const isSeries = series.some((s) => s._id === contentId);
-      const contentType = isMovie ? "movies" : isSeries ? "series" : null;
-
-      if (!contentType) {
-        console.error("Content type could not be determined");
-        return;
-      }
+      const contentType = isMovie ? "movies" : "series";
 
       const url = `https://j-flix-omega.vercel.app/users/${user.Username}/${contentType}/${contentId}`;
       const method = isFavorite ? "DELETE" : "POST";
@@ -140,17 +139,32 @@ const MainView = () => {
           return response.json();
         })
         .then((updatedUser) => {
-          const updatedFavorites = isFavorite
-            ? user.FavoriteMovies.filter((id) => id !== contentId)
-            : [...user.FavoriteMovies, contentId];
+          // Update the correct array based on content type
+          if (isMovie) {
+            const updatedMovies = isFavorite
+              ? user.FavoriteMovies.filter((id) => id !== contentId)
+              : [...(user.FavoriteMovies || []), contentId];
 
-          const newUser = {
-            ...user,
-            FavoriteMovies: updatedFavorites,
-          };
+            const newUser = {
+              ...user,
+              FavoriteMovies: updatedMovies,
+              FavoriteSeries: user.FavoriteSeries || [], // Preserve series
+            };
+            setUser(newUser);
+            localStorage.setItem("user", JSON.stringify(newUser));
+          } else {
+            const updatedSeries = isFavorite
+              ? user.FavoriteSeries.filter((id) => id !== contentId)
+              : [...(user.FavoriteSeries || []), contentId];
 
-          setUser(newUser);
-          localStorage.setItem("user", JSON.stringify(newUser));
+            const newUser = {
+              ...user,
+              FavoriteMovies: user.FavoriteMovies || [], // Preserve movies
+              FavoriteSeries: updatedSeries,
+            };
+            setUser(newUser);
+            localStorage.setItem("user", JSON.stringify(newUser));
+          }
         })
         .catch((error) => {
           if (error.message === "unauthorized") {
@@ -163,12 +177,17 @@ const MainView = () => {
           }
         });
     },
-    [user, token, movies, series] // Added movies and series to dependencies
+    [user, token, movies]
   );
 
   const isFavorite = useCallback(
     (contentId) => {
-      return user?.FavoriteMovies?.includes(contentId) || false;
+      // Check both FavoriteMovies and FavoriteSeries arrays
+      return (
+        user?.FavoriteMovies?.includes(contentId) ||
+        user?.FavoriteSeries?.includes(contentId) ||
+        false
+      );
     },
     [user]
   );
