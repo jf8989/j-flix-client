@@ -109,7 +109,13 @@ const MainView = () => {
       }
 
       const isFavorite = user.FavoriteMovies.includes(contentId);
-      const url = `https://j-flix-omega.vercel.app/users/${user.Username}/movies/${contentId}`;
+
+      // Local check using the Redux store data
+      const contentType = movies.find((m) => m._id === contentId)
+        ? "movies"
+        : "series";
+
+      const url = `https://j-flix-omega.vercel.app/users/${user.Username}/${contentType}/${contentId}`;
       const method = isFavorite ? "DELETE" : "POST";
 
       fetch(url, {
@@ -124,7 +130,7 @@ const MainView = () => {
             throw new Error("unauthorized");
           }
           if (!response.ok) {
-            throw new Error("Failed to update favorites");
+            throw new Error(`Failed to update favorites: ${response.status}`);
           }
           return response.json();
         })
@@ -152,7 +158,7 @@ const MainView = () => {
           }
         });
     },
-    [user, token]
+    [user, token] // No need to include movies or series in dependencies as they're from Redux
   );
 
   const isFavorite = useCallback(
