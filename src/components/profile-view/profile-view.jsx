@@ -237,7 +237,8 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
           {/* Movies Section */}
           <h3 className="section-title sub-title">Movies</h3>
           {movies.length > 0 && favoriteMovies.length > 0 ? (
-            <Row xs={2} sm={3} md={4} lg={5} className="g-4">
+            <Row xs={2} sm={2} md={4} lg={5} className="g-4 mx-0">
+              {" "}
               {movies
                 .filter((movie) => favoriteMovies.includes(movie._id))
                 .filter((movie) =>
@@ -262,7 +263,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
           {/* TV Series Section */}
           <h3 className="section-title sub-title">TV Series</h3>
           {series.length > 0 && favoriteSeries.length > 0 ? (
-            <Row xs={2} sm={3} md={4} lg={5} className="g-4">
+            <Row xs={2} sm={2} md={4} lg={5} className="g-4 mx-0">
               {series
                 .filter((show) => favoriteSeries.includes(show._id))
                 .filter((show) =>
