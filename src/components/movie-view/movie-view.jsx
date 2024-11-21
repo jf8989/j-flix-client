@@ -178,6 +178,12 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     isFavorite(movie._id) ? "favorite" : ""
   }`;
 
+  // Helper function to format rating
+  const formatRating = (rating) => {
+    if (!rating) return "N/A";
+    return Number(rating).toFixed(1);
+  };
+
   // This will be the return statement for MovieView component
   return (
     <div className="movie-view">
@@ -211,7 +217,7 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
                       display: "inline-block",
                     }}
                   >
-                    ★ {movie.rating || "N/A"}
+                    ★ {formatRating(movie.rating)}
                   </span>
                   {movie.releaseYear ? (
                     // Movie year display

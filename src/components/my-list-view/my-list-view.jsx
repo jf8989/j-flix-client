@@ -6,14 +6,18 @@ import { BackArrow } from "../back-arrow/back-arrow";
 import "./my-list-view.scss";
 
 export const MyListView = ({ user, movies, onToggleFavorite }) => {
+  // Get both favorite arrays
   const favoriteMovies = user?.FavoriteMovies || [];
+  const favoriteSeries = user?.FavoriteSeries || [];
+  const allFavorites = [...favoriteMovies, ...favoriteSeries];
+
   const filter = useSelector((state) => state.movies.filter);
   // Get series from Redux store
   const series = useSelector((state) => state.series.list);
 
   // Combine and filter both movies and series
   const filteredContent = [...movies, ...series]
-    .filter((content) => favoriteMovies.includes(content._id))
+    .filter((content) => allFavorites.includes(content._id))
     .filter((content) =>
       content.title.toLowerCase().includes(filter.toLowerCase())
     );

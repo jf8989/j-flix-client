@@ -3,6 +3,7 @@ import { Button, Card, Form, Row, Col, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { MovieCard } from "../movie-card/movie-card";
 import { BackArrow } from "../back-arrow/back-arrow";
+import "./profile-view.scss";
 
 // Function to format the date to yyyy-MM-dd for input type="date"
 const formatDate = (dateString) => {
@@ -17,7 +18,9 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const [favoriteSeries, setFavoriteSeries] = useState([]);
   const filter = useSelector((state) => state.movies.filter);
+  const series = useSelector((state) => state.series.list);
 
   // Populate user data and favorite movies
   useEffect(() => {
@@ -26,6 +29,7 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
       setEmail(user.Email || "");
       setBirthday(formatDate(user.Birthday));
       setFavoriteMovies(user.FavoriteMovies || []);
+      setFavoriteSeries(user.FavoriteSeries || []);
     }
   }, [user]);
 
@@ -153,6 +157,11 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
       });
   };
 
+  const formatRating = (rating) => {
+    if (!rating) return "N/A";
+    return Number(rating).toFixed(1);
+  };
+
   return (
     <Container fluid className="profile-view p-3 content-margin">
       <Row className="align-items-center mb-4">
@@ -224,9 +233,11 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
           </Card>
         </Col>
         <Col md={8} lg={9}>
-          <h2 className="text-white mb-4">Favorite Movies</h2>
+          <h2 className="section-title main-title">My Favorites</h2>
+          {/* Movies Section */}
+          <h3 className="section-title sub-title">Movies</h3>
           {movies.length > 0 && favoriteMovies.length > 0 ? (
-            <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
+            <Row xs={2} sm={3} md={4} lg={5} className="g-4">
               {movies
                 .filter((movie) => favoriteMovies.includes(movie._id))
                 .filter((movie) =>
@@ -235,15 +246,42 @@ export const ProfileView = ({ user, token, setUser, movies }) => {
                 .map((movie) => (
                   <Col key={movie._id}>
                     <MovieCard
+                      key={movie._id}
                       movie={movie}
                       onToggleFavorite={onToggleFavorite}
                       isFavorite={true}
+                      rating={formatRating(movie.rating)} // Add this prop
                     />
                   </Col>
                 ))}
             </Row>
           ) : (
-            <p className="text-white">No favorite movies selected.</p>
+            <p className="no-content-message">No favorite movies selected.</p>
+          )}
+
+          {/* TV Series Section */}
+          <h3 className="section-title sub-title">TV Series</h3>
+          {series.length > 0 && favoriteSeries.length > 0 ? (
+            <Row xs={2} sm={3} md={4} lg={5} className="g-4">
+              {series
+                .filter((show) => favoriteSeries.includes(show._id))
+                .filter((show) =>
+                  show.title.toLowerCase().includes(filter.toLowerCase())
+                )
+                .map((show) => (
+                  <Col key={show._id}>
+                    <MovieCard
+                      key={show._id}
+                      movie={show}
+                      onToggleFavorite={onToggleFavorite}
+                      isFavorite={true}
+                      rating={formatRating(show.rating)} // Added here for series
+                    />
+                  </Col>
+                ))}
+            </Row>
+          ) : (
+            <p className="no-content-message">No favorite series selected.</p>
           )}
         </Col>
       </Row>
