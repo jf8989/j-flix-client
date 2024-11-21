@@ -353,12 +353,20 @@ MovieView.propTypes = {
         name: PropTypes.string.isRequired,
         bio: PropTypes.string,
         birthYear: PropTypes.number,
-      }).isRequired,
+      }),
+      creator: PropTypes.shape({
+        // Add creator for series
+        name: PropTypes.string.isRequired,
+        bio: PropTypes.string,
+      }),
       imageURL: PropTypes.string,
       featured: PropTypes.bool,
       actors: PropTypes.arrayOf(PropTypes.string),
       rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       releaseYear: PropTypes.number,
+      firstAirYear: PropTypes.number, // Add series-specific fields
+      lastAirYear: PropTypes.number,
+      numberOfSeasons: PropTypes.number,
     })
   ).isRequired,
   onToggleFavorite: PropTypes.func.isRequired,

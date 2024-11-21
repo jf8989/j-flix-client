@@ -1,15 +1,20 @@
+// src/components/movie-filter/movie-filter.jsx
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilter } from "../../redux/moviesSlice";
+import { setFilter as setMoviesFilter } from "../../redux/moviesSlice";
+import { setFilter as setSeriesFilter } from "../../redux/seriesSlice";
 import { Form, Container } from "react-bootstrap";
 
 export function MovieFilter() {
   const dispatch = useDispatch();
-  const filter = useSelector((state) => state.movies.filter);
+  const filter = useSelector((state) => state.movies.filter); // We can use movies filter as the source of truth
 
   const handleFilterChange = useCallback(
     (e) => {
-      dispatch(setFilter(e.target.value));
+      const value = e.target.value;
+      // Update both filters simultaneously
+      dispatch(setMoviesFilter(value));
+      dispatch(setSeriesFilter(value));
     },
     [dispatch]
   );
@@ -18,14 +23,13 @@ export function MovieFilter() {
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === "Escape") {
-        dispatch(setFilter("")); // Clear the filter
+        // Clear both filters
+        dispatch(setMoviesFilter(""));
+        dispatch(setSeriesFilter(""));
       }
     };
 
-    // Add event listener
     document.addEventListener("keydown", handleEscKey);
-
-    // Cleanup
     return () => {
       document.removeEventListener("keydown", handleEscKey);
     };
@@ -37,7 +41,7 @@ export function MovieFilter() {
     >
       <Form.Control
         type="text"
-        placeholder="Search movies..."
+        placeholder="Search movies & shows..."
         value={filter}
         onChange={handleFilterChange}
         className="bg-dark text-white"

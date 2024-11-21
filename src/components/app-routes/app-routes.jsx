@@ -21,6 +21,7 @@ const AppRoutes = ({
   user,
   token,
   movies,
+  series,
   onLoggedIn,
   onLoggedOut,
   setUser,
@@ -28,7 +29,7 @@ const AppRoutes = ({
   authError,
   onToggleFavorite,
   isFavorite,
-  filteredMovies,
+  filteredContent,
 }) => {
   const location = useLocation();
 
@@ -73,10 +74,18 @@ const AppRoutes = ({
                   <Navigate to="/login" replace />
                 ) : (
                   <MovieView
-                    movies={movies.map((movie) => ({
-                      ...movie,
-                      rating: movie.rating?.toString() || "N/A",
-                    }))}
+                    movies={[
+                      ...movies.map((movie) => ({
+                        ...movie,
+                        rating: movie.rating?.toString() || "N/A",
+                        director: movie.director || { name: "N/A" }, // Provide default director
+                      })),
+                      ...series.map((show) => ({
+                        ...show,
+                        rating: show.rating?.toString() || "N/A",
+                        director: show.creator || { name: "N/A" }, // Map creator to director for series
+                      })),
+                    ]}
                     onToggleFavorite={onToggleFavorite}
                     isFavorite={isFavorite}
                   />
@@ -104,15 +113,19 @@ const AppRoutes = ({
                     </div>
                     <div className="movie-container">
                       <div className="movie-grid">
-                        {filteredMovies.map((movie) => (
-                          <div key={movie._id} className="movie-card">
-                            <MovieCard
-                              movie={movie}
-                              onToggleFavorite={onToggleFavorite}
-                              isFavorite={isFavorite(movie._id)}
-                            />
-                          </div>
-                        ))}
+                        {(filteredContent || []).map(
+                          (
+                            item // Changed movie to item
+                          ) => (
+                            <div key={item._id} className="movie-card">
+                              <MovieCard
+                                movie={item} // Pass the item as movie prop
+                                onToggleFavorite={onToggleFavorite}
+                                isFavorite={isFavorite(item._id)}
+                              />
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </>
