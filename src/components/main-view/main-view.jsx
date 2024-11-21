@@ -248,7 +248,10 @@ const MainView = () => {
             <MoviesByGenre
               movies={[...movies, ...series]}
               onToggleFavorite={onToggleFavorite}
-              userFavorites={user?.FavoriteMovies || []}
+              userFavorites={[
+                ...(user?.FavoriteMovies || []),
+                ...(user?.FavoriteSeries || []),
+              ]} // Update this line to include both arrays
               filter={filter}
             />
           </div>
