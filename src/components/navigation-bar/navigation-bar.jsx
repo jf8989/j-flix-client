@@ -352,15 +352,15 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
               <img src={profilePic} alt="Profile" className="profile-image" />
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item as={Link} to="/profile">
-                Profile
-              </Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item as={Link} to="/manage-profiles">
-                Manage Profiles
-              </Dropdown.Item>
+              {/* <Dropdown.Item as={Link} to="/profile">
+    Profile
+  </Dropdown.Item>
+  <Dropdown.Divider />
+  <Dropdown.Item as={Link} to="/manage-profiles">
+    Manage Profiles
+  </Dropdown.Item> */}
               <Dropdown.Item as={Link} to="/account">
-                Account
+                Manage Account
               </Dropdown.Item>
               <Dropdown.Item as={Link} to="/help">
                 Help Center
@@ -435,26 +435,26 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           isMobileProfileMenuOpen ? "show" : ""
         }`}
       >
-        <Nav.Link
-          as={Link}
-          to="/profile"
-          onClick={() => setIsMobileProfileMenuOpen(false)}
-        >
-          Profile
-        </Nav.Link>
-        <Nav.Link
-          as={Link}
-          to="/manage-profiles"
-          onClick={() => setIsMobileProfileMenuOpen(false)}
-        >
-          Manage Profiles
-        </Nav.Link>
+        {/* <Nav.Link
+    as={Link}
+    to="/profile"
+    onClick={() => setIsMobileProfileMenuOpen(false)}
+  >
+    Profile
+  </Nav.Link>
+  <Nav.Link
+    as={Link}
+    to="/manage-profiles"
+    onClick={() => setIsMobileProfileMenuOpen(false)}
+  >
+    Manage Profiles
+  </Nav.Link> */}
         <Nav.Link
           as={Link}
           to="/account"
           onClick={() => setIsMobileProfileMenuOpen(false)}
         >
-          Account
+          Manage Account
         </Nav.Link>
         <Nav.Link
           as={Link}
