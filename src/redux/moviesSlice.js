@@ -20,6 +20,7 @@ export const fetchMovies = createAsyncThunk(
         title: movie.title,
         imageURL: movie.imageURL,
         description: movie.description,
+        type: "movie",
         // Enhanced genre handling
         primaryGenre:
           Array.isArray(movie.genres) && movie.genres.length > 0

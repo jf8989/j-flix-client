@@ -242,6 +242,7 @@ const MainView = () => {
             onToggleFavorite={onToggleFavorite}
             isFavorite={isFavorite}
             filteredContent={filteredContent}
+            filter={filter}
           />
         )}
       </main>

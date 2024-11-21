@@ -15,8 +15,10 @@ import Jobs from "../jobs-view/jobs-view";
 import Contact from "../contact-view/contact-view";
 import Privacy from "../privacy-view/privacy-view";
 import PageTransition from "../page-transition/PageTransition";
+import TVShowsView from "../tv-shows-view/tv-shows-view";
 import { AnimatePresence } from "framer-motion";
 
+// In app-routes.jsx, update the props destructuring at the top:
 const AppRoutes = ({
   user,
   token,
@@ -30,6 +32,7 @@ const AppRoutes = ({
   onToggleFavorite,
   isFavorite,
   filteredContent,
+  filter,
 }) => {
   const location = useLocation();
 
@@ -167,28 +170,42 @@ const AppRoutes = ({
               </>
             }
           />
+          <Route
+            path="/tvshows"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <TVShowsView
+                    onToggleFavorite={onToggleFavorite}
+                    userFavorites={user?.FavoriteMovies || []}
+                    filter={filter || ""} // We'll get series data from Redux directly
+                  />
+                )}
+              </>
+            }
+          />
           {/* Construction Routes */}
-          {["/new", "/movies", "/tvshows", "/manage-profiles", "/account"].map(
-            (path) => (
-              <Route
-                key={path}
-                path={path}
-                element={
-                  <>
-                    {!user ? (
-                      <Navigate to="/login" replace />
-                    ) : (
-                      <UnderConstructionView
-                        user={user}
-                        movies={movies}
-                        onToggleFavorite={onToggleFavorite}
-                      />
-                    )}
-                  </>
-                }
-              />
-            )
-          )}
+          {["/new", "/movies", "/manage-profiles", "/account"].map((path) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <>
+                  {!user ? (
+                    <Navigate to="/login" replace />
+                  ) : (
+                    <UnderConstructionView
+                      user={user}
+                      movies={movies}
+                      onToggleFavorite={onToggleFavorite}
+                    />
+                  )}
+                </>
+              }
+            />
+          ))}
           {/* Help and Kids Routes */}
           <Route
             path="/help"

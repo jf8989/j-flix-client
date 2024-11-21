@@ -1,0 +1,29 @@
+// src/components/tv-shows-view/tv-shows-view.scss
+.tv-shows-view {
+  padding-top: 70px; // Adjust based on your navbar height
+  
+  .tv-shows-header {
+    padding: 2rem 4%; // Reduced padding
+    margin-bottom: 0; // Changed from 2rem to 0
+    
+    h1 {
+      color: var(--text-color);
+      font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    
+    p {
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+      margin-bottom: 0; // Add this to remove any bottom margin from the paragraph
+    }
+  }
+
+  // Add this to remove any potential gap from the MoviesByGenre component
+  .genre-groups-wrapper {
+    margin-top: 0;
+  }
+}

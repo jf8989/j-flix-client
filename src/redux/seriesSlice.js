@@ -19,6 +19,7 @@ export const fetchSeries = createAsyncThunk(
         title: series.title,
         imageURL: series.imageURL,
         description: series.description,
+        type: "series",
         primaryGenre:
           Array.isArray(series.genres) && series.genres.length > 0
             ? series.genres[0].name
