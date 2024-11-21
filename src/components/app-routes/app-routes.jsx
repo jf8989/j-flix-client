@@ -16,6 +16,7 @@ import Contact from "../contact-view/contact-view";
 import Privacy from "../privacy-view/privacy-view";
 import PageTransition from "../page-transition/PageTransition";
 import TVShowsView from "../tv-shows-view/tv-shows-view";
+import MoviesOnlyView from "../movies-only-view/movies-only-view";
 import { AnimatePresence } from "framer-motion";
 
 // In app-routes.jsx, update the props destructuring at the top:
@@ -186,8 +187,24 @@ const AppRoutes = ({
               </>
             }
           />
+          <Route
+            path="/movies"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <MoviesOnlyView
+                    onToggleFavorite={onToggleFavorite}
+                    userFavorites={user?.FavoriteMovies || []}
+                    filter={filter || ""} // We'll get series data from Redux directly
+                  />
+                )}
+              </>
+            }
+          />
           {/* Construction Routes */}
-          {["/new", "/movies", "/manage-profiles", "/account"].map((path) => (
+          {["/new", "/manage-profiles", "/account"].map((path) => (
             <Route
               key={path}
               path={path}
