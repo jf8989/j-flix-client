@@ -206,18 +206,19 @@ const AppRoutes = ({
             }
           />
           {/* Construction Routes */}
-          {["/new", "/manage-profiles", "/account"].map((path) => (
+          {["/new", "/manage-profiles"].map((path) => (
             <Route
-              path="/account"
+              key={path}
+              path={path}
               element={
                 <>
                   {!user ? (
                     <Navigate to="/login" replace />
                   ) : (
-                    <AccountManagement
+                    <UnderConstructionView
                       user={user}
-                      token={token}
-                      setUser={setUser}
+                      movies={movies}
+                      onToggleFavorite={onToggleFavorite}
                     />
                   )}
                 </>
@@ -241,6 +242,22 @@ const AppRoutes = ({
                   <KidsView
                     movies={movies}
                     onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <AccountManagement
+                    user={user}
+                    token={token}
+                    setUser={setUser}
                   />
                 )}
               </>
