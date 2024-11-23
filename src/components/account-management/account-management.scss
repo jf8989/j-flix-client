@@ -1,68 +1,123 @@
-// src/components/account-management/account-management.scss
+// account-management.scss
 
 div.account-management {
-    margin-top: 6rem;
-    padding: 0 0rem; // Reduced side padding for mobile
-    
-    .row {
-      margin-right: 0;
-      margin-left: 0;
-    }
+  margin-top: 5rem;
+  padding: 0 0rem;
   
-    // Add this new style for the column on mobile
-    .col-md-6 {
-      width: 100%; // Makes it wider on mobile
-      padding: 0; // Removes padding on mobile
-      margin: 0 auto; // Centers the column
+  .account-card {
+    background-color: rgba(30, 30, 30, 0.95);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    padding: 2rem;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
     }
     
-    .card {
-      background-color: var(--card-bg);
-      border: none;
-      
-      &:hover {
-        background-color: var(--card-hover-bg);
-      }
+    .section-title {
+      color: var(--primary-color);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: left;
     }
     
-    .form-control {
-      background-color: #333;
-      border: none;
+    .info-section {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .form-field {
+      background-color: rgba(51, 51, 51, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
       color: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
       
       &:focus {
-        background-color: #454545;
+        background-color: rgba(75, 75, 75, 0.9);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.3);
+      }
+
+      &[readonly] {
+        background-color: rgba(40, 40, 40, 0.85);
+        cursor: not-allowed;
+      }
+    }
+
+    .password-section {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      
+      h3 {
+        font-size: 1.5rem;
         color: #fff;
-        box-shadow: none;
+        font-weight: 600;
+        margin-bottom: 1rem;
       }
     }
-    
-    .btn-danger {
+
+    .update-btn, .deregister-btn {
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-radius: 6px;
+      margin: 0.5rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .update-btn {
       background-color: var(--primary-color);
-      border: none;
+      color: #fff;
       
       &:hover {
-        background-color: var(--primary-color-dark);
+        background-color: #b20710;
+        color: #e5e5e5;
       }
     }
-    
-    .btn-outline-danger {
-      border-color: var(--primary-color);
-      color: var(--primary-color);
+
+    .deregister-btn {
+      background-color: #ff3b30;
+      color: #fff;
       
       &:hover {
-        background-color: var(--primary-color);
-        color: white;
-      }
-    }
-  
-    // Add media query for larger screens
-    @media (min-width: 768px) {
-      padding: 0 1.5rem;
-      
-      .col-md-6 {
-        width: auto; // Reset width for desktop
-        padding: 0 05px; // Reset padding for desktop
+        background-color: #d32f2f;
+        color: #fff;
       }
     }
   }
+}
+
+@media (min-width: 768px) {
+  div.account-management {
+    padding: 0 2rem;
+    
+    .account-card {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  div.account-management {
+    .account-card {
+      padding: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .update-btn, .deregister-btn {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+}
