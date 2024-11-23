@@ -17,6 +17,7 @@ import Privacy from "../privacy-view/privacy-view";
 import PageTransition from "../page-transition/PageTransition";
 import TVShowsView from "../tv-shows-view/tv-shows-view";
 import MoviesOnlyView from "../movies-only-view/movies-only-view";
+import AccountManagement from "../account-management/account-management";
 import { AnimatePresence } from "framer-motion";
 
 // In app-routes.jsx, update the props destructuring at the top:
@@ -207,17 +208,16 @@ const AppRoutes = ({
           {/* Construction Routes */}
           {["/new", "/manage-profiles", "/account"].map((path) => (
             <Route
-              key={path}
-              path={path}
+              path="/account"
               element={
                 <>
                   {!user ? (
                     <Navigate to="/login" replace />
                   ) : (
-                    <UnderConstructionView
+                    <AccountManagement
                       user={user}
-                      movies={movies}
-                      onToggleFavorite={onToggleFavorite}
+                      token={token}
+                      setUser={setUser}
                     />
                   )}
                 </>

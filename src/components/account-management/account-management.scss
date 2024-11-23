@@ -1,0 +1,68 @@
+// src/components/account-management/account-management.scss
+
+div.account-management {
+    margin-top: 6rem;
+    padding: 0 0rem; // Reduced side padding for mobile
+    
+    .row {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  
+    // Add this new style for the column on mobile
+    .col-md-6 {
+      width: 100%; // Makes it wider on mobile
+      padding: 0; // Removes padding on mobile
+      margin: 0 auto; // Centers the column
+    }
+    
+    .card {
+      background-color: var(--card-bg);
+      border: none;
+      
+      &:hover {
+        background-color: var(--card-hover-bg);
+      }
+    }
+    
+    .form-control {
+      background-color: #333;
+      border: none;
+      color: #fff;
+      
+      &:focus {
+        background-color: #454545;
+        color: #fff;
+        box-shadow: none;
+      }
+    }
+    
+    .btn-danger {
+      background-color: var(--primary-color);
+      border: none;
+      
+      &:hover {
+        background-color: var(--primary-color-dark);
+      }
+    }
+    
+    .btn-outline-danger {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      
+      &:hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+    }
+  
+    // Add media query for larger screens
+    @media (min-width: 768px) {
+      padding: 0 1.5rem;
+      
+      .col-md-6 {
+        width: auto; // Reset width for desktop
+        padding: 0 05px; // Reset padding for desktop
+      }
+    }
+  }
