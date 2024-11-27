@@ -1,5 +1,11 @@
 import React from "react";
-import { Route, Navigate, Routes, useLocation } from "react-router-dom";
+import {
+  Route,
+  Navigate,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -18,6 +24,7 @@ import PageTransition from "../page-transition/PageTransition";
 import TVShowsView from "../tv-shows-view/tv-shows-view";
 import MoviesOnlyView from "../movies-only-view/movies-only-view";
 import AccountManagement from "../account-management/account-management";
+import ProfilePictureSelector from "../profile-picture-selector/profile-picture-selector";
 import { AnimatePresence } from "framer-motion";
 
 // In app-routes.jsx, update the props destructuring at the top:
@@ -37,6 +44,7 @@ const AppRoutes = ({
   filter,
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <AnimatePresence mode="wait">
@@ -242,6 +250,31 @@ const AppRoutes = ({
                   <KidsView
                     movies={movies}
                     onToggleFavorite={onToggleFavorite}
+                  />
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/profile-picture"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <ProfilePictureSelector
+                    show={true}
+                    onHide={() => navigate(-1)}
+                    onSelect={(picturePath) => {
+                      const updatedUser = {
+                        ...user,
+                        profilePicture: picturePath,
+                      };
+                      setUser(updatedUser);
+                      localStorage.setItem("user", JSON.stringify(updatedUser));
+                      navigate(-1);
+                    }}
+                    currentPicture={user.profilePicture || "1.webp"}
                   />
                 )}
               </>

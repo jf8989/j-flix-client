@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FaSearch, FaBell } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux"; // Ensure useSelector is imported
 import { setFilter } from "../../redux/moviesSlice";
-import profilePic from "../../assets/images/profilepic.jpg";
+import defaultProfilePic from "../../assets/images/profilepic.jpg";
 import "./NavigationBar.scss";
 
 export const NavigationBar = ({ user, onLoggedOut }) => {
@@ -28,6 +28,9 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const filter = useSelector((state) => state.movies.filter); // Get filter from Redux
 
   const [searchValue, setSearchValue] = useState(filter); // Initialize with filter
+
+  // Use default profile picture if no custom picture is selected
+  const profilePic = user?.profilePicture || defaultProfilePic;
 
   // Synchronize searchValue with filter whenever filter changes
   useEffect(() => {
@@ -359,6 +362,9 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   <Dropdown.Item as={Link} to="/manage-profiles">
     Manage Profiles
   </Dropdown.Item> */}
+              <Dropdown.Item as={Link} to="/profile-picture">
+                Change Profile Picture
+              </Dropdown.Item>
               <Dropdown.Item as={Link} to="/account">
                 Manage Account
               </Dropdown.Item>
@@ -449,6 +455,13 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   >
     Manage Profiles
   </Nav.Link> */}
+        <Nav.Link
+          as={Link}
+          to="/profile-picture"
+          onClick={() => setIsMobileProfileMenuOpen(false)}
+        >
+          Change Profile Picture
+        </Nav.Link>
         <Nav.Link
           as={Link}
           to="/account"
