@@ -15,6 +15,8 @@ import { Footer } from "../footer/footer";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 import AppRoutes from "../app-routes/app-routes";
 import MoviesByGenre from "../genre-group/genre-group";
+import ProfilePictureSelector from "../profile-picture-selector/profile-picture-selector";
+import defaultProfilePic from "../../assets/images/profilepic.jpg";
 import "./main-view.scss";
 
 // Token validation helper
@@ -59,6 +61,8 @@ const MainView = () => {
 
   // Ref to store previous pathname
   const prevPathnameRef = useRef();
+
+  const [showProfileSelector, setShowProfileSelector] = useState(false);
 
   useEffect(() => {
     if (pathname === "/" && user) {
@@ -204,6 +208,22 @@ const MainView = () => {
     return [...filteredMovies, ...filteredSeries];
   }, [movies, series, filter]);
 
+  const handleProfilePictureChange = (newPicture) => {
+    // Update the user state as before
+    const newUser = {
+      ...user,
+      profilePicture: newPicture,
+    };
+    setUser(newUser);
+    localStorage.setItem("user", JSON.stringify(newUser));
+
+    // Store profile preference separately with username as key
+    if (user?.Username) {
+      localStorage.setItem(`profilePicture_${user.Username}`, newPicture);
+    }
+    setShowProfileSelector(false);
+  };
+
   if (authError) {
     return <Navigate to="/login" replace />;
   }
@@ -222,22 +242,67 @@ const MainView = () => {
   }
 
   const handleLoggedIn = (userData, tokenData) => {
-    setUser(userData);
+    // Load any stored profile picture preference for this user
+    const storedProfilePic = localStorage.getItem(
+      `profilePicture_${userData.Username}`
+    );
+
+    const enrichedUserData = {
+      ...userData,
+      profilePicture:
+        storedProfilePic || userData?.profilePicture || defaultProfilePic,
+    };
+
+    // Update localStorage and state
+    setUser(enrichedUserData);
     setToken(tokenData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(enrichedUserData));
     localStorage.setItem("token", tokenData);
+
+    // Ensure profile picture preference is preserved
+    if (storedProfilePic) {
+      localStorage.setItem(
+        `profilePicture_${userData.Username}`,
+        storedProfilePic
+      );
+    }
+
     setAuthError(null);
   };
 
   const handleLoggedOut = () => {
+    // Preserve the profile picture preferences before clearing
+    const profilePictures = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith("profilePicture_")) {
+        profilePictures[key] = localStorage.getItem(key);
+      }
+    }
+
+    // Clear authentication data
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
+    // Restore profile picture preferences
+    Object.entries(profilePictures).forEach(([key, value]) => {
+      localStorage.setItem(key, value);
+    });
+
+    // Reset state
     setUser(null);
     setToken(null);
-    localStorage.clear();
   };
 
   return (
     <div className="app-container">
-      {user && <NavigationBar user={user} onLoggedOut={handleLoggedOut} />}
+      {user && (
+        <NavigationBar
+          user={user}
+          onLoggedOut={handleLoggedOut}
+          onProfilePictureSelect={() => setShowProfileSelector(true)}
+        />
+      )}
       <main className="main-content">
         {user && pathname === "/" ? (
           <div
@@ -274,6 +339,12 @@ const MainView = () => {
         )}
       </main>
       <Footer />
+      <ProfilePictureSelector
+        show={showProfileSelector}
+        onHide={() => setShowProfileSelector(false)}
+        onSelect={handleProfilePictureChange}
+        currentPicture={user?.profilePicture}
+      />
     </div>
   );
 };

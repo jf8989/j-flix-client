@@ -7,7 +7,11 @@ import { setFilter } from "../../redux/moviesSlice";
 import defaultProfilePic from "../../assets/images/profilepic.jpg";
 import "./NavigationBar.scss";
 
-export const NavigationBar = ({ user, onLoggedOut }) => {
+export const NavigationBar = ({
+  user,
+  onLoggedOut,
+  onProfilePictureSelect,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -362,7 +366,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   <Dropdown.Item as={Link} to="/manage-profiles">
     Manage Profiles
   </Dropdown.Item> */}
-              <Dropdown.Item as={Link} to="/profile-picture">
+              <Dropdown.Item onClick={onProfilePictureSelect}>
                 Change Profile Picture
               </Dropdown.Item>
               <Dropdown.Item as={Link} to="/account">

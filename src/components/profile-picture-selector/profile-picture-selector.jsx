@@ -47,9 +47,7 @@ const profilePics = [
 const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
   const [selectedImage, setSelectedImage] = useState(currentPicture);
   const [loadedImages, setLoadedImages] = useState([]);
-  const navigate = useNavigate();
 
-  // Preload images when component mounts
   useEffect(() => {
     Promise.all(
       profilePics.map((pic) => {
@@ -93,9 +91,11 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
                 onClick={() => handleImageSelect(pic.path)}
               >
                 <img src={pic.path} alt={`Profile option ${pic.id}`} />
-                <div className="selection-indicator">
-                  <span className="checkmark">✓</span>
-                </div>
+                {selectedImage === pic.path && (
+                  <div className="selection-indicator">
+                    <span className="checkmark">✓</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
