@@ -1,8 +1,7 @@
 // src/components/profile-picture-selector/profile-picture-selector.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./profile-picture-selector.scss";
-import { useNavigate } from "react-router-dom";
 
 // Import all profile pictures individually
 import pic1 from "../../assets/images/profile-pics/1.webp";
@@ -47,36 +46,140 @@ const profilePics = [
 const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
   const [selectedImage, setSelectedImage] = useState(currentPicture);
   const [loadedImages, setLoadedImages] = useState([]);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
+  // Handle body scrolling when selector is open
+  // Handle mobile viewport height
   useEffect(() => {
-    Promise.all(
-      profilePics.map((pic) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.src = pic.path;
-          img.onload = () => resolve(pic);
-        });
-      })
-    ).then(setLoadedImages);
-  }, []);
+    const updateHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
 
-  const handleImageSelect = (imagePath) => {
-    setSelectedImage(imagePath);
-    onSelect(imagePath);
-    onHide();
+    if (show) {
+      updateHeight();
+      window.addEventListener("resize", updateHeight);
+      document.body.classList.add("modal-open");
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.height = "100%";
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+      document.body.style.top = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+      document.body.style.top = "";
+    };
+  }, [show]);
+
+  // Handle keyboard events
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (show && e.key === "Escape") {
+        onHide();
+      }
+    };
+
+    if (show) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [show, onHide]);
+
+  // Load and cache images
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const loadedPics = await Promise.all(
+          profilePics.map((pic) => {
+            return new Promise((resolve) => {
+              const img = new Image();
+              img.src = pic.path;
+              img.onload = () => resolve(pic);
+              img.onerror = () => resolve({ ...pic, error: true });
+            });
+          })
+        );
+        setLoadedImages(loadedPics.filter((pic) => !pic.error));
+      } catch (error) {
+        console.error("Error loading profile pictures:", error);
+      }
+    };
+
+    if (show) {
+      loadImages();
+    }
+  }, [show]);
+
+  // Handle image selection
+  const handleImageSelect = useCallback(
+    (imagePath) => {
+      setSelectedImage(imagePath);
+      onSelect(imagePath);
+      onHide();
+    },
+    [onSelect, onHide]
+  );
+
+  // Handle touch events for swipe detection
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientY);
   };
 
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isSwipeDown = distance < -50;
+
+    if (isSwipeDown) {
+      onHide();
+    }
+  };
+
+  // Don't render if not shown
   if (!show) return null;
 
   return (
-    <div className="profile-selector-overlay" onClick={onHide}>
+    <div
+      className="profile-selector-overlay"
+      onClick={onHide}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div
         className="profile-selector-container"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="profile-selector-header">
           <h2>Choose Your Profile Picture</h2>
-          <button className="close-button" onClick={onHide}>
+          <button
+            className="close-button"
+            onClick={onHide}
+            aria-label="Close profile picture selector"
+          >
             ×
           </button>
         </div>
@@ -89,11 +192,21 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
                   selectedImage === pic.path ? "selected" : ""
                 }`}
                 onClick={() => handleImageSelect(pic.path)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Profile picture option ${pic.id}`}
+                aria-selected={selectedImage === pic.path}
               >
-                <img src={pic.path} alt={`Profile option ${pic.id}`} />
+                <img
+                  src={pic.path}
+                  alt={`Profile option ${pic.id}`}
+                  loading="lazy"
+                />
                 {selectedImage === pic.path && (
                   <div className="selection-indicator">
-                    <span className="checkmark">✓</span>
+                    <span className="checkmark" aria-hidden="true">
+                      ✓
+                    </span>
                   </div>
                 )}
               </div>

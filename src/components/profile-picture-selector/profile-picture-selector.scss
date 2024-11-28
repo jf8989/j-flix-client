@@ -1,23 +1,38 @@
 .profile-selector-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
+  inset: 0; /* Shorthand for top/right/bottom/left: 0 */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
-  backdrop-filter: blur(8px);
-  padding: 60px 20px 20px 20px;
+  z-index: 999999; /* Super high z-index */
+  padding: 0;
+  isolation: isolate; /* Creates a new stacking context */
+  overflow: hidden;
+
+  /* Ensure it's above everything */
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: -1;
+  }
+
+  /* Mobile optimization */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS height fix */
+    height: -webkit-fill-available;
+  }
 }
 
 .profile-selector-container {
   background-color: #141414;
   border-radius: 8px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 2000px; // Increased to match grid max-width
   height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
@@ -60,12 +75,12 @@
 
 .profile-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 2000px; // Increased from 1100px to accommodate more columns
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
 }
 
 .profile-pic-item {
@@ -105,21 +120,109 @@
   }
 }
 
-/* Mobile styles */
+/* Core mobile fixes */
 @media (max-width: 768px) {
   .profile-selector-overlay {
-    padding: 60px 10px 10px 10px;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background-color: #141414;
   }
 
   .profile-selector-container {
-    height: calc(100vh - 70px);
+    height: 100vh;
+    margin: 0;
+    padding: 0;
     border-radius: 0;
+    box-shadow: none;
+  }
+
+  .profile-selector-header {
+    padding: 16px;
+    height: 60px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .close-button {
+      padding: 8px;
+      font-size: 1.5rem;
+    }
+  }
+
+  .profile-selector-content {
+    padding: 12px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
   }
 
   .profile-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    padding: 0 8px;
+    padding: 0;
+    width: 100%;
+  }
+
+  .profile-pic-item {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    &.selected {
+      border: 3px solid #00ff00;
+    }
+
+    .selection-indicator {
+      top: 4px;
+      right: 4px;
+      padding: 3px;
+      
+      .checkmark {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  .profile-selector-header {
+    padding: 12px;
+    height: 50px;
+    
+    h2 {
+      font-size: 1rem;
+    }
+    
+    .close-button {
+      font-size: 1.25rem;
+    }
+  }
+
+  .profile-selector-content {
+    height: calc(100vh - 50px);
+    padding: 8px;
+  }
+
+  .profile-grid {
+    gap: 8px;
+  }
+
+  .profile-pic-item {
+    &.selected {
+      border: 2px solid #00ff00;
+    }
   }
 }
 
@@ -128,6 +231,18 @@
   .profile-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .profile-grid {
+    gap: 32px; // Larger gap for very wide screens
+  }
+}
+
+@media (min-width: 1440px) {
+  .profile-selector-content {
+    padding: 24px;
   }
 }
 
