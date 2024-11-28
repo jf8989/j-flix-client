@@ -1,6 +1,7 @@
 // src/components/profile-picture-selector/profile-picture-selector.jsx
 
 import React, { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import "./profile-picture-selector.scss";
 
 // Import all profile pictures individually
@@ -60,28 +61,10 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
     if (show) {
       updateHeight();
       window.addEventListener("resize", updateHeight);
-      document.body.classList.add("modal-open");
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.width = "100%";
-      document.body.style.height = "100%";
-      document.body.style.top = `-${window.scrollY}px`;
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-      document.body.style.height = "";
-      document.body.style.top = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     }
 
     return () => {
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-      document.body.style.height = "";
-      document.body.style.top = "";
+      window.removeEventListener("resize", updateHeight);
     };
   }, [show]);
 

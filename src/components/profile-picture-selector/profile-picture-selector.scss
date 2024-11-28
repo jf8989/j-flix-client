@@ -1,18 +1,18 @@
+// src/components/profile-picture-selector/profile-picture-selector.scss
+
 .profile-selector-overlay {
   position: fixed;
-  inset: 0; /* Shorthand for top/right/bottom/left: 0 */
+  inset: 0;
   width: 100%;
-  height: 100%;
+  height: calc(var(--vh, 1vh) * 100); // Updated from 100% to use --vh
   background-color: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999999; /* Super high z-index */
+  z-index: 999999;
   padding: 0;
-  isolation: isolate; /* Creates a new stacking context */
-  overflow: hidden;
+  pointer-events: all;
 
-  /* Ensure it's above everything */
   &::before {
     content: '';
     position: fixed;
@@ -20,10 +20,11 @@
     background: #000;
     z-index: -1;
   }
+}
 
-  /* Mobile optimization */
-  @supports (-webkit-touch-callout: none) {
-    /* iOS height fix */
+// iOS height fix
+@supports (-webkit-touch-callout: none) {
+  .profile-selector-overlay {
     height: -webkit-fill-available;
   }
 }
@@ -33,7 +34,7 @@
   border-radius: 8px;
   width: 100%;
   max-width: 2000px; // Increased to match grid max-width
-  height: calc(100vh - 80px);
+  height: calc((var(--vh, 1vh) * 100) - 80px); // Updated from calc(100vh - 80px)
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -124,14 +125,16 @@
 @media (max-width: 768px) {
   .profile-selector-overlay {
     padding: 0;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); // Updated from 100vh
     width: 100vw;
     position: fixed;
     background-color: #141414;
+    transform: translateZ(9999px);
+    -webkit-transform: translateZ(9999px);
   }
 
   .profile-selector-container {
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); // Updated from 100vh
     margin: 0;
     padding: 0;
     border-radius: 0;
@@ -156,7 +159,7 @@
 
   .profile-selector-content {
     padding: 12px;
-    height: calc(100vh - 60px);
+    height: calc((var(--vh, 1vh) * 100) - 60px); // Updated from calc(100vh - 60px)
     overflow-y: auto;
   }
 
@@ -211,7 +214,7 @@
   }
 
   .profile-selector-content {
-    height: calc(100vh - 50px);
+    height: calc((var(--vh, 1vh) * 100) - 50px); // Updated from calc(100vh - 50px)
     padding: 8px;
   }
 
