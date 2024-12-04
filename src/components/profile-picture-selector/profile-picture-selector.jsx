@@ -122,12 +122,17 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
 
   // Handle touch events for swipe detection
   const handleTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientY);
+    // Only start touch if the target is the overlay (not a child element)
+    if (e.target === e.currentTarget) {
+      setTouchEnd(null);
+      setTouchStart(e.targetTouches[0].clientY);
+    }
   };
 
   const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientY);
+    if (e.target === e.currentTarget && touchStart !== null) {
+      setTouchEnd(e.targetTouches[0].clientY);
+    }
   };
 
   const handleTouchEnd = () => {
@@ -144,7 +149,8 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
   // Don't render if not shown
   if (!show) return null;
 
-  return (
+  // Create the overlay component
+  const overlayComponent = (
     <div
       className="profile-selector-overlay"
       onClick={onHide}
@@ -155,6 +161,9 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
       <div
         className="profile-selector-container"
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
       >
         <div className="profile-selector-header">
           <h2>Choose Your Profile Picture</h2>
@@ -175,6 +184,9 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
                   selectedImage === pic.path ? "selected" : ""
                 }`}
                 onClick={() => handleImageSelect(pic.path)}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                onTouchEnd={(e) => e.stopPropagation()}
                 role="button"
                 tabIndex={0}
                 aria-label={`Profile picture option ${pic.id}`}
@@ -199,6 +211,9 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
       </div>
     </div>
   );
+
+  // Use createPortal to render the overlay into document.body
+  return createPortal(overlayComponent, document.body);
 };
 
 export default ProfilePictureSelector;

@@ -21,12 +21,18 @@ import "./main-view.scss";
 
 // Token validation helper
 const isTokenValid = (token) => {
-  if (!token) return false;
+  if (!token) {
+    console.log("Token is missing or undefined.");
+    return false;
+  }
 
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.exp * 1000 > Date.now();
+    const isValid = payload.exp * 1000 > Date.now();
+    console.log(`Token validation result: ${isValid}`, token);
+    return isValid;
   } catch (error) {
+    console.log("Error decoding token:", error, token);
     return false;
   }
 };
