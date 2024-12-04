@@ -12,6 +12,7 @@
   z-index: 999999;
   padding: 0;
   pointer-events: all;
+  touch-action: none;
 
   &::before {
     content: '';

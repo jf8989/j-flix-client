@@ -115,7 +115,9 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
     (imagePath) => {
       setSelectedImage(imagePath);
       onSelect(imagePath);
-      onHide();
+      setTimeout(() => {
+        onHide();
+      }, 0);
     },
     [onSelect, onHide]
   );
@@ -124,6 +126,8 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
   const handleTouchStart = (e) => {
     // Only start touch if the target is the overlay (not a child element)
     if (e.target === e.currentTarget) {
+      e.preventDefault(); // Add this line
+      e.stopPropagation(); // Add this line
       setTouchEnd(null);
       setTouchStart(e.targetTouches[0].clientY);
     }
@@ -131,6 +135,8 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
 
   const handleTouchMove = (e) => {
     if (e.target === e.currentTarget && touchStart !== null) {
+      e.preventDefault(); // Add this line
+      e.stopPropagation(); // Add this line
       setTouchEnd(e.targetTouches[0].clientY);
     }
   };
@@ -142,7 +148,9 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
     const isSwipeDown = distance < -50;
 
     if (isSwipeDown) {
-      onHide();
+      setTimeout(() => {
+        onHide();
+      }, 0);
     }
   };
 
@@ -153,7 +161,12 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
   const overlayComponent = (
     <div
       className="profile-selector-overlay"
-      onClick={onHide}
+      onClick={(e) => {
+        e.stopPropagation();
+        setTimeout(() => {
+          onHide();
+        }, 0);
+      }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
