@@ -215,18 +215,21 @@ const MainView = () => {
   }, [movies, series, filter]);
 
   const handleProfilePictureChange = (newPicture) => {
-    // Update the user state as before
+    const username = user?.Username;
+    if (!username || !newPicture) return;
+
+    // First, update the separate profile storage
+    localStorage.setItem(`profilePicture_${username}`, newPicture);
+
+    // Then update the user object
     const newUser = {
       ...user,
       profilePicture: newPicture,
     };
-    setUser(newUser);
-    localStorage.setItem("user", JSON.stringify(newUser));
 
-    // Store profile preference separately with username as key
-    if (user?.Username) {
-      localStorage.setItem(`profilePicture_${user.Username}`, newPicture);
-    }
+    // Update user in localStorage and state
+    localStorage.setItem("user", JSON.stringify(newUser));
+    setUser(newUser);
     setShowProfileSelector(false);
   };
 
