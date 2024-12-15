@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
 import './trailer-hero.scss';
 
-const TrailerHero = ({ movies }) => {
+const TrailerHero = ({ movies, series }) => {
   const [isMuted, setIsMuted] = useState(true);
   const [currentMovie, setCurrentMovie] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -16,16 +16,21 @@ const TrailerHero = ({ movies }) => {
   const isYouTubeScriptLoaded = useRef(false);
   const hideOverlayTimer = useRef(null);
 
-  // Function to select a random movie
-  const selectRandomMovie = useCallback(() => {
-    if (movies && movies.length > 0) {
-      const moviesWithTrailers = movies.filter(movie => movie.trailer?.key);
-      if (moviesWithTrailers.length > 0) {
-        const randomIndex = Math.floor(Math.random() * moviesWithTrailers.length);
-        setCurrentMovie(moviesWithTrailers[randomIndex]);
+// Function to select a random movie or series
+const selectRandomMovie = useCallback(() => {
+    if ((movies && movies.length > 0) || (series && series.length > 0)) {
+      // Combine movies and series
+      const allContent = [...(movies || []), ...(series || [])];
+      
+      // Filter for items with trailers
+      const contentWithTrailers = allContent.filter(item => item.trailer?.key);
+      
+      if (contentWithTrailers.length > 0) {
+        const randomIndex = Math.floor(Math.random() * contentWithTrailers.length);
+        setCurrentMovie(contentWithTrailers[randomIndex]);
       }
     }
-  }, [movies]);
+  }, [movies, series]);
 
   // Initialize YouTube Player
   const initializePlayer = useCallback(() => {
