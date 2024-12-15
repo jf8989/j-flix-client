@@ -17,6 +17,7 @@ import AppRoutes from "../app-routes/app-routes";
 import MoviesByGenre from "../genre-group/genre-group";
 import ProfilePictureSelector from "../profile-picture-selector/profile-picture-selector";
 import defaultProfilePic from "../../assets/images/profilepic.jpg";
+import TrailerHero from "../trailer-hero/trailer-hero";
 import "./main-view.scss";
 
 // Token validation helper
@@ -314,21 +315,24 @@ const MainView = () => {
       )}
       <main className="main-content">
         {user && pathname === "/" ? (
-          <div
-            className={`movie-groups-container ${
-              shouldAnimate ? "animate" : ""
-            }`}
-          >
-            <MoviesByGenre
-              movies={[...movies, ...series]}
-              onToggleFavorite={onToggleFavorite}
-              userFavorites={[
-                ...(user?.FavoriteMovies || []),
-                ...(user?.FavoriteSeries || []),
-              ]} // Update this line to include both arrays
-              filter={filter}
-            />
-          </div>
+          <>
+            <TrailerHero movies={movies} />
+            <div
+              className={`movie-groups-container ${
+                shouldAnimate ? "animate" : ""
+              }`}
+            >
+              <MoviesByGenre
+                movies={[...movies, ...series]}
+                onToggleFavorite={onToggleFavorite}
+                userFavorites={[
+                  ...(user?.FavoriteMovies || []),
+                  ...(user?.FavoriteSeries || []),
+                ]} // Update this line to include both arrays
+                filter={filter}
+              />
+            </div>
+          </>
         ) : (
           <AppRoutes
             user={user}
