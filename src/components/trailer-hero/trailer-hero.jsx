@@ -10,6 +10,7 @@ const TrailerHero = ({ movies }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showFullscreenOverlay, setShowFullscreenOverlay] = useState(true);
+  const [currentQuality, setCurrentQuality] = useState(''); // For displaying current quality
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   const isYouTubeScriptLoaded = useRef(false);
@@ -30,8 +31,12 @@ const TrailerHero = ({ movies }) => {
   const initializePlayer = useCallback(() => {
     if (!currentMovie?.trailer?.key || !window.YT) return;
 
+    // Debugging Log
+    console.log('Initializing YouTube Player for:', currentMovie.title);
+
     // Destroy existing player if any
     if (playerRef.current) {
+      console.log('Destroying existing player.');
       playerRef.current.destroy();
     }
 
@@ -51,8 +56,24 @@ const TrailerHero = ({ movies }) => {
       },
       events: {
         onReady: (event) => {
-          console.log('Player ready');
+          console.log('Player ready for:', currentMovie.title);
           event.target.setPlaybackQuality('hd1080'); // Request 1080p
+
+          // Check available qualities before setting
+          const availableQualities = event.target.getAvailableQualityLevels();
+          console.log('Available Qualities:', availableQualities);
+          if (availableQualities.includes('hd1080')) {
+            event.target.setPlaybackQuality('hd1080');
+            setCurrentQuality('hd1080');
+          } else if (availableQualities.includes('hd720')) {
+            event.target.setPlaybackQuality('hd720');
+            setCurrentQuality('hd720');
+          } else if (availableQualities.length > 0) {
+            event.target.setPlaybackQuality(availableQualities[0]);
+            setCurrentQuality(availableQualities[0]);
+          }
+
+          // Handle initial mute state without affecting dependencies
           if (isMuted) {
             event.target.mute();
           } else {
@@ -69,6 +90,7 @@ const TrailerHero = ({ movies }) => {
         },
         onPlaybackQualityChange: (event) => {
           console.log('Quality changed to:', event.data);
+          setCurrentQuality(event.data);
         },
         onError: (error) => {
           console.error('YouTube player error:', error);
@@ -99,10 +121,11 @@ const TrailerHero = ({ movies }) => {
     // Cleanup on unmount
     return () => {
       if (playerRef.current) {
+        console.log('Cleaning up player on unmount.');
         playerRef.current.destroy();
       }
     };
-  }, [currentMovie, initializePlayer]);
+  }, [currentMovie, initializePlayer]); // Ensure isMuted is not here
 
   // Select initial movie on component mount or when movies prop changes
   useEffect(() => {
@@ -113,8 +136,10 @@ const TrailerHero = ({ movies }) => {
   const toggleMute = useCallback(() => {
     if (playerRef.current) {
       if (isMuted) {
+        console.log('Unmuting trailer.');
         playerRef.current.unMute();
       } else {
+        console.log('Muting trailer.');
         playerRef.current.mute();
       }
       setIsMuted(!isMuted);
@@ -156,8 +181,10 @@ const TrailerHero = ({ movies }) => {
     if (playerRef.current) {
       const playerState = playerRef.current.getPlayerState();
       if (playerState === window.YT.PlayerState.PLAYING) {
+        console.log('Pausing trailer.');
         playerRef.current.pauseVideo();
       } else if (playerState === window.YT.PlayerState.PAUSED || playerState === window.YT.PlayerState.CUED) {
+        console.log('Resuming trailer.');
         playerRef.current.playVideo();
       }
       // Note: Other states like BUFFERING can be handled if necessary
@@ -201,6 +228,7 @@ const TrailerHero = ({ movies }) => {
     clearHideOverlayTimer();
     hideOverlayTimer.current = setTimeout(() => {
       setShowFullscreenOverlay(false);
+      console.log('Hiding overlay and cursor due to inactivity.');
     }, 3000); // 3 seconds of inactivity
   }, []);
 
@@ -208,6 +236,7 @@ const TrailerHero = ({ movies }) => {
     if (isFullscreen) {
       setShowFullscreenOverlay(true);
       startHideOverlayTimer();
+      console.log('Resetting overlay timer due to mouse movement.');
     }
   }, [isFullscreen, startHideOverlayTimer]);
 
@@ -215,6 +244,7 @@ const TrailerHero = ({ movies }) => {
     if (hideOverlayTimer.current) {
       clearTimeout(hideOverlayTimer.current);
       hideOverlayTimer.current = null;
+      console.log('Cleared overlay hiding timer.');
     }
   }, []);
 
@@ -255,6 +285,9 @@ const TrailerHero = ({ movies }) => {
           <div className="trailer-content">
             <h1>{currentMovie.title}</h1>
             <p>{currentMovie.description}</p>
+            <div className="current-quality">
+              Current Quality: {currentQuality.toUpperCase()}
+            </div>
           </div>
           <div className="trailer-controls">
             <button 
