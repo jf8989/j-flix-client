@@ -130,6 +130,19 @@ const TrailerHero = ({ movies }) => {
     }
   }, []);
 
+  // Toggle play/pause on click
+  const togglePlayPause = useCallback(() => {
+    if (playerRef.current) {
+      const playerState = playerRef.current.getPlayerState();
+      if (playerState === window.YT.PlayerState.PLAYING) {
+        playerRef.current.pauseVideo();
+      } else if (playerState === window.YT.PlayerState.PAUSED || playerState === window.YT.PlayerState.CUED) {
+        playerRef.current.playVideo();
+      }
+      // Note: Other states like BUFFERING can be handled if necessary
+    }
+  }, []);
+
   if (!currentMovie) return null;
 
   return (
@@ -139,6 +152,8 @@ const TrailerHero = ({ movies }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onDoubleClick={handleDoubleClick}
+      onClick={togglePlayPause} // Added onClick handler
+      style={{ cursor: 'pointer' }} // Change cursor to indicate clickability
     >
       <div className="trailer-container">
         <div id="youtube-player"></div>
@@ -148,7 +163,13 @@ const TrailerHero = ({ movies }) => {
             <p>{currentMovie.description}</p>
           </div>
           <div className="trailer-controls">
-            <button className="control-button mute-button" onClick={toggleMute}>
+            <button 
+              className="control-button mute-button" 
+              onClick={(e) => { 
+                e.stopPropagation(); // Prevent click from triggering play/pause
+                toggleMute(); 
+              }}
+            >
               {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </button>
             {/* Fullscreen button removed */}

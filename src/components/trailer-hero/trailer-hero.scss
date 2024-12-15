@@ -7,6 +7,7 @@
     min-height: 400px;
     margin-top: 4rem; // Offset navbar height
     overflow: hidden;
+    cursor: pointer; // Indicate interactivity
   
     .trailer-container {
       position: relative;
@@ -29,17 +30,14 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.8) 0%,
-          rgba(0, 0, 0, 0.4) 60%,
-          rgba(0, 0, 0, 0.9) 100%
-        );
+        /* Remove the gradient by default */
+        background: transparent;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         padding: 2rem 4%;
         z-index: 2;
+        transition: background 0.3s ease; // Smooth background transition
   
         /* Initially hide trailer-content and trailer-controls */
         .trailer-content,
@@ -49,8 +47,15 @@
           transition: opacity 0.3s ease, visibility 0.3s ease;
         }
   
-        /* When hovered, show trailer-content and trailer-controls */
+        /* When hovered, show trailer-content, trailer-controls, and apply gradient */
         &.hovered {
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.4) 60%,
+            rgba(0, 0, 0, 0.9) 100%
+          );
+  
           .trailer-content,
           .trailer-controls {
             opacity: 1;
