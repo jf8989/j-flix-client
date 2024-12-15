@@ -9,6 +9,10 @@
     overflow: hidden;
     cursor: pointer; // Indicate interactivity
   
+    &.hide-cursor {
+      cursor: none;
+    }
+  
     .trailer-container {
       position: relative;
       width: 100%;
@@ -47,7 +51,7 @@
           transition: opacity 0.3s ease, visibility 0.3s ease;
         }
   
-        /* When hovered, show trailer-content, trailer-controls, and apply gradient */
+        /* When hovered or fullscreen overlay is active, show trailer-content and trailer-controls */
         &.hovered {
           background: linear-gradient(
             to bottom,

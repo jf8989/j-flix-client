@@ -8,9 +8,12 @@ const TrailerHero = ({ movies }) => {
   const [isMuted, setIsMuted] = useState(true);
   const [currentMovie, setCurrentMovie] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showFullscreenOverlay, setShowFullscreenOverlay] = useState(true);
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   const isYouTubeScriptLoaded = useRef(false);
+  const hideOverlayTimer = useRef(null);
 
   // Function to select a random movie
   const selectRandomMovie = useCallback(() => {
@@ -23,7 +26,7 @@ const TrailerHero = ({ movies }) => {
     }
   }, [movies]);
 
-  // Initialize player when currentMovie changes
+  // Initialize YouTube Player
   const initializePlayer = useCallback(() => {
     if (!currentMovie?.trailer?.key || !window.YT) return;
 
@@ -123,10 +126,28 @@ const TrailerHero = ({ movies }) => {
     const container = containerRef.current;
     if (!container) return;
 
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) { /* Firefox */
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+      }
     } else {
-      container.requestFullscreen();
+      // Enter fullscreen
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+      } else if (container.webkitRequestFullscreen) { /* Safari */
+        container.webkitRequestFullscreen();
+      } else if (container.mozRequestFullScreen) { /* Firefox */
+        container.mozRequestFullScreen();
+      } else if (container.msRequestFullscreen) { /* IE11 */
+        container.msRequestFullscreen();
+      }
     }
   }, []);
 
@@ -143,11 +164,84 @@ const TrailerHero = ({ movies }) => {
     }
   }, []);
 
+  // Handle fullscreen change events
+  const handleFullscreenChange = useCallback(() => {
+    const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    const isFs = !!fsElement;
+    setIsFullscreen(isFs);
+
+    if (isFs) {
+      setShowFullscreenOverlay(true);
+      startHideOverlayTimer();
+    } else {
+      setShowFullscreenOverlay(false);
+      clearHideOverlayTimer();
+    }
+  }, []);
+
+  // Add event listeners for fullscreen changes
+  useEffect(() => {
+    const handleChange = () => handleFullscreenChange();
+
+    document.addEventListener('fullscreenchange', handleChange);
+    document.addEventListener('webkitfullscreenchange', handleChange);
+    document.addEventListener('mozfullscreenchange', handleChange);
+    document.addEventListener('MSFullscreenChange', handleChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleChange);
+      document.removeEventListener('webkitfullscreenchange', handleChange);
+      document.removeEventListener('mozfullscreenchange', handleChange);
+      document.removeEventListener('MSFullscreenChange', handleChange);
+    };
+  }, [handleFullscreenChange]);
+
+  // Functions to manage overlay hiding timer
+  const startHideOverlayTimer = useCallback(() => {
+    clearHideOverlayTimer();
+    hideOverlayTimer.current = setTimeout(() => {
+      setShowFullscreenOverlay(false);
+    }, 3000); // 3 seconds of inactivity
+  }, []);
+
+  const resetHideOverlayTimer = useCallback(() => {
+    if (isFullscreen) {
+      setShowFullscreenOverlay(true);
+      startHideOverlayTimer();
+    }
+  }, [isFullscreen, startHideOverlayTimer]);
+
+  const clearHideOverlayTimer = useCallback(() => {
+    if (hideOverlayTimer.current) {
+      clearTimeout(hideOverlayTimer.current);
+      hideOverlayTimer.current = null;
+    }
+  }, []);
+
+  // Handle mouse movement to reset the overlay timer
+  useEffect(() => {
+    if (isFullscreen) {
+      const handleMouseMove = () => {
+        resetHideOverlayTimer();
+      };
+
+      document.addEventListener('mousemove', handleMouseMove);
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        clearHideOverlayTimer();
+      };
+    }
+  }, [isFullscreen, resetHideOverlayTimer, clearHideOverlayTimer]);
+
+  // Derived state to determine if overlay should be visible
+  const showOverlay = (!isFullscreen && isHovered) || (isFullscreen && showFullscreenOverlay);
+
   if (!currentMovie) return null;
 
   return (
     <div 
-      className="trailer-hero" 
+      className={`trailer-hero ${isFullscreen && !showFullscreenOverlay ? 'hide-cursor' : ''}`} 
       ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -157,7 +251,7 @@ const TrailerHero = ({ movies }) => {
     >
       <div className="trailer-container">
         <div id="youtube-player"></div>
-        <div className={`trailer-overlay ${isHovered ? 'hovered' : ''}`}>
+        <div className={`trailer-overlay ${showOverlay ? 'hovered' : ''}`}>
           <div className="trailer-content">
             <h1>{currentMovie.title}</h1>
             <p>{currentMovie.description}</p>
@@ -169,6 +263,7 @@ const TrailerHero = ({ movies }) => {
                 e.stopPropagation(); // Prevent click from triggering play/pause
                 toggleMute(); 
               }}
+              aria-label={isMuted ? "Unmute Trailer" : "Mute Trailer"} // Accessibility
             >
               {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </button>
