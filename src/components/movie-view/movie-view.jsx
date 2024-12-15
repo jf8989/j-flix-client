@@ -1,3 +1,5 @@
+// movie-view.jsx is a component that displays detailed information about a movie or series.
+
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
@@ -7,6 +9,7 @@ import MovieImage from "../movie-image/movie-image";
 import { BackArrow } from "../back-arrow/back-arrow";
 import { useDispatch } from "react-redux";
 import { clearFilter } from "../../redux/moviesSlice";
+import MovieTrailer from "../movie-trailer/movie-trailer";
 import "./movie-view.scss";
 
 const SimilarMovies = ({
@@ -174,9 +177,8 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
     return <div>Movie not found</div>;
   }
 
-  const favoriteButtonClass = `favorite-button ${
-    isFavorite(movie._id) ? "favorite" : ""
-  }`;
+  const favoriteButtonClass = `favorite-button ${isFavorite(movie._id) ? "favorite" : ""
+    }`;
 
   // Helper function to format rating
   const formatRating = (rating) => {
@@ -197,6 +199,15 @@ export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
             <h2 className="text-white mb-0">{movie.title}</h2>
           </Col>
         </Row>
+
+        {/* Add the MovieTrailer component here */}
+        {movie.trailer && (
+          <Row className="mb-4">
+            <Col>
+              <MovieTrailer trailer={movie.trailer} />
+            </Col>
+          </Row>
+        )}
 
         <Row className="g-4">
           {/* Left Column: Image and Favorite Button */}
