@@ -87,18 +87,16 @@ const AppRoutes = ({
                   <Navigate to="/login" replace />
                 ) : (
                   <MovieView
-                    movies={[
-                      ...movies.map((movie) => ({
-                        ...movie,
-                        rating: movie.rating?.toString() || "N/A",
-                        director: movie.director || { name: "N/A" }, // Provide default director
-                      })),
-                      ...series.map((show) => ({
-                        ...show,
-                        rating: show.rating?.toString() || "N/A",
-                        director: show.creator || { name: "N/A" }, // Map creator to director for series
-                      })),
-                    ]}
+                    movies={movies.map((movie) => ({
+                      ...movie,
+                      rating: movie.rating?.toString() || "N/A",
+                      director: movie.director || { name: "N/A" },
+                    }))}
+                    series={series.map((show) => ({
+                      ...show,
+                      rating: show.rating?.toString() || "N/A",
+                      creator: show.creator || { name: "N/A" },
+                    }))}
                     onToggleFavorite={onToggleFavorite}
                     isFavorite={isFavorite}
                   />

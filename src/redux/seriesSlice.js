@@ -27,8 +27,8 @@ export const fetchSeries = createAsyncThunk(
         genres: Array.isArray(series.genres)
           ? series.genres.map((genre) => ({ name: genre.name }))
           : series.genre
-          ? [{ name: series.genre.name }]
-          : [],
+            ? [{ name: series.genre.name }]
+            : [],
         creator: {
           name: series.creator?.name || "",
           bio: series.creator?.bio || "",
@@ -40,6 +40,13 @@ export const fetchSeries = createAsyncThunk(
         rating: series.rating,
         status: series.status,
         numberOfSeasons: series.numberOfSeasons,
+        trailer: series.trailer ? {  // Add this trailer object mapping
+          site: series.trailer.site,
+          key: series.trailer.key,
+          name: series.trailer.name,
+          official: series.trailer.official,
+          type: series.trailer.type
+        } : null,
       }));
     } catch (error) {
       return rejectWithValue(error.message);

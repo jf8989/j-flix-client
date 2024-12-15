@@ -134,10 +134,10 @@ const SimilarMovies = ({
   );
 };
 
-export const MovieView = ({ movies, onToggleFavorite, isFavorite }) => {
+export const MovieView = ({ movies, series, onToggleFavorite, isFavorite }) => {
   const { movieId } = useParams();
   const navigate = useNavigate();
-  const movie = movies.find((m) => m._id === movieId);
+  const movie = [...(movies || []), ...(series || [])].find((m) => m._id === movieId);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const dispatch = useDispatch();
@@ -468,8 +468,31 @@ MovieView.propTypes = {
         bio: PropTypes.string,
         birthYear: PropTypes.number,
       }),
+      imageURL: PropTypes.string,
+      featured: PropTypes.bool,
+      actors: PropTypes.arrayOf(PropTypes.string),
+      rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      releaseYear: PropTypes.number,
+      trailer: PropTypes.shape({  // Add trailer for movies
+        site: PropTypes.string,
+        key: PropTypes.string,
+        name: PropTypes.string,
+        official: PropTypes.bool,
+        type: PropTypes.string
+      })
+    })
+  ).isRequired,
+  series: PropTypes.arrayOf(  // Add series array
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      genres: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+        })
+      ),
       creator: PropTypes.shape({
-        // Add creator for series
         name: PropTypes.string.isRequired,
         bio: PropTypes.string,
       }),
@@ -477,10 +500,17 @@ MovieView.propTypes = {
       featured: PropTypes.bool,
       actors: PropTypes.arrayOf(PropTypes.string),
       rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      releaseYear: PropTypes.number,
-      firstAirYear: PropTypes.number, // Add series-specific fields
+      firstAirYear: PropTypes.number,
       lastAirYear: PropTypes.number,
       numberOfSeasons: PropTypes.number,
+      status: PropTypes.string,
+      trailer: PropTypes.shape({  // Add trailer for series
+        site: PropTypes.string,
+        key: PropTypes.string,
+        name: PropTypes.string,
+        official: PropTypes.bool,
+        type: PropTypes.string
+      })
     })
   ).isRequired,
   onToggleFavorite: PropTypes.func.isRequired,
