@@ -76,11 +76,11 @@ The application will open in your default browser at `http://localhost:1234`.
 
 ## 🌐 Live Demo
 
-Visit the live application at: [Your-Netlify-URL]
+Visit the live application at: (https://j-flixcom.netlify.app/)
 
 ## 🔗 API Integration
 
-This application connects to the myFlix REST API. API documentation and endpoints can be found at [Your-API-Documentation-URL].
+This application connects to the myFlix REST API. API documentation and endpoints can be found at (https://github.com/jf8989/j-flix)
 
 ## 📱 Screenshots
 
