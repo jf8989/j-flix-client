@@ -1,0 +1,179 @@
+// src/components/footer/footer.scss
+
+// Variables (copied from index but keeping them in index.scss too)
+:root {
+  --primary-color: #e50914;
+  --secondary-color: #221f1f;
+  --text-color: #ffffff;
+}
+
+// Original footer variables
+$footer-bg: var(--background-color);  // Updated to use root variable
+$footer-text: #a1a1a1;
+$footer-hover: #fff;
+$mobile-breakpoint: 740px;
+$small-mobile-breakpoint: 500px;
+
+// Mixins (keeping original)
+@mixin mobile {
+  @media (max-width: #{$mobile-breakpoint}) {
+    @content;
+  }
+}
+
+@mixin small-mobile {
+  @media (max-width: #{$small-mobile-breakpoint}) {
+    @content;
+  }
+}
+
+// Footer Styles (merged with index.scss footer styles)
+.footer {
+  background-color: $footer-bg;
+  color: $footer-text;
+  padding: 50px 0 20px;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow-x: hidden;
+
+  .container {
+    max-width: 980px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  .social-icons {
+    font-size: 24px;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    @include mobile {
+      gap: 1.5rem;
+    }
+
+    a {
+      color: $footer-text;
+      font-size: 1.25rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem;
+
+      &:hover {
+        color: $footer-hover;
+        transform: scale(1.1);
+      }
+    }
+
+    svg {
+      margin: 0 0.75rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $footer-hover;
+      }
+    }
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    max-width: 100%;
+
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .col {
+      @include mobile {
+        padding: 0 0.5rem;
+      }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 0.5rem;
+
+        @include mobile {
+          margin-bottom: 0.75rem;
+        }
+
+        .footer-link {
+          color: $footer-text;
+          text-decoration: none;
+          font-size: 0.813rem;
+          transition: color 0.2s ease;
+          display: block;
+          padding: 0.25rem 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &:hover {
+            color: $footer-hover;
+          }
+        }
+      }
+    }
+  }
+
+  .service-code {
+    background: transparent;
+    border: 1px solid $footer-text;
+    color: $footer-text;
+    padding: 0.4rem 0.8rem;
+    margin: 1rem auto;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    font-size: 0.813rem;
+
+    &:hover {
+      color: $footer-hover;
+      border-color: $footer-hover;
+    }
+
+    @include mobile {
+      margin: 0.75rem auto;
+    }
+  }
+
+  .copyright {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.813rem;
+    padding: 0 1rem;
+
+    @include mobile {
+      margin-top: 0.75rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    .footer-links {
+      .col {
+        flex: 0 0 50%;
+      }
+    }
+  }
+}

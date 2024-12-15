@@ -1,0 +1,149 @@
+// src/components/profile-view/profile-view.scss
+
+.profile-view {
+    // Container styles
+    .container-fluid {
+      @media (max-width: 576px) {
+        padding: 1rem !important;
+      }
+    }
+  
+    // Header section
+    .header-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+  
+      @media (max-width: 576px) {
+        margin-bottom: 1.5rem;
+      }
+  
+      .section-title {
+        font-family: 'Clash Display', sans-serif;
+        font-weight: 600;
+        font-size: 2rem;
+        margin: 0;
+        color: var(--text-color);
+  
+        @media (max-width: 576px) {
+          font-size: 1.5rem;
+        }
+  
+        &.sub-title {
+          font-size: 1.5rem;
+          color: var(--primary-color);
+          margin-top: 2rem;
+          margin-bottom: 1.5rem;
+  
+          @media (max-width: 576px) {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+  
+    // Grid layout
+    .movies-grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  
+      @media (max-width: 768px) {
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+  
+      @media (max-width: 576px) {
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+  
+    // Empty state
+    .no-content-message {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-color);
+      
+      p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+  
+        @media (max-width: 576px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  
+    // Back arrow customization
+    .back-arrow {
+      margin-right: 1rem;
+      
+      @media (max-width: 576px) {
+        margin-right: 0.75rem;
+      }
+    }
+  
+    // Movie card adjustments
+    .movie-card {
+      height: 100%;
+      margin: 0;
+      
+      @media (max-width: 576px) {
+        .card-title {
+          font-size: 0.9rem;
+        }
+        
+        .movie-description {
+          font-size: 0.8rem;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+        }
+      }
+  
+      img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2/3;
+        object-fit: cover;
+      }
+    }
+  
+    // Profile form card
+    .card {
+      background-color: var(--card-bg);
+      border: none;
+      border-radius: 8px;
+      
+      @media (max-width: 576px) {
+        margin-bottom: 1.5rem;
+      }
+  
+      .form-control {
+        background-color: var(--card-hover-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-color);
+        
+        &:focus {
+          background-color: var(--card-hover-bg);
+          border-color: var(--primary-color);
+          box-shadow: none;
+        }
+      }
+  
+      .btn {
+        font-weight: 500;
+        
+        &-danger {
+          background-color: var(--primary-color);
+          border: none;
+          
+          &:hover {
+            background-color: var(--primary-color-dark);
+          }
+        }
+      }
+    }
+  }

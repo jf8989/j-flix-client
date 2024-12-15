@@ -1,0 +1,139 @@
+// trailer-hero.scss
+
+.trailer-hero {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    min-height: 400px;
+    margin-top: 4rem; // Offset navbar height
+    overflow: hidden;
+    cursor: pointer; // Indicate interactivity
+  
+    &.hide-cursor {
+      cursor: none;
+    }
+  
+    .trailer-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+  
+      #youtube-player {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100vw;
+        height: 100vh;
+        transform: translate(-50%, -50%) scale(1.5);
+        pointer-events: none;
+      }
+  
+      .trailer-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* Remove the gradient by default */
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 2rem 4%;
+        z-index: 2;
+        transition: background 0.3s ease; // Smooth background transition
+  
+        /* Initially hide trailer-content and trailer-controls */
+        .trailer-content,
+        .trailer-controls {
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+  
+        /* When hovered or fullscreen overlay is active, show trailer-content and trailer-controls */
+        &.hovered {
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.4) 60%,
+            rgba(0, 0, 0, 0.9) 100%
+          );
+  
+          .trailer-content,
+          .trailer-controls {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+  
+        .trailer-content {
+          max-width: 600px;
+          margin-bottom: 2rem;
+  
+          h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          }
+  
+          p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+          }
+        }
+  
+        .trailer-controls {
+          /* Position the mute button */
+          .mute-button {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+  
+            &:hover {
+              background: rgba(0, 0, 0, 0.8);
+            }
+  
+            svg {
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Media queries for responsiveness
+  @media (max-width: 768px) {
+    .trailer-hero {
+      height: 60vh;
+  
+      .trailer-overlay {
+        .trailer-content {
+          h1 {
+            font-size: 2rem;
+          }
+  
+          p {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+  

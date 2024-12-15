@@ -1,0 +1,57 @@
+.movie-card {
+    .badges-container {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      gap: 4px;
+      z-index: 4;
+    }
+  
+    .rating-badge,
+    .year-badge {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #ffffff;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+    }
+  
+    .rating-badge {
+      background-color: rgba(229, 9, 20, 0.9);
+    }
+  
+    .year-badge {
+      background-color: rgba(34, 31, 31, 0.9);
+    }
+  
+    .movie-favorite-icon {
+      transition: transform 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .genre-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    
+    .genre-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      
+      &.primary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 500;
+      }
+    }
+  }

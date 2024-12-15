@@ -32,3 +32,5 @@ jspm_packages/
 
 # MacOS
 .DS_Store
+
+.cache

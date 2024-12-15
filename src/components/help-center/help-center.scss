@@ -1,0 +1,177 @@
+.help-center {
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+
+  // Search section styles
+  .search-section {
+    position: relative;
+    margin-bottom: 3rem;
+
+    .form-control {
+      background-color: rgba(51, 51, 51, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      padding: 1rem 3rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      height: 56px;
+
+      &:focus {
+        background-color: rgba(69, 69, 69, 0.9);
+        box-shadow: none;
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  // Popular Topics cards
+  .card {
+    background-color: rgba(51, 51, 51, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--card-hover-bg);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      background-color: rgba(51, 51, 51, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.25rem;
+
+      h3 {
+        color: var(--text-color);
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      color: var(--text-color);
+    }
+  }
+
+  // FAQ Accordion styles
+  .accordion {
+    .accordion-item {
+      background-color: rgba(51, 51, 51, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .accordion-button {
+      background-color: rgba(51, 51, 51, 0.9);
+      color: var(--text-color);
+      padding: 1.25rem;
+      font-weight: 500;
+
+      &:not(.collapsed) {
+        background-color: var(--card-hover-bg);
+        color: var(--text-color);
+      }
+
+      &::after {
+        filter: invert(1);
+      }
+
+      &:focus {
+        box-shadow: none;
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    .accordion-body {
+      background-color: rgba(51, 51, 51, 0.7);
+      color: rgba(255, 255, 255, 0.8);
+      padding: 1.25rem;
+    }
+  }
+
+  // Contact Support section
+  .contact-support {
+    .card {
+      background-color: rgba(51, 51, 51, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2.5rem;
+
+      h3 {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1.5rem;
+      }
+
+      .btn-danger {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        font-size: 1.1rem;
+
+        &:hover {
+          background-color: var(--primary-color-dark);
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 0.25rem rgba(229, 9, 20, 0.25);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .help-center {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+
+    .popular-topics {
+      .card {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .contact-support .card {
+      padding: 2rem;
+    }
+  }
+}
+
+// Utility classes for the help center
+.mb-8 {
+  margin-bottom: 2rem !important;
+}
+
+.mb-12 {
+  margin-bottom: 3rem !important;
+}
+
+.mt-12 {
+  margin-top: 3rem !important;
+}

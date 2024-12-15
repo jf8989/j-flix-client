@@ -1,0 +1,16 @@
+.back-arrow {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    margin-right: 1rem;
+  
+    &:hover {
+      opacity: 0.8;
+    }
+  }

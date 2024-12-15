@@ -1,0 +1,168 @@
+// src/components/profile-picture-selector/profile-picture-selector.scss
+
+.profile-selector-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: calc(var(--vh, 1vh) * 100); // Uses --vh for mobile viewport units
+  background-color: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  padding: 0;
+  pointer-events: all;
+  touch-action: none;
+
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: -1;
+  }
+}
+
+// iOS height fix
+@supports (-webkit-touch-callout: none) {
+  .profile-selector-overlay {
+    height: -webkit-fill-available;
+  }
+}
+
+.profile-selector-container {
+  background-color: #141414;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 2000px; // Increased to match grid max-width
+  height: calc((var(--vh, 1vh) * 100) - 80px); // Updated from calc(100vh - 80px)
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.profile-selector-header {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #141414;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
+.profile-selector-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 2000px; // Increased from 1100px to accommodate more columns
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.profile-pic-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  &.selected {
+    border: 4px solid #00ff00;
+  }
+
+  .selection-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(0, 128, 0, 0.7);
+    border-radius: 50%;
+    padding: 4px;
+
+    .checkmark {
+      color: white;
+      font-size: 1rem;
+    }
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .profile-selector-content {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .profile-grid {
+    gap: 32px; // Larger gap for very wide screens
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Core mobile fixes */
+@media (max-width: 768px) {
+  .profile-selector-overlay {
+    /* Reintroduce essential properties */
+    transform: translateZ(9999px);
+    -webkit-transform: translateZ(9999px);
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  /* No additional overrides needed */
+}

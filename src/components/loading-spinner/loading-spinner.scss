@@ -1,0 +1,50 @@
+// Loading overlay styles
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+  }
+  
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .loading-text {
+    margin-top: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+  }
+
+  // Add these to your index.scss
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .app-wrapper {
+    min-height: 100%;
+    position: relative;
+  }
+  
+  // Make sure bootstrap container doesn't add unnecessary padding
+  .container-fluid {
+    margin: 0;
+    padding: 0;
+  }

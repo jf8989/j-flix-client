@@ -1,0 +1,92 @@
+// My List View styles
+.my-list-view {
+    // Container styles
+    .container-fluid {
+      @media (max-width: 576px) {
+        padding: 1rem !important;
+      }
+    }
+  
+    // Header section
+    .list-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+  
+      @media (max-width: 576px) {
+        margin-bottom: 1.5rem;
+      }
+  
+      h2 {
+        font-family: 'Clash Display', sans-serif;
+        font-weight: 600;
+        font-size: 2rem;
+        margin: 0;
+        color: var(--text-color);
+  
+        @media (max-width: 576px) {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  
+    // Grid layout
+    .movies-grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  
+      @media (max-width: 768px) {
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+  
+      @media (max-width: 576px) {
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+  
+    // Empty state
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-color);
+      
+      p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+  
+        @media (max-width: 576px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  
+    // Back arrow customization
+    .back-arrow {
+      margin-right: 1rem;
+      
+      @media (max-width: 576px) {
+        margin-right: 0.75rem;
+      }
+    }
+  
+    // Movie card adjustments
+    .movie-card {
+      height: 100%;
+      margin: 0;
+      
+      @media (max-width: 576px) {
+        .card-title {
+          font-size: 0.9rem;
+        }
+        
+        .movie-description {
+          font-size: 0.8rem;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+        }
+      }
+    }
+  }
