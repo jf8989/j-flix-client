@@ -1,4 +1,4 @@
-# 🎬 myFlix React App
+# 🎬 J-Flix React App
 
 A full-stack movie application built using the MERN stack (MongoDB, Express, React, Node.js). This client-side application interfaces with a REST API to provide users with access to information about different movies, series, directors, and genres.
 
