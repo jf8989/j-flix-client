@@ -76,7 +76,7 @@ const TrailerHero = ({ movies }) => {
         }
       }
     });
-  }, [currentMovie, selectRandomMovie, isMuted]);
+  }, [currentMovie, selectRandomMovie]); // Removed isMuted from dependencies
 
   // Load YouTube IFrame API script
   useEffect(() => {
