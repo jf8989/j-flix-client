@@ -41,6 +41,13 @@ export const fetchMovies = createAsyncThunk(
         featured: movie.featured || false,
         releaseYear: movie.releaseYear,
         rating: movie.rating,
+        trailer: movie.trailer ? {
+          site: movie.trailer.site,
+          key: movie.trailer.key,
+          name: movie.trailer.name,
+          official: movie.trailer.official,
+          type: movie.trailer.type
+        } : null,
       }));
     } catch (error) {
       return rejectWithValue(error.message);
