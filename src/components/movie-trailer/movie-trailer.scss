@@ -1,54 +1,80 @@
 .movie-trailer {
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 2rem;
-    position: relative;
-    background-color: #000;
-    border-radius: 8px;
-    overflow: hidden;
+  width: 100%;
+  margin-bottom: 2rem;
+  position: relative;
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
 
-    .trailer-container {
-        cursor: pointer; // Add this line
-        position: relative;
-        padding-top: 56.25%;
-    }
+  .trailer-container {
+    position: relative;
+    padding-top: 56.25%; // 16:9 aspect ratio
 
     #movie-trailer-player {
-        cursor: pointer; // Add this line
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-  
-    .trailer-controls {
       position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-      z-index: 2;
-  
-      .control-button {
-        background: rgba(0, 0, 0, 0.7);
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.2s;
-  
-        &:hover {
-          background: rgba(0, 0, 0, 0.9);
-        }
-  
-        svg {
-          width: 20px;
-          height: 20px;
-        }
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:fullscreen {
+      padding-top: 0;
+      height: 100vh;
+
+      #movie-trailer-player {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   }
+
+  .trailer-controls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.5rem;
+
+    .control-button {
+      background: rgba(0, 0, 0, 0.7);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.9);
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+/* Support for all fullscreen prefixes */
+.trailer-container:-webkit-full-screen,
+.trailer-container:-moz-full-screen,
+.trailer-container:-ms-fullscreen,
+.trailer-container:fullscreen {
+  padding-top: 0;
+  height: 100vh;
+
+  #movie-trailer-player {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
