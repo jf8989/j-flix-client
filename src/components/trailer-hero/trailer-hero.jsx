@@ -16,15 +16,15 @@ const TrailerHero = ({ movies, series }) => {
   const isYouTubeScriptLoaded = useRef(false);
   const hideOverlayTimer = useRef(null);
 
-// Function to select a random movie or series
-const selectRandomMovie = useCallback(() => {
+  // Function to select a random movie or series
+  const selectRandomMovie = useCallback(() => {
     if ((movies && movies.length > 0) || (series && series.length > 0)) {
       // Combine movies and series
       const allContent = [...(movies || []), ...(series || [])];
-      
+
       // Filter for items with trailers
       const contentWithTrailers = allContent.filter(item => item.trailer?.key);
-      
+
       if (contentWithTrailers.length > 0) {
         const randomIndex = Math.floor(Math.random() * contentWithTrailers.length);
         setCurrentMovie(contentWithTrailers[randomIndex]);
@@ -275,14 +275,14 @@ const selectRandomMovie = useCallback(() => {
   if (!currentMovie) return null;
 
   return (
-    <div 
-      className={`trailer-hero ${isFullscreen && !showFullscreenOverlay ? 'hide-cursor' : ''}`} 
+    <div
+      className={`trailer-hero ${isFullscreen && !showFullscreenOverlay ? 'hide-cursor' : ''}`}
       ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onDoubleClick={handleDoubleClick}
-      onClick={togglePlayPause} // Added onClick handler
-      style={{ cursor: 'pointer' }} // Change cursor to indicate clickability
+      onClick={togglePlayPause}
+      style={{ cursor: 'pointer' }}
     >
       <div className="trailer-container">
         <div id="youtube-player"></div>
@@ -295,22 +295,35 @@ const selectRandomMovie = useCallback(() => {
             </div>
           </div>
           <div className="trailer-controls">
-            <button 
-              className="control-button mute-button" 
-              onClick={(e) => { 
-                e.stopPropagation(); // Prevent click from triggering play/pause
-                toggleMute(); 
+            <button
+              className="control-button mute-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMute();
               }}
-              aria-label={isMuted ? "Unmute Trailer" : "Mute Trailer"} // Accessibility
+              aria-label={isMuted ? "Unmute Trailer" : "Mute Trailer"}
             >
               {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </button>
-            {/* Fullscreen button removed */}
+            {window.innerWidth <= 768 && (
+              <button
+                className="control-button fullscreen-button-mobile"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDoubleClick();
+                }}
+                aria-label="Toggle Fullscreen"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default TrailerHero;
