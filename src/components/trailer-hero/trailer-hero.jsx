@@ -56,6 +56,7 @@ const TrailerHero = ({ movies, series }) => {
         showinfo: 0,
         modestbranding: 1,
         rel: 0,
+        iv_load_policy: 3,
         // Removed loop and playlist to prevent infinite looping
         // Removed mute from playerVars to prevent reinitialization on mute toggle
       },
@@ -84,6 +85,7 @@ const TrailerHero = ({ movies, series }) => {
           } else {
             event.target.unMute();
           }
+          event.target.setVolume(50); // Set initial volume to 50%
           event.target.playVideo();
         },
         onStateChange: (event) => {
@@ -107,21 +109,38 @@ const TrailerHero = ({ movies, series }) => {
 
   // Load YouTube IFrame API script
   useEffect(() => {
-    if (!window.YT && !isYouTubeScriptLoaded.current) {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      isYouTubeScriptLoaded.current = true;
+    const loadYouTubeAPI = () => {
+      return new Promise((resolve) => {
+        if (window.YT) {
+          resolve();
+          return;
+        }
 
-      // Define callback for when API is ready
-      window.onYouTubeIframeAPIReady = () => {
-        console.log('YouTube API Ready');
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Define callback for when API is ready
+        window.onYouTubeIframeAPIReady = () => {
+          console.log('YouTube API Ready');
+          resolve();
+        };
+      });
+    };
+
+    const initializeYouTubePlayer = async () => {
+      if (!currentMovie) return;
+
+      try {
+        await loadYouTubeAPI();
         initializePlayer();
-      };
-    } else if (window.YT && currentMovie) {
-      initializePlayer();
-    }
+      } catch (error) {
+        console.error('Error initializing YouTube player:', error);
+      }
+    };
+
+    initializeYouTubePlayer();
 
     // Cleanup on unmount
     return () => {
@@ -130,7 +149,7 @@ const TrailerHero = ({ movies, series }) => {
         playerRef.current.destroy();
       }
     };
-  }, [currentMovie, initializePlayer]); // Ensure isMuted is not here
+  }, [currentMovie, initializePlayer]);
 
   // Select initial movie on component mount or when movies prop changes
   useEffect(() => {
