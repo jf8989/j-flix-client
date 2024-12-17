@@ -1,239 +1,320 @@
 // trailer-hero.scss
 
 .trailer-hero {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  min-height: 400px;
+  margin-top: 4rem; // Offset navbar height
+  overflow: hidden;
+  cursor: pointer; // Indicate interactivity
+
+  &.hide-cursor {
+    cursor: none;
+  }
+
+  .trailer-container {
     position: relative;
     width: 100%;
-    height: 80vh;
-    min-height: 400px;
-    margin-top: 4rem; // Offset navbar height
-    overflow: hidden;
-    cursor: pointer; // Indicate interactivity
-  
-    &.hide-cursor {
-      cursor: none;
+    height: 100%;
+
+    #youtube-player {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 100vh;
+      transform: translate(-50%, -50%) scale(1.2); // Changed from 1.5 to 1.2
+      pointer-events: none;
     }
-  
-    .trailer-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-  
-      #youtube-player {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100vw;
-        height: 100vh;
-        transform: translate(-50%, -50%) scale(1.5);
-        pointer-events: none;
+
+    .trailer-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* Remove the gradient by default */
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem 4%;
+      z-index: 2;
+      transition: background 0.3s ease; // Smooth background transition
+
+      /* Initially hide trailer-content and trailer-controls */
+      .trailer-content,
+      .trailer-controls {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
       }
-  
-      .trailer-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        /* Remove the gradient by default */
-        background: transparent;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 2rem 4%;
-        z-index: 2;
-        transition: background 0.3s ease; // Smooth background transition
-  
-        /* Initially hide trailer-content and trailer-controls */
-        .trailer-content,
-        .trailer-controls {
-          opacity: 0;
-          visibility: hidden;
-          transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-  
-        /* When hovered or fullscreen overlay is active, show trailer-content and trailer-controls */
-        &.hovered {
-          background: linear-gradient(
-            to bottom,
+
+      /* When hovered or fullscreen overlay is active, show trailer-content and trailer-controls */
+      &.hovered {
+        background: linear-gradient(to bottom,
             rgba(0, 0, 0, 0.8) 0%,
             rgba(0, 0, 0, 0.4) 60%,
-            rgba(0, 0, 0, 0.9) 100%
-          );
-  
-          .trailer-content,
-          .trailer-controls {
-            opacity: 1;
-            visibility: visible;
-          }
-        }
-  
-        .trailer-content {
-          max-width: 600px;
-          margin-bottom: 2rem;
-  
-          h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-          }
-  
-          p {
-            font-size: 1.2rem;
-            line-height: 1.5;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-          }
-        }
-  
+            rgba(0, 0, 0, 0.9) 100%);
+
+        .trailer-content,
         .trailer-controls {
-          /* Position the mute button */
-          .mute-button {
-            position: absolute;
-            bottom: 2rem;
-            right: 2rem;
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .trailer-content {
+        max-width: 600px;
+        margin-bottom: 2rem;
+
+        h1 {
+          font-size: 3rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        p {
+          font-size: 1.2rem;
+          line-height: 1.5;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .trailer-controls {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        display: flex;
+        gap: 1rem;
+        z-index: 3;
+
+        .mute-button {
+          background: rgba(0, 0, 0, 0.6);
+          border: none;
+          color: white;
+          padding: 0.5rem;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.8);
+          }
+
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .volume-control {
+          display: none; // Hidden by default
+          align-items: center;
+          width: 100px;
+          margin-right: 0.5rem;
+
+          .volume-slider {
+            width: 100%;
+            height: 4px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            transition: background 0.3s ease;
+
+            &::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              width: 12px;
+              height: 12px;
+              background: white;
+              border-radius: 50%;
+              cursor: pointer;
+            }
+
+            &::-moz-range-thumb {
+              width: 12px;
+              height: 12px;
+              background: white;
+              border: none;
+              border-radius: 50%;
+              cursor: pointer;
+            }
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.4);
+            }
+          }
+        }
+
+        // Show volume control only on desktop
+        @media (min-width: 769px) {
+          .volume-control {
+            display: flex;
+          }
+        }
+
+        .fullscreen-button-mobile {
+          background: rgba(0, 0, 0, 0.6);
+          border: none;
+          color: white;
+          padding: 0.5rem;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.8);
+          }
+
+          svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Media queries for responsiveness
+@media (max-width: 768px) {
+  .trailer-hero {
+    height: 60vh;
+
+    .trailer-overlay {
+      .trailer-content {
+        h1 {
+          font-size: 2rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Add this at the end of your existing SCSS file
+@media (max-width: 768px) {
+  .trailer-hero {
+    margin-top: 6rem;
+    height: 35vh; // Shorter height on mobile
+    min-height: 300px;
+
+    .trailer-container {
+      border-radius: 1rem;
+      overflow: hidden;
+
+      #youtube-player {
+        // Adjust scaling for mobile
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+
+      .trailer-overlay {
+        padding: 1rem 2%;
+
+        .trailer-content {
+          max-width: 100%;
+          margin-bottom: 1rem;
+
+          h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+          }
+
+          p {
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .current-quality {
+            font-size: 0.8rem;
+          }
+        }
+
+        .trailer-controls {
+          display: flex;
+          gap: 1rem;
+          position: absolute;
+          bottom: 1rem;
+          right: 1rem;
+
+          .control-button {
             background: rgba(0, 0, 0, 0.6);
             border: none;
             color: white;
             padding: 0.5rem;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: background-color 0.3s ease;
-  
+
             &:hover {
               background: rgba(0, 0, 0, 0.8);
             }
-  
+
             svg {
-              width: 20px;
-              height: 20px;
+              width: 18px;
+              height: 18px;
             }
           }
+
+          .fullscreen-button-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+              stroke-width: 2.5px;
+            }
+          }
+        }
+      }
+    }
+
+    // Show controls by default on mobile
+    .trailer-overlay {
+      &.hovered {
+        .trailer-controls {
+          opacity: 1;
+          visibility: visible;
         }
       }
     }
   }
-  
-  // Media queries for responsiveness
-  @media (max-width: 768px) {
-    .trailer-hero {
-      height: 60vh;
-  
-      .trailer-overlay {
-        .trailer-content {
-          h1 {
-            font-size: 2rem;
-          }
-  
-          p {
-            font-size: 1rem;
-          }
-        }
-      }
+}
+
+// Add support for landscape mode on mobile
+@media (max-width: 768px) and (orientation: landscape) {
+  .trailer-hero {
+    height: 100vh;
+
+    .trailer-container #youtube-player {
+      transform: translate(-50%, -50%) scale(1);
     }
   }
-  
-    // Add this at the end of your existing SCSS file
-    @media (max-width: 768px) {
-      .trailer-hero {
-        height: 40vh; // Shorter height on mobile
-        min-height: 300px;
-  
-        .trailer-container {
-          #youtube-player {
-            // Adjust scaling for mobile
-            transform: translate(-50%, -50%) scale(1.2);
-          }
-  
-          .trailer-overlay {
-            padding: 1rem 2%;
-  
-            .trailer-content {
-              max-width: 100%;
-              margin-bottom: 1rem;
-  
-              h1 {
-                font-size: 1.5rem;
-                margin-bottom: 0.5rem;
-              }
-  
-              p {
-                font-size: 0.9rem;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-              }
-  
-              .current-quality {
-                font-size: 0.8rem;
-              }
-            }
-  
-            .trailer-controls {
-              display: flex;
-              gap: 1rem;
-              position: absolute;
-              bottom: 1rem;
-              right: 1rem;
-  
-              .control-button {
-                background: rgba(0, 0, 0, 0.6);
-                border: none;
-                color: white;
-                padding: 0.5rem;
-                border-radius: 50%;
-                width: 36px;
-                height: 36px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-  
-                &:hover {
-                  background: rgba(0, 0, 0, 0.8);
-                }
-  
-                svg {
-                  width: 18px;
-                  height: 18px;
-                }
-              }
-  
-              .fullscreen-button-mobile {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              }
-            }
-          }
-        }
-  
-        // Show controls by default on mobile
-        .trailer-overlay {
-          &.hovered {
-            .trailer-controls {
-              opacity: 1;
-              visibility: visible;
-            }
-          }
-        }
-      }
-    }
-  
-    // Add support for landscape mode on mobile
-    @media (max-width: 768px) and (orientation: landscape) {
-      .trailer-hero {
-        height: 100vh;
-  
-        .trailer-container #youtube-player {
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
-    }
+}

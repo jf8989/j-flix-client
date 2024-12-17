@@ -151,6 +151,22 @@ const TrailerHero = ({ movies, series }) => {
     }
   }, [isMuted]);
 
+  // Handle volume change via input range
+  const handleVolumeChange = useCallback((e) => {
+    e.stopPropagation();
+    if (playerRef.current) {
+      const volume = parseInt(e.target.value, 10);
+      playerRef.current.setVolume(volume);
+      if (volume === 0) {
+        playerRef.current.mute();
+        setIsMuted(true);
+      } else if (isMuted) {
+        playerRef.current.unMute();
+        setIsMuted(false);
+      }
+    }
+  }, [isMuted]);
+
   // Handle fullscreen toggle via double-click
   const handleDoubleClick = useCallback(() => {
     const container = containerRef.current;
@@ -305,6 +321,18 @@ const TrailerHero = ({ movies, series }) => {
             >
               {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </button>
+            <div className="volume-control">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                className="volume-slider"
+                onChange={handleVolumeChange}
+                onClick={(e) => e.stopPropagation()}
+                onDoubleClick={(e) => e.stopPropagation()}
+                aria-label="Volume"
+              />
+            </div>
 
             <button
               className="control-button fullscreen-button-mobile"
