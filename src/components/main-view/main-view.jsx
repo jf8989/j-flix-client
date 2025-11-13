@@ -316,11 +316,12 @@ const MainView = () => {
       <main className="main-content">
         {user && pathname === "/" ? (
           <>
-            <TrailerHero movies={movies} />
+            {/* Hide trailer when user is searching */}
+            {!filter && <TrailerHero movies={movies} series={series} />}
             <div
               className={`movie-groups-container ${
                 shouldAnimate ? "animate" : ""
-              }`}
+              } ${filter ? "searching" : ""}`}
             >
               <MoviesByGenre
                 movies={[...movies, ...series]}
