@@ -5,6 +5,7 @@ import { FaSearch, FaBell } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux"; // Ensure useSelector is imported
 import { setFilter } from "../../redux/moviesSlice";
 import defaultProfilePic from "../../assets/images/profilepic.jpg";
+import { getProfilePicturePath } from "../../utils/profilePictures";
 import "./NavigationBar.scss";
 
 export const NavigationBar = ({
@@ -34,7 +35,9 @@ export const NavigationBar = ({
   const [searchValue, setSearchValue] = useState(filter); // Initialize with filter
 
   // Use default profile picture if no custom picture is selected
-  const profilePic = user?.profilePicture || defaultProfilePic;
+  const profilePic = user?.profilePicture
+    ? getProfilePicturePath(user.profilePicture)
+    : defaultProfilePic;
 
   // Synchronize searchValue with filter whenever filter changes
   useEffect(() => {

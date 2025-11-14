@@ -63,7 +63,7 @@ const MyFlixApplication = () => {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
-            backgroundColor: '#161616'
+            backgroundColor: '#0d0d0d'
           }}>
             <LoadingSpinner />
           </div>

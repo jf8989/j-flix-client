@@ -34,14 +34,18 @@
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden; // Ensure no overflow
 
     #youtube-player {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 100vw;
+      // Maintain 16:9 aspect ratio and cover the container
+      width: 177.77vh; // 16/9 * 100vh to maintain aspect ratio
       height: 100vh;
-      transform: translate(-50%, -50%) scale(1.2); // Changed from 1.5 to 1.2
+      min-width: 100%;
+      min-height: 56.25vw; // 9/16 * 100vw to maintain aspect ratio
+      transform: translate(-50%, -50%);
       pointer-events: none;
     }
 
@@ -318,8 +322,12 @@
       overflow: hidden;
 
       #youtube-player {
-        // Adjust scaling for mobile
-        transform: translate(-50%, -50%) scale(1.1);
+        // Maintain proper aspect ratio on mobile too
+        width: 177.77vh;
+        height: 100vh;
+        min-width: 100%;
+        min-height: 56.25vw;
+        transform: translate(-50%, -50%);
       }
 
       .trailer-overlay {
@@ -416,7 +424,12 @@
     height: 100vh;
 
     .trailer-container #youtube-player {
-      transform: translate(-50%, -50%) scale(1);
+      // Maintain aspect ratio in landscape too
+      width: 177.77vh;
+      height: 100vh;
+      min-width: 100%;
+      min-height: 56.25vw;
+      transform: translate(-50%, -50%);
     }
   }
 }
