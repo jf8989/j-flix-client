@@ -3,49 +3,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import "./profile-picture-selector.scss";
-
-// Import all profile pictures individually
-import pic1 from "../../assets/images/profile-pics/1.webp";
-import pic2 from "../../assets/images/profile-pics/2.webp";
-import pic3 from "../../assets/images/profile-pics/3.webp";
-import pic4 from "../../assets/images/profile-pics/4.webp";
-import pic5 from "../../assets/images/profile-pics/5.webp";
-import pic6 from "../../assets/images/profile-pics/6.webp";
-import pic7 from "../../assets/images/profile-pics/7.webp";
-import pic8 from "../../assets/images/profile-pics/8.webp";
-import pic9 from "../../assets/images/profile-pics/9.webp";
-import pic10 from "../../assets/images/profile-pics/10.webp";
-import pic11 from "../../assets/images/profile-pics/11.webp";
-import pic12 from "../../assets/images/profile-pics/12.webp";
-import pic13 from "../../assets/images/profile-pics/13.webp";
-import pic14 from "../../assets/images/profile-pics/14.webp";
-import pic15 from "../../assets/images/profile-pics/15.webp";
-import pic16 from "../../assets/images/profile-pics/16.webp";
-import pic17 from "../../assets/images/profile-pics/17.webp";
-
-// Create array of profile pictures with their paths
-const profilePics = [
-  { id: 1, path: pic1 },
-  { id: 2, path: pic2 },
-  { id: 3, path: pic3 },
-  { id: 4, path: pic4 },
-  { id: 5, path: pic5 },
-  { id: 6, path: pic6 },
-  { id: 7, path: pic7 },
-  { id: 8, path: pic8 },
-  { id: 9, path: pic9 },
-  { id: 10, path: pic10 },
-  { id: 11, path: pic11 },
-  { id: 12, path: pic12 },
-  { id: 13, path: pic13 },
-  { id: 14, path: pic14 },
-  { id: 15, path: pic15 },
-  { id: 16, path: pic16 },
-  { id: 17, path: pic17 },
-];
+import { profilePics, getProfilePictureFilename } from "../../utils/profilePictures";
 
 const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
-  const [selectedImage, setSelectedImage] = useState(currentPicture);
+  // Convert currentPicture to filename if it's a path
+  const currentFilename = getProfilePictureFilename(currentPicture);
+  const [selectedImage, setSelectedImage] = useState(currentFilename);
   const [loadedImages, setLoadedImages] = useState([]);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -112,9 +75,9 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
 
   // Handle image selection
   const handleImageSelect = useCallback(
-    (imagePath) => {
-      setSelectedImage(imagePath);
-      onSelect(imagePath);
+    (filename) => {
+      setSelectedImage(filename);
+      onSelect(filename); // Save just the filename, not the full path
       setTimeout(() => {
         onHide();
       }, 0);
@@ -194,23 +157,23 @@ const ProfilePictureSelector = ({ show, onHide, onSelect, currentPicture }) => {
               <div
                 key={pic.id}
                 className={`profile-pic-item ${
-                  selectedImage === pic.path ? "selected" : ""
+                  selectedImage === pic.name ? "selected" : ""
                 }`}
-                onClick={() => handleImageSelect(pic.path)}
+                onClick={() => handleImageSelect(pic.name)}
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 onTouchEnd={(e) => e.stopPropagation()}
                 role="button"
                 tabIndex={0}
                 aria-label={`Profile picture option ${pic.id}`}
-                aria-selected={selectedImage === pic.path}
+                aria-selected={selectedImage === pic.name}
               >
                 <img
                   src={pic.path}
                   alt={`Profile option ${pic.id}`}
                   loading="lazy"
                 />
-                {selectedImage === pic.path && (
+                {selectedImage === pic.name && (
                   <div className="selection-indicator">
                     <span className="checkmark" aria-hidden="true">
                       ✓

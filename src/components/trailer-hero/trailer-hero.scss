@@ -5,6 +5,7 @@
   width: 100%;
   height: 80vh;
   min-height: 400px;
+  max-height: 900px; // Prevent hero from being too tall on very large screens
   margin-top: 4rem; // Offset navbar height
   overflow: hidden;
   cursor: pointer; // Indicate interactivity
@@ -13,18 +14,38 @@
     cursor: none;
   }
 
+  // Improved mobile-first approach
+  @media (max-width: 640px) {
+    height: 50vh; // Shorter on small phones
+    min-height: 280px;
+    margin-top: 3.5rem;
+  }
+
+  @media (min-width: 641px) and (max-width: 768px) {
+    height: 60vh; // Medium height for tablets
+    min-height: 350px;
+  }
+
+  @media (min-width: 1920px) {
+    height: 70vh; // Slightly shorter on very large screens
+  }
+
   .trailer-container {
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden; // Ensure no overflow
 
     #youtube-player {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 100vw;
+      // Maintain 16:9 aspect ratio and cover the container
+      width: 177.77vh; // 16/9 * 100vh to maintain aspect ratio
       height: 100vh;
-      transform: translate(-50%, -50%) scale(1.2); // Changed from 1.5 to 1.2
+      min-width: 100%;
+      min-height: 56.25vw; // 9/16 * 100vw to maintain aspect ratio
+      transform: translate(-50%, -50%);
       pointer-events: none;
     }
 
@@ -39,47 +60,93 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 2rem 4%;
+      padding: 2rem 5%; // Generous padding for desktop
       z-index: 2;
       transition: background 0.3s ease; // Smooth background transition
+
+      // Mobile-first responsive padding
+      @media (max-width: 640px) {
+        padding: 1rem 4%; // Reduced padding on small screens
+      }
+
+      @media (min-width: 641px) and (max-width: 1024px) {
+        padding: 1.5rem 4%; // Medium padding for tablets
+      }
+
+      @media (min-width: 1440px) {
+        padding: 3rem 6%; // Extra padding on large screens
+      }
 
       /* Initially hide trailer-content and trailer-controls */
       .trailer-content,
       .trailer-controls {
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transform: translateY(20px); // Start position for entrance animation
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                    visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       /* When hovered or fullscreen overlay is active, show trailer-content and trailer-controls */
       &.hovered {
         background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.8) 0%,
-            rgba(0, 0, 0, 0.4) 60%,
-            rgba(0, 0, 0, 0.9) 100%);
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(0, 0, 0, 0.5) 60%,
+            rgba(0, 0, 0, 0.95) 100%);
 
         .trailer-content,
         .trailer-controls {
           opacity: 1;
           visibility: visible;
+          transform: translateY(0); // End position - slide up effect
         }
       }
 
       .trailer-content {
-        max-width: 600px;
+        max-width: 700px;
         margin-bottom: 2rem;
 
-        h1 {
-          font-size: 3rem;
-          font-weight: 700;
+        // Responsive max-width
+        @media (max-width: 640px) {
+          max-width: 100%; // Full width on small phones
           margin-bottom: 1rem;
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (min-width: 1440px) {
+          max-width: 800px; // Wider on large screens
+        }
+
+        h1 {
+          // Stunning UI: Display headline (56px-96px desktop)
+          font-size: 4rem; // 64px - Bold, impactful
+          font-weight: 800; // Extra bold for hero headlines
+          line-height: 1.1; // Tight line height for impact
+          letter-spacing: -0.02em; // Tighter for premium feel
+          margin-bottom: 1rem;
+          text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+
+          @media (max-width: 480px) {
+            font-size: 1.75rem; // 28px for very small phones
+            margin-bottom: 0.5rem;
+          }
+
+          @media (min-width: 1920px) {
+            font-size: 5rem; // 80px for extra large screens
+          }
         }
 
         p {
-          font-size: 1.2rem;
-          line-height: 1.5;
-          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+          font-size: 1.25rem; // 20px - Body large
+          line-height: 1.6; // Comfortable reading
+          font-weight: 400;
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+          color: rgba(255, 255, 255, 0.95); // Slightly off-white for better readability
+
+          @media (max-width: 640px) {
+            font-size: 0.95rem; // 15.2px for small screens
+            line-height: 1.5;
+          }
         }
       }
 
@@ -97,21 +164,35 @@
           color: white;
           padding: 0.5rem;
           border-radius: 50%;
-          width: 40px;
-          height: 40px;
+          width: 44px; // Increased from 40px for better accessibility
+          height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background-color 0.3s ease;
+          // Stunning UI: Smooth micro-interactions
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(8px);
 
           &:hover {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            transform: scale(1.05); // Subtle scale on hover
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          }
+
+          &:active {
+            transform: scale(0.95); // Press feedback
+          }
+
+          &:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
           }
 
           svg {
             width: 20px;
             height: 20px;
+            transition: transform 0.2s ease;
           }
         }
 
@@ -168,22 +249,36 @@
           color: white;
           padding: 0.5rem;
           border-radius: 50%;
-          width: 40px;
-          height: 40px;
+          width: 44px; // Increased from 40px for better accessibility
+          height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background-color 0.3s ease;
+          // Stunning UI: Smooth micro-interactions
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(8px);
 
           &:hover {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            transform: scale(1.05); // Subtle scale on hover
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          }
+
+          &:active {
+            transform: scale(0.95); // Press feedback
+          }
+
+          &:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
           }
 
           svg {
             width: 20px;
             height: 20px;
             stroke-width: 2.5px;
+            transition: transform 0.2s ease;
           }
         }
       }
@@ -199,11 +294,16 @@
     .trailer-overlay {
       .trailer-content {
         h1 {
-          font-size: 2rem;
+          // Stunning UI: Display headline mobile (40px-56px)
+          font-size: 2.5rem; // 40px
+          font-weight: 800;
+          line-height: 1.2;
+          letter-spacing: -0.02em;
         }
 
         p {
-          font-size: 1rem;
+          font-size: 1rem; // 16px - Base body size
+          line-height: 1.5;
         }
       }
     }
@@ -222,8 +322,12 @@
       overflow: hidden;
 
       #youtube-player {
-        // Adjust scaling for mobile
-        transform: translate(-50%, -50%) scale(1.1);
+        // Maintain proper aspect ratio on mobile too
+        width: 177.77vh;
+        height: 100vh;
+        min-width: 100%;
+        min-height: 56.25vw;
+        transform: translate(-50%, -50%);
       }
 
       .trailer-overlay {
@@ -234,12 +338,17 @@
           margin-bottom: 1rem;
 
           h1 {
-            font-size: 1.5rem;
+            // Stunning UI: Mobile display headline
+            font-size: 2rem; // 32px for very small screens
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
             margin-bottom: 0.5rem;
           }
 
           p {
-            font-size: 0.9rem;
+            font-size: 0.9rem; // 14.4px
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
@@ -248,7 +357,8 @@
           }
 
           .current-quality {
-            font-size: 0.8rem;
+            font-size: 0.75rem; // 12px - Small text
+            font-weight: 500;
           }
         }
 
@@ -265,8 +375,8 @@
             color: white;
             padding: 0.5rem;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            width: 44px; // Increased from 36px for better accessibility (WCAG AAA)
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -278,8 +388,8 @@
             }
 
             svg {
-              width: 18px;
-              height: 18px;
+              width: 20px; // Increased proportionally
+              height: 20px;
             }
           }
 
@@ -314,7 +424,12 @@
     height: 100vh;
 
     .trailer-container #youtube-player {
-      transform: translate(-50%, -50%) scale(1);
+      // Maintain aspect ratio in landscape too
+      width: 177.77vh;
+      height: 100vh;
+      min-width: 100%;
+      min-height: 56.25vw;
+      transform: translate(-50%, -50%);
     }
   }
 }

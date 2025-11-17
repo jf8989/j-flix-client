@@ -56,7 +56,20 @@ const App = () => {
 const MyFlixApplication = () => {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate
+        loading={
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            backgroundColor: '#0d0d0d'
+          }}>
+            <LoadingSpinner />
+          </div>
+        }
+        persistor={persistor}
+      >
         <App />
       </PersistGate>
     </Provider>

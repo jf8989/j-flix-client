@@ -1,4 +1,37 @@
 .movie-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    // Stunning UI: Smooth hover transitions
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+      .card-img-top {
+        transform: scale(1.05);
+      }
+
+      .card-body {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .rating-badge,
+      .year-badge {
+        transform: translateY(-2px);
+      }
+    }
+
+    .card-img-top {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-body {
+      transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     .badges-container {
       position: absolute;
       top: 8px;
@@ -16,6 +49,7 @@
       color: #ffffff;
       font-weight: 500;
       backdrop-filter: blur(4px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   
     .rating-badge {
@@ -40,18 +74,42 @@
     flex-wrap: wrap;
     gap: 0.25rem;
     margin-top: 0.5rem;
-    
+
     .genre-badge {
       font-size: 0.7rem;
       padding: 0.15rem 0.5rem;
       border-radius: 1rem;
       background: rgba(255, 255, 255, 0.1);
       color: rgba(255, 255, 255, 0.8);
-      
+
       &.primary {
         background: rgba(255, 255, 255, 0.2);
         color: white;
         font-weight: 500;
+      }
+    }
+  }
+
+  // Accessibility: Respect reduced motion preference
+  @media (prefers-reduced-motion: reduce) {
+    .movie-card {
+      transition-duration: 0.01ms !important;
+
+      &:hover {
+        transform: none;
+      }
+
+      .card-img-top {
+        transition-duration: 0.01ms !important;
+      }
+
+      .card-body {
+        transition-duration: 0.01ms !important;
+      }
+
+      .rating-badge,
+      .year-badge {
+        transition-duration: 0.01ms !important;
       }
     }
   }

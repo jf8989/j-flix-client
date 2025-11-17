@@ -3,8 +3,9 @@
   margin-bottom: 2rem;
   position: relative;
   background-color: #000;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 
   .trailer-container {
     position: relative;
@@ -12,14 +13,43 @@
 
     #movie-trailer-player {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      transform: translate(-50%, -50%);
+      pointer-events: auto;
     }
 
-    &:fullscreen {
+    .trailer-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: transparent;
+      transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2;
+
+      &.hovered {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.6) 0%,
+          rgba(0, 0, 0, 0.3) 60%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+
+        .trailer-controls {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    &:fullscreen,
+    &:-webkit-full-screen,
+    &:-moz-full-screen,
+    &:-ms-fullscreen {
       padding-top: 0;
       height: 100vh;
 
@@ -33,32 +63,110 @@
 
   .trailer-controls {
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 2;
+    bottom: 1.5rem;
+    right: 1.5rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    align-items: center;
+    // Stunning UI: Hide controls by default, show on hover
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
     .control-button {
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.6);
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 44px; // Increased for better accessibility
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       cursor: pointer;
-      transition: background-color 0.2s;
+      backdrop-filter: blur(8px);
+      // Stunning UI: Smooth micro-interactions
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.85);
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
       }
 
       svg {
         width: 20px;
         height: 20px;
+        transition: transform 0.2s ease;
+      }
+    }
+
+    .volume-control {
+      display: flex;
+      align-items: center;
+      width: 100px;
+
+      .volume-slider {
+        width: 100%;
+        height: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        outline: none;
+        transition: background 0.3s ease;
+        cursor: pointer;
+
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 12px;
+          height: 12px;
+          background: white;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+          &:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+          }
+        }
+
+        &::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          background: white;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+          &:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+          }
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.4);
+        }
+
+        &:focus {
+          outline: 2px solid var(--primary-color);
+          outline-offset: 2px;
+        }
       }
     }
   }

@@ -11,10 +11,13 @@ const TrailerHero = ({ movies, series }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showFullscreenOverlay, setShowFullscreenOverlay] = useState(true);
   const [currentQuality, setCurrentQuality] = useState(''); // For displaying current quality
+  const [hasError, setHasError] = useState(false);
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   const isYouTubeScriptLoaded = useRef(false);
   const hideOverlayTimer = useRef(null);
+  const retryCountRef = useRef(0);
+  const maxRetries = 3;
 
   // Function to select a random movie or series
   const selectRandomMovie = useCallback(() => {
@@ -63,6 +66,11 @@ const TrailerHero = ({ movies, series }) => {
       events: {
         onReady: (event) => {
           console.log('Player ready for:', currentMovie.title);
+
+          // Reset error state on successful load
+          setHasError(false);
+          retryCountRef.current = 0;
+
           event.target.setPlaybackQuality('hd1080'); // Request 1080p
 
           // Check available qualities before setting
@@ -100,8 +108,27 @@ const TrailerHero = ({ movies, series }) => {
           setCurrentQuality(event.data);
         },
         onError: (error) => {
-          console.error('YouTube player error:', error);
-          selectRandomMovie(); // Attempt to play another trailer on error
+          console.error('YouTube player error:', error.data, 'for video:', currentMovie.trailer.key);
+
+          // Handle different error types
+          // 2 - Invalid parameter / video ID
+          // 5 - HTML5 player error
+          // 100 - Video not found or private
+          // 101, 150 - Video not embeddable
+
+          if (retryCountRef.current < maxRetries) {
+            retryCountRef.current += 1;
+            console.log(`Retrying... attempt ${retryCountRef.current} of ${maxRetries}`);
+
+            // Try another video after a short delay
+            setTimeout(() => {
+              selectRandomMovie();
+            }, 1000);
+          } else {
+            console.error('Max retries reached. Could not load any trailer.');
+            setHasError(true);
+            retryCountRef.current = 0; // Reset for next attempt
+          }
         }
       }
     });
@@ -154,7 +181,10 @@ const TrailerHero = ({ movies, series }) => {
   // Select initial movie on component mount or when movies prop changes
   useEffect(() => {
     selectRandomMovie();
-  }, [movies, selectRandomMovie]);
+    // Reset error state when new content is available
+    setHasError(false);
+    retryCountRef.current = 0;
+  }, [movies, series, selectRandomMovie]);
 
   // Toggle mute state
   const toggleMute = useCallback(() => {
@@ -320,7 +350,41 @@ const TrailerHero = ({ movies, series }) => {
       style={{ cursor: 'pointer' }}
     >
       <div className="trailer-container">
-        <div id="youtube-player"></div>
+        {hasError ? (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            zIndex: 10
+          }}>
+            <p style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+              Unable to load trailer
+            </p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setHasError(false);
+                retryCountRef.current = 0;
+                selectRandomMovie();
+              }}
+              style={{
+                padding: '0.75rem 1.5rem',
+                fontSize: '1rem',
+                backgroundColor: 'var(--primary-color)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '0.375rem',
+                cursor: 'pointer'
+              }}
+            >
+              Try Another Trailer
+            </button>
+          </div>
+        ) : (
+          <div id="youtube-player"></div>
+        )}
         <div className={`trailer-overlay ${showOverlay ? 'hovered' : ''}`}>
           <div className="trailer-content">
             <h1>{currentMovie.title}</h1>

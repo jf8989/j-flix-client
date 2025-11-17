@@ -86,19 +86,38 @@
 
     <!-- Script to handle root loading state -->
     <script>
-      window.addEventListener("load", function () {
+      // Make root visible as soon as DOM is ready, not waiting for all resources
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          document.getElementById("root").classList.add("loaded");
+        });
+      } else {
+        // DOM is already ready
         document.getElementById("root").classList.add("loaded");
-      });
+      }
 
       // Font loading optimization
       if ("fonts" in document) {
         Promise.all([
           document.fonts.load("1em Inter"),
           document.fonts.load("1em Clash Display"),
-        ]).then(() => {
-          document.documentElement.classList.add("fonts-loaded");
-        });
+        ])
+          .then(() => {
+            document.documentElement.classList.add("fonts-loaded");
+          })
+          .catch(() => {
+            // Even if fonts fail to load, mark as loaded to prevent blocking
+            document.documentElement.classList.add("fonts-loaded");
+          });
       }
+
+      // Fallback: ensure root is visible after 1 second even if load events fail
+      setTimeout(function () {
+        var root = document.getElementById("root");
+        if (root && !root.classList.contains("loaded")) {
+          root.classList.add("loaded");
+        }
+      }, 1000);
     </script>
 
     <!-- DNS Prefetch for External Resources -->

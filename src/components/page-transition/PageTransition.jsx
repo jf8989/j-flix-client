@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { useLocation, useNavigationType } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./PageTransition.scss";
 
 const transitions = {
@@ -10,64 +10,51 @@ const transitions = {
     exit: { opacity: 0 },
   },
   slideLeft: {
-    initial: { opacity: 0, x: 50 },
+    initial: { opacity: 0, x: 30 },
     animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -50 },
+    exit: { opacity: 0, x: -30 },
   },
   slideUp: {
-    initial: { opacity: 0, y: 20 },
+    initial: { opacity: 0, y: 15 },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 },
+    exit: { opacity: 0, y: -15 },
   },
   scale: {
-    initial: { opacity: 0, scale: 0.95 },
+    initial: { opacity: 0, scale: 0.97 },
     animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
+    exit: { opacity: 0, scale: 0.97 },
   },
 };
 
 const timingPresets = {
   smooth: {
     type: "tween",
-    ease: "easeInOut",
-    duration: 0.2,
+    ease: [0.4, 0, 0.2, 1], // Stunning-UI: Custom cubic-bezier for smoothness
+    duration: 0.3, // Increased from 0.2 for smoother feel
   },
   snappy: {
     type: "spring",
-    stiffness: 300,
-    damping: 30,
-    duration: 0.2,
+    stiffness: 260,
+    damping: 26,
+    mass: 0.8,
   },
   gentle: {
     type: "tween",
-    ease: "anticipate",
-    duration: 0.5,
+    ease: [0.25, 0.1, 0.25, 1], // Smooth ease-in-out
+    duration: 0.4,
   },
 };
 
 const PageTransition = ({
   children,
-  transitionType = "fade",
+  transitionType = "slideUp", // Changed from fade to slideUp for more engaging transitions
   timing = "smooth",
   className = "",
 }) => {
   const location = useLocation();
-  const navigationType = useNavigationType();
 
-  useEffect(() => {
-    // Only scroll to top if it's not a POP navigation (back button or navigate(-1))
-    if (navigationType !== "POP") {
-      const timeoutId = setTimeout(() => {
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: "smooth",
-        });
-      }, 100);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [location.pathname, navigationType]);
+  // Note: Scroll restoration is handled by the ScrollRestoration component
+  // in main-view.jsx to avoid conflicts
 
   return (
     <motion.div
