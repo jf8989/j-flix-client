@@ -7,6 +7,7 @@ const MovieTrailer = ({ trailer }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [volume, setVolume] = useState(50); // Track volume state
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   const videoContainerRef = useRef(null);
@@ -82,7 +83,12 @@ const MovieTrailer = ({ trailer }) => {
     }
   };
 
-  const togglePlayPause = () => {
+  const togglePlayPause = (e) => {
+    // Only toggle if clicking on the video itself, not on controls
+    if (e && e.target.closest('.trailer-controls')) {
+      return;
+    }
+
     if (playerRef.current) {
       if (isPlaying) {
         playerRef.current.pauseVideo();
@@ -90,6 +96,24 @@ const MovieTrailer = ({ trailer }) => {
         playerRef.current.playVideo();
       }
       setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleVolumeChange = (e) => {
+    e.stopPropagation();
+    if (playerRef.current) {
+      const newVolume = parseInt(e.target.value, 10);
+      setVolume(newVolume);
+      playerRef.current.setVolume(newVolume);
+
+      // Auto unmute if volume is raised from 0
+      if (newVolume === 0) {
+        playerRef.current.mute();
+        setIsMuted(true);
+      } else if (isMuted) {
+        playerRef.current.unMute();
+        setIsMuted(false);
+      }
     }
   };
 
@@ -124,6 +148,8 @@ const MovieTrailer = ({ trailer }) => {
       ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={togglePlayPause}
+      style={{ cursor: 'pointer' }}
     >
       <div className="trailer-container" ref={videoContainerRef}>
         <div id="movie-trailer-player"></div>
@@ -139,6 +165,19 @@ const MovieTrailer = ({ trailer }) => {
             >
               {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </button>
+            <div className="volume-control">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={volume}
+                className="volume-slider"
+                onChange={handleVolumeChange}
+                onClick={(e) => e.stopPropagation()}
+                onDoubleClick={(e) => e.stopPropagation()}
+                aria-label="Volume"
+              />
+            </div>
             <button
               className="control-button fullscreen-button"
               onClick={(e) => {
