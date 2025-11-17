@@ -1,22 +1,22 @@
 // Profile picture utilities
-// Import all profile pictures
-import pic1 from "../assets/images/profile-pics/1.webp";
-import pic2 from "../assets/images/profile-pics/2.webp";
-import pic3 from "../assets/images/profile-pics/3.webp";
-import pic4 from "../assets/images/profile-pics/4.webp";
-import pic5 from "../assets/images/profile-pics/5.webp";
-import pic6 from "../assets/images/profile-pics/6.webp";
-import pic7 from "../assets/images/profile-pics/7.webp";
-import pic8 from "../assets/images/profile-pics/8.webp";
-import pic9 from "../assets/images/profile-pics/9.webp";
-import pic10 from "../assets/images/profile-pics/10.webp";
-import pic11 from "../assets/images/profile-pics/11.webp";
-import pic12 from "../assets/images/profile-pics/12.webp";
-import pic13 from "../assets/images/profile-pics/13.webp";
-import pic14 from "../assets/images/profile-pics/14.webp";
-import pic15 from "../assets/images/profile-pics/15.webp";
-import pic16 from "../assets/images/profile-pics/16.webp";
-import pic17 from "../assets/images/profile-pics/17.webp";
+// Import all profile pictures as URLs
+import pic1 from "url:../assets/images/profile-pics/1.webp";
+import pic2 from "url:../assets/images/profile-pics/2.webp";
+import pic3 from "url:../assets/images/profile-pics/3.webp";
+import pic4 from "url:../assets/images/profile-pics/4.webp";
+import pic5 from "url:../assets/images/profile-pics/5.webp";
+import pic6 from "url:../assets/images/profile-pics/6.webp";
+import pic7 from "url:../assets/images/profile-pics/7.webp";
+import pic8 from "url:../assets/images/profile-pics/8.webp";
+import pic9 from "url:../assets/images/profile-pics/9.webp";
+import pic10 from "url:../assets/images/profile-pics/10.webp";
+import pic11 from "url:../assets/images/profile-pics/11.webp";
+import pic12 from "url:../assets/images/profile-pics/12.webp";
+import pic13 from "url:../assets/images/profile-pics/13.webp";
+import pic14 from "url:../assets/images/profile-pics/14.webp";
+import pic15 from "url:../assets/images/profile-pics/15.webp";
+import pic16 from "url:../assets/images/profile-pics/16.webp";
+import pic17 from "url:../assets/images/profile-pics/17.webp";
 
 // Map filename to imported path
 const profilePictureMap = {
@@ -78,13 +78,27 @@ export const getProfilePicturePath = (filename) => {
 export const getProfilePictureFilename = (path) => {
   if (!path) return "1.webp";
 
+  // Normalize different input shapes (string, file info object, etc.)
+  let normalizedPath = path;
+  if (typeof path === "object") {
+    if (typeof path?.name === "string") {
+      normalizedPath = path.name;
+    } else if (typeof path?.path === "string") {
+      normalizedPath = path.path;
+    } else {
+      return "1.webp";
+    }
+  } else if (typeof path !== "string") {
+    return "1.webp";
+  }
+
   // If it's already just a filename, return it
-  if (path.endsWith(".webp") && !path.includes("/")) {
-    return path;
+  if (normalizedPath.endsWith(".webp") && !normalizedPath.includes("/")) {
+    return normalizedPath;
   }
 
   // Extract filename from path
-  const parts = path.split("/");
+  const parts = normalizedPath.split("/");
   const filename = parts[parts.length - 1];
 
   // Check if it's a valid filename

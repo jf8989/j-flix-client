@@ -3,6 +3,7 @@ node_modules/
 
 # Parcel cache
 .parcel-cache/
+.npm-cache/
 
 # Dist folder (build output)
 dist/
