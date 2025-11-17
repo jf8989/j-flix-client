@@ -27,81 +27,47 @@ export const ScrollRestoration = () => {
 
       console.log(`[ScrollRestore] Back to ${currentPath}, restoring to ${savedPosition}px`);
 
-      // DON'T scroll to top first for back navigation
-      // Restore immediately and repeatedly to ensure it works
-      const timers = [
-        setTimeout(() => {
-          window.scrollTo(0, savedPosition);
-          document.documentElement.scrollTop = savedPosition;
-          document.body.scrollTop = savedPosition;
-        }, 0),
-        setTimeout(() => {
-          window.scrollTo(0, savedPosition);
-          document.documentElement.scrollTop = savedPosition;
-          document.body.scrollTop = savedPosition;
-        }, 50),
-        setTimeout(() => {
-          window.scrollTo(0, savedPosition);
-          document.documentElement.scrollTop = savedPosition;
-          document.body.scrollTop = savedPosition;
-        }, 100),
-        setTimeout(() => {
-          window.scrollTo(0, savedPosition);
-          document.documentElement.scrollTop = savedPosition;
-          document.body.scrollTop = savedPosition;
-        }, 200),
-        setTimeout(() => {
-          window.scrollTo(0, savedPosition);
-          document.documentElement.scrollTop = savedPosition;
-          document.body.scrollTop = savedPosition;
-        }, 350),
-        setTimeout(() => {
-          window.scrollTo(0, savedPosition);
-          document.documentElement.scrollTop = savedPosition;
-          document.body.scrollTop = savedPosition;
-        }, 500),
-      ];
+      // Helper function to force scroll
+      const forceScroll = (position) => {
+        window.scrollTo(0, position);
+        document.documentElement.scrollTop = position;
+        document.body.scrollTop = position;
+      };
+
+      // Main page needs longer restoration window due to TrailerHero and genre groups
+      const isMainPage = currentPath === '/';
+      const timings = isMainPage
+        ? [0, 50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1000]
+        : [0, 50, 100, 200, 350, 500];
+
+      // Create restoration timers
+      const timers = timings.map(delay =>
+        setTimeout(() => forceScroll(savedPosition), delay)
+      );
+
       scrollTimersRef.current = timers;
     } else {
       // FORWARD NAVIGATION: Scroll to top
       console.log(`[ScrollRestore] Forward to ${currentPath}, scrolling to top`);
 
-      // Scroll to top immediately and repeatedly
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
+      // Helper function to force scroll to top
+      const forceScrollTop = () => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      };
 
+      // Immediate scroll
+      forceScrollTop();
+
+      // Keep forcing scroll to top during and after transition
       const timers = [
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 10),
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 50),
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 100),
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 200),
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 350),
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 500),
+        setTimeout(forceScrollTop, 10),
+        setTimeout(forceScrollTop, 50),
+        setTimeout(forceScrollTop, 100),
+        setTimeout(forceScrollTop, 200),
+        setTimeout(forceScrollTop, 350),
+        setTimeout(forceScrollTop, 500),
       ];
       scrollTimersRef.current = timers;
     }
