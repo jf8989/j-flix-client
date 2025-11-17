@@ -18,6 +18,7 @@ import MoviesByGenre from "../genre-group/genre-group";
 import ProfilePictureSelector from "../profile-picture-selector/profile-picture-selector";
 import defaultProfilePic from "../../assets/images/profilepic.jpg";
 import TrailerHero from "../trailer-hero/trailer-hero";
+import ScrollRestoration from "../scroll-restoration/scroll-restoration";
 import "./main-view.scss";
 
 // Token validation helper
@@ -306,6 +307,7 @@ const MainView = () => {
 
   return (
     <div className="app-container">
+      <ScrollRestoration />
       {user && (
         <NavigationBar
           user={user}
