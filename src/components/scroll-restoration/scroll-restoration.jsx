@@ -7,74 +7,102 @@ const scrollPositions = new Map();
 export const ScrollRestoration = () => {
   const location = useLocation();
   const navigationType = useNavigationType();
-  const prevLocationRef = useRef(location);
-  const isRestoringRef = useRef(false);
+  const prevLocationRef = useRef(null);
+  const scrollTimersRef = useRef([]);
 
   useEffect(() => {
     const currentPath = location.pathname;
-    const prevPath = prevLocationRef.current?.pathname;
+    const prevPath = prevLocationRef.current;
 
-    // Determine if this is a back/forward navigation (POP) or a new navigation (PUSH)
-    const isBackOrForward = navigationType === 'POP';
+    // Clear any existing scroll timers
+    scrollTimersRef.current.forEach(timer => clearTimeout(timer));
+    scrollTimersRef.current = [];
 
-    // Save scroll position of previous path before navigating
+    // Save the previous page's scroll position when navigating away
     if (prevPath && prevPath !== currentPath) {
-      scrollPositions.set(prevPath, window.scrollY);
+      const currentScroll = window.scrollY;
+      scrollPositions.set(prevPath, currentScroll);
     }
 
-    if (isBackOrForward && scrollPositions.has(currentPath)) {
-      // Restore scroll position when using back/forward buttons
-      isRestoringRef.current = true;
+    // Determine navigation type
+    const isBackNavigation = navigationType === 'POP';
 
-      // Use multiple RAF to ensure DOM is fully rendered (especially for complex pages)
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const savedPosition = scrollPositions.get(currentPath);
-          window.scrollTo({
-            top: savedPosition,
-            left: 0,
-            behavior: 'instant',
-          });
+    if (isBackNavigation && scrollPositions.has(currentPath)) {
+      // Restore scroll position for back navigation
+      const savedPosition = scrollPositions.get(currentPath);
 
-          // Clear the restoration flag
-          setTimeout(() => {
-            isRestoringRef.current = false;
-          }, 50);
-        });
-      });
+      // Scroll immediately to top first
+      window.scrollTo(0, 0);
+
+      // Then restore after transition completes
+      const timers = [
+        setTimeout(() => window.scrollTo(0, savedPosition), 100),
+        setTimeout(() => window.scrollTo(0, savedPosition), 350),
+        setTimeout(() => window.scrollTo(0, savedPosition), 400),
+      ];
+      scrollTimersRef.current = timers;
     } else {
-      // Scroll to top for new/forward navigation (PUSH, REPLACE)
-      // Use RAF to ensure page is rendered before scrolling
-      requestAnimationFrame(() => {
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: 'instant',
-        });
-      });
+      // Scroll to top for forward navigation - VERY AGGRESSIVE
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Keep forcing scroll to top during and after transition
+      const timers = [
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 10),
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 50),
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 100),
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 200),
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 350),
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 500),
+      ];
+      scrollTimersRef.current = timers;
     }
 
-    // Save scroll position continuously while on a page
+    // Update previous path reference
+    prevLocationRef.current = currentPath;
+
+    // Continuously save scroll position while on this page
     let scrollTimeout;
     const handleScroll = () => {
-      if (!isRestoringRef.current) {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          scrollPositions.set(currentPath, window.scrollY);
-        }, 100);
-      }
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        scrollPositions.set(currentPath, window.scrollY);
+      }, 100);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Update previous location
-    prevLocationRef.current = location;
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
       clearTimeout(scrollTimeout);
+      scrollTimersRef.current.forEach(timer => clearTimeout(timer));
     };
-  }, [location, navigationType]);
+  }, [location.pathname, navigationType]);
 
   return null;
 };
